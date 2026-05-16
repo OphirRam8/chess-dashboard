@@ -1,0 +1,132 @@
+{
+  "_meta": {
+    "purpose": "Curated opening positions for the chess-dashboard Openings Library section. Each entry shows the key starting position that defines the opening (the moment after which it becomes recognizable). Levy Rozman's recommended sub-1500 picks are flagged with is_levy_pick.",
+    "fen_format": "After the listed moves; the side_to_move tells whose turn it is in the displayed position",
+    "image_url_template": "https://lichess.org/export/fen.gif?fen={url_encoded_fen}",
+    "analysis_url_template": "https://lichess.org/analysis/{fen_with_underscores}",
+    "curated": "2026-05-16",
+    "source": "Levy Rozman, How to Win at Chess (Ten Speed Press, 2023) — see knowledge/chess/openings/ atoms"
+  },
+  "openings": [
+    {
+      "id": "london",
+      "name": "London System",
+      "color": "white",
+      "is_levy_pick": true,
+      "moves": "1.d4 d5 2.Nf3 Nf6 3.Bf4",
+      "fen": "rnbqkb1r/ppp1pppp/5n2/3p4/3P1B2/5N2/PPP1PPPP/RN1QKB1R b KQkq - 4 3",
+      "side_to_move": "Black",
+      "summary": "Universal d4 system. Bishop comes out to f4 BEFORE getting blocked. Same plan against almost anything Black plays — Levy's #1 pick for sub-1500."
+    },
+    {
+      "id": "vienna",
+      "name": "Vienna System",
+      "color": "white",
+      "is_levy_pick": true,
+      "moves": "1.e4 e5 2.Nc3",
+      "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 1 2",
+      "side_to_move": "Black",
+      "summary": "Levy's e4 weapon — 70% personal win rate. Sets up the Vienna Gambit (3.f4) against ...Nf6. Off the beaten path; opponents rarely know it."
+    },
+    {
+      "id": "alapin-sicilian",
+      "name": "Alapin Sicilian (anti-Sicilian for White)",
+      "color": "white",
+      "is_levy_pick": true,
+      "moves": "1.e4 c5 2.c3",
+      "fen": "rnbqkbnr/pp1ppppp/8/2p5/4P3/2P5/PP1P1PPP/RNBQKBNR b KQkq - 0 2",
+      "side_to_move": "Black",
+      "summary": "Sidesteps 90% of Sicilian theory by playing 2.c3 instead of 2.Nf3. Prepares d4. Removes opponent's prep advantage."
+    },
+    {
+      "id": "italian",
+      "name": "Italian Game",
+      "color": "white",
+      "is_levy_pick": false,
+      "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4",
+      "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3",
+      "side_to_move": "Black",
+      "summary": "Classical e4 opening, named after 17th-c. Italian master Greco. Bishop aims at f7 (Black's weakest square). Solid, principled."
+    },
+    {
+      "id": "ruy-lopez",
+      "name": "Ruy López (Spanish Opening)",
+      "color": "white",
+      "is_levy_pick": false,
+      "moves": "1.e4 e5 2.Nf3 Nc6 3.Bb5",
+      "fen": "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3",
+      "side_to_move": "Black",
+      "summary": "The most-studied opening at master level. Bishop attacks the c6 knight defending the e5 pawn. Carlsen's go-to — but theory-heavy."
+    },
+    {
+      "id": "queens-gambit",
+      "name": "Queen's Gambit",
+      "color": "white",
+      "is_levy_pick": false,
+      "moves": "1.d4 d5 2.c4",
+      "fen": "rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq - 0 2",
+      "side_to_move": "Black",
+      "summary": "Classic d4 opening offering the c-pawn. Black usually declines (QGD). Got mainstream attention via the Netflix series."
+    },
+    {
+      "id": "caro-kann",
+      "name": "Caro-Kann Defense",
+      "color": "black",
+      "is_levy_pick": true,
+      "moves": "1.e4 c6 2.d4 d5",
+      "fen": "rnbqkbnr/pp2pppp/2p5/3p4/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 0 3",
+      "side_to_move": "White",
+      "summary": "Levy's PERSONAL favorite — beat 100+ GMs with it. Building-block defense (c6 supports d5). Solid pawn structure. Drops White's win rate from 51% to 47% at sub-1600."
+    },
+    {
+      "id": "scandinavian",
+      "name": "Scandinavian Defense",
+      "color": "black",
+      "is_levy_pick": true,
+      "moves": "1.e4 d5 2.exd5 Qxd5 3.Nc3 Qa5",
+      "fen": "rnb1kbnr/ppp1pppp/8/q7/8/2N5/PPPP1PPP/R1BQKBNR w KQkq - 2 3",
+      "side_to_move": "White",
+      "summary": "Force White to react on move 1. Queen out early (the exception that proves the rule). Memorize: Qd5 → Qa5 → c6 (queen escape)."
+    },
+    {
+      "id": "sicilian",
+      "name": "Sicilian Defense",
+      "color": "black",
+      "is_levy_pick": false,
+      "moves": "1.e4 c5",
+      "fen": "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+      "side_to_move": "White",
+      "summary": "Most popular Black response at GM level. Asymmetric counter-attack. Theory-dense (Najdorf, Dragon, Sveshnikov, etc.) — Levy doesn't recommend for sub-1500."
+    },
+    {
+      "id": "french",
+      "name": "French Defense",
+      "color": "black",
+      "is_levy_pick": false,
+      "moves": "1.e4 e6 2.d4 d5",
+      "fen": "rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 0 3",
+      "side_to_move": "White",
+      "summary": "Building-block sister to Caro-Kann (e6 supports d5 instead of c6). Creates closed positions. Light-squared bishop is the problem child."
+    },
+    {
+      "id": "qgd-setup",
+      "name": "Queen's Gambit Declined (setup)",
+      "color": "black",
+      "is_levy_pick": true,
+      "moves": "1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.Bg5 Be7",
+      "fen": "rnbqk2r/ppp1bppp/4pn2/3p2B1/2PP4/2N5/PP2PPP1/R2QKBNR w KQkq - 4 5",
+      "side_to_move": "White",
+      "summary": "Levy's pick vs d4 (and other slow openings). Decline the c4 pawn — accepting bumps White's win rate to 56%. Setup transposes to London, English, Reti."
+    },
+    {
+      "id": "kid",
+      "name": "King's Indian Defense (KID)",
+      "color": "black",
+      "is_levy_pick": false,
+      "moves": "1.d4 Nf6 2.c4 g6 3.Nc3 Bg7",
+      "fen": "rnbqk2r/ppppppbp/5np1/8/2PP4/2N5/PP2PPPP/R1BQKBNR w KQkq - 4 4",
+      "side_to_move": "White",
+      "summary": "Setup-based defense playable against most White openings. Kasparov's favorite. Counterpunching style — closed positions, kingside pawn storms."
+    }
+  ]
+}

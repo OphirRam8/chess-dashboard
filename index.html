@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>♟ Chess Dashboard — Ophir's Path to 1500</title>
+<style>
+/* ============== CHESS-VIBES PALETTE ============== */
+:root {
+  --board-light: #f0d9b5;       /* lichess light squares */
+  --board-dark:  #b58863;        /* lichess dark squares */
+  --cream:       #faf6ee;        /* page background */
+  --cream-card:  #ffffff;        /* card background */
+  --brown-deep:  #4a3526;        /* primary text */
+  --brown-mid:   #7a5a3e;        /* secondary text */
+  --brown-soft:  #d4b896;        /* dividers, subtle */
+  --gold:        #c9a14b;        /* highlights, Levy's-pick badges */
+  --gold-soft:   #f0e0bb;        /* gold backgrounds */
+  --green-deep:  #4a6b3a;        /* progress, current */
+  --green-soft:  #d9e6c9;        /* green backgrounds */
+  --red-deep:    #a04545;        /* danger zones */
+  --red-soft:    #f0d4d4;        /* red backgrounds */
+  --shadow-sm:   0 1px 3px rgba(74,53,38,0.08);
+  --shadow-md:   0 4px 12px rgba(74,53,38,0.12);
+  --radius:      12px;
+  --radius-sm:   8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+  background: var(--cream);
+  color: var(--brown-deep);
+  line-height: 1.5;
+  padding: 0;
+  /* Chess-board-pattern subtle background */
+  background-image:
+    linear-gradient(45deg, rgba(181,136,99,0.04) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(181,136,99,0.04) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(181,136,99,0.04) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(181,136,99,0.04) 75%);
+  background-size: 60px 60px;
+  background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 14px 80px;
+}
+
+/* ============== HEADER ============== */
+.app-header {
+  text-align: center;
+  padding: 18px 8px 12px;
+  margin-bottom: 24px;
+}
+.app-title {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: var(--brown-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.app-title .pieces {
+  font-size: 24px;
+  letter-spacing: 4px;
+  color: var(--brown-mid);
+}
+.app-subtitle {
+  font-size: 13px;
+  color: var(--brown-mid);
+  margin-top: 6px;
+}
+.last-synced {
+  font-size: 11px;
+  color: var(--brown-mid);
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+/* ============== SECTION ============== */
+.section {
+  margin-bottom: 28px;
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-left: 4px;
+}
+.section-icon {
+  font-size: 18px;
+  color: var(--brown-mid);
+}
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--brown-mid);
+}
+
+/* ============== CARD ============== */
+.card {
+  background: var(--cream-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 18px;
+  border: 1px solid rgba(122, 90, 62, 0.08);
+}
+
+/* ============== GOAL BANNER ============== */
+.goal-banner {
+  background: linear-gradient(135deg, var(--green-soft) 0%, var(--gold-soft) 100%);
+  padding: 22px;
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+}
+.goal-banner::before {
+  content: "♔";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 130px;
+  opacity: 0.06;
+  color: var(--brown-deep);
+}
+.goal-rating-line {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.goal-current {
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--brown-deep);
+  letter-spacing: -1px;
+}
+.goal-arrow {
+  color: var(--brown-mid);
+  font-size: 22px;
+}
+.goal-target {
+  font-size: 28px;
+  color: var(--brown-mid);
+  font-weight: 500;
+}
+.goal-tag {
+  background: var(--gold);
+  color: white;
+  padding: 3px 9px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.goal-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+.goal-stat {
+  text-align: center;
+}
+.goal-stat-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--brown-deep);
+}
+.goal-stat-label {
+  font-size: 11px;
+  color: var(--brown-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+.progress-bar {
+  height: 8px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green-deep) 0%, var(--gold) 100%);
+  transition: width 0.6s ease-out;
+}
+
+/* ============== ELO CHART ============== */
+.elo-chart {
+  width: 100%;
+  height: 200px;
+}
+.chart-empty {
+  text-align: center;
+  color: var(--brown-mid);
+  font-style: italic;
+  padding: 60px 20px;
+  font-size: 14px;
+}
+
+/* ============== THIS WEEK ============== */
+.this-week-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.theme-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--brown-deep);
+  margin-bottom: 4px;
+}
+.theme-meta {
+  font-size: 13px;
+  color: var(--brown-mid);
+  margin-bottom: 12px;
+}
+.theme-link {
+  display: inline-block;
+  padding: 8px 14px;
+  background: var(--green-deep);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+.theme-link:hover { background: var(--brown-deep); }
+
+/* ============== FEATURED PATTERN ============== */
+.featured-board-wrap {
+  text-align: center;
+}
+.featured-board {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  margin: 8px auto;
+}
+.featured-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--brown-deep);
+  margin-top: 12px;
+}
+.featured-explanation {
+  font-size: 13px;
+  color: var(--brown-mid);
+  margin-top: 8px;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============== CYCLE CALENDAR ============== */
+.cycle-strip {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+  margin-top: 4px;
+}
+.cycle-week {
+  text-align: center;
+  padding: 10px 4px;
+  border-radius: var(--radius-sm);
+  background: white;
+  border: 1px solid var(--brown-soft);
+  transition: all 0.2s;
+  text-decoration: none;
+  color: var(--brown-mid);
+}
+.cycle-week.is-current {
+  background: var(--green-soft);
+  border-color: var(--green-deep);
+  color: var(--brown-deep);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+.cycle-week-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.cycle-week-theme {
+  font-size: 10px;
+  margin-top: 4px;
+  line-height: 1.2;
+}
+
+/* ============== RECENT GAMES ============== */
+.games-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 600px) {
+  .games-row { grid-template-columns: 1fr 1fr 1fr; }
+}
+.game-card {
+  background: white;
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  border: 1px solid rgba(122, 90, 62, 0.08);
+  text-align: center;
+}
+.game-result {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.game-result.win  { background: var(--green-soft); color: var(--green-deep); }
+.game-result.loss { background: var(--red-soft);   color: var(--red-deep); }
+.game-result.draw { background: var(--gold-soft);  color: var(--gold); }
+.game-meta {
+  font-size: 12px;
+  color: var(--brown-mid);
+  margin: 6px 0;
+}
+.game-board {
+  width: 100%;
+  max-width: 200px;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+.game-worst {
+  font-size: 11px;
+  color: var(--brown-mid);
+  font-family: 'SF Mono', Menlo, monospace;
+  margin-top: 4px;
+}
+
+/* ============== WEAKNESS ZONES ============== */
+.zones {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+.zone {
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  background: white;
+  border: 2px solid transparent;
+}
+.zone.warning { background: var(--gold-soft);  border-color: var(--gold); }
+.zone.danger  { background: var(--red-soft);   border-color: var(--red-deep); }
+.zone-range {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--brown-mid);
+}
+.zone-stat {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--brown-deep);
+  margin: 4px 0;
+}
+.zone-detail {
+  font-size: 11px;
+  color: var(--brown-mid);
+}
+
+/* ============== PATTERN GALLERY & OPENINGS ============== */
+.gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 600px) {
+  .gallery { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 900px) {
+  .gallery { grid-template-columns: 1fr 1fr 1fr; }
+}
+.gallery-item {
+  background: white;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(122, 90, 62, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+.gallery-board {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-bottom: 1px solid rgba(122, 90, 62, 0.08);
+}
+.gallery-content {
+  padding: 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.gallery-badges {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.badge {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.badge.theme    { background: var(--green-soft); color: var(--green-deep); }
+.badge.color-w  { background: #f5f5f5; color: #333; border: 1px solid #ddd; }
+.badge.color-b  { background: #2a2a2a; color: white; }
+.badge.levy     { background: var(--gold); color: white; }
+.badge.kind     { background: var(--brown-soft); color: var(--brown-deep); }
+.gallery-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--brown-deep);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.gallery-summary {
+  font-size: 12px;
+  color: var(--brown-mid);
+  flex: 1;
+  margin-bottom: 8px;
+}
+.gallery-link {
+  font-size: 11px;
+  color: var(--green-deep);
+  text-decoration: none;
+  font-weight: 500;
+}
+.gallery-link:hover { text-decoration: underline; }
+
+/* Section filters */
+.gallery-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  font-size: 12px;
+  padding: 6px 12px;
+  background: white;
+  border: 1px solid var(--brown-soft);
+  border-radius: 14px;
+  cursor: pointer;
+  color: var(--brown-mid);
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.filter-btn:hover { border-color: var(--brown-mid); }
+.filter-btn.active {
+  background: var(--brown-deep);
+  color: white;
+  border-color: var(--brown-deep);
+}
+
+/* ============== QUICK LINKS ============== */
+.quick-links {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+@media (min-width: 600px) {
+  .quick-links { grid-template-columns: 1fr 1fr; }
+}
+.quick-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: white;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--brown-deep);
+  border: 1px solid rgba(122, 90, 62, 0.1);
+  transition: all 0.15s;
+  font-size: 13px;
+}
+.quick-link:hover {
+  background: var(--gold-soft);
+  border-color: var(--gold);
+}
+.quick-link::before {
+  content: "→";
+  color: var(--brown-mid);
+  font-size: 16px;
+}
+
+/* ============== FOOTER ============== */
+.app-footer {
+  text-align: center;
+  padding-top: 30px;
+  font-size: 11px;
+  color: var(--brown-mid);
+  opacity: 0.6;
+}
+.app-footer .chess-pieces {
+  font-size: 14px;
+  letter-spacing: 6px;
+  margin-bottom: 6px;
+  color: var(--brown-mid);
+}
+
+/* ============== UTILITIES ============== */
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--brown-mid);
+}
+.error {
+  background: var(--red-soft);
+  color: var(--red-deep);
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============== HEADER ============== -->
+  <div class="app-header">
+    <div class="app-title">
+      <span class="pieces">♜♞♝</span>
+      Chess Dashboard
+      <span class="pieces">♛♚♟</span>
+    </div>
+    <div class="app-subtitle">Ophir's path from rapid 937 → <strong>1500 by EOY 2026</strong></div>
+    <div class="last-synced" id="lastSynced">…</div>
+  </div>
+
+  <div id="content">
+    <div class="loading">Loading data…</div>
+  </div>
+
+  <!-- ============== FOOTER ============== -->
+  <div class="app-footer">
+    <div class="chess-pieces">♔ ♕ ♖ ♗ ♘ ♙</div>
+    <div>Synced daily from Hermes + Chess.com + Lichess. Built with Levy Rozman's <em>How to Win at Chess</em>.</div>
+  </div>
+
+</div>
+
+<script>
+const DATA_URL = "data.json?v=" + Date.now();   // bypass cache on each load
+
+const ICON = {
+  goal: "🎯",
+  trend: "📈",
+  week: "🚥",
+  pattern: "🎴",
+  cycle: "🗓",
+  games: "♟",
+  weakness: "🌡",
+  gallery: "🧩",
+  openings: "📚",
+  links: "🔗",
+};
+
+function el(html) {
+  const t = document.createElement("template");
+  t.innerHTML = html.trim();
+  return t.content.firstChild;
+}
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+function lichessImage(fen) {
+  return "https://lichess.org/export/fen.gif?fen=" + encodeURIComponent(fen);
+}
+function lichessAnalysis(fen) {
+  return "https://lichess.org/analysis/" + fen.replace(/ /g, "_");
+}
+function fmtDate(iso) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+}
+function section(iconKey, title, body) {
+  return `
+    <div class="section">
+      <div class="section-head">
+        <span class="section-icon">${ICON[iconKey] || ""}</span>
+        <span class="section-title">${escapeHtml(title)}</span>
+      </div>
+      ${body}
+    </div>`;
+}
+
+function renderGoal(goal) {
+  const cur = goal.current_rapid ?? "—";
+  const tgt = goal.target_rapid ?? "—";
+  const pct = goal.progress_pct ?? 0;
+  return section("goal", "Goal", `
+    <div class="goal-banner">
+      <div class="goal-rating-line">
+        <span class="goal-current">${cur}</span>
+        <span class="goal-arrow">→</span>
+        <span class="goal-target">${tgt}</span>
+        <span class="goal-tag">RAPID</span>
+      </div>
+      <div class="goal-stats">
+        <div class="goal-stat">
+          <div class="goal-stat-value">${goal.days_remaining ?? "—"}</div>
+          <div class="goal-stat-label">days left</div>
+        </div>
+        <div class="goal-stat">
+          <div class="goal-stat-value">${goal.current_lichess_puzzle ?? goal.current_chesscom_puzzle ?? "—"}</div>
+          <div class="goal-stat-label">puzzle ELO</div>
+        </div>
+        <div class="goal-stat">
+          <div class="goal-stat-value">${pct}%</div>
+          <div class="goal-stat-label">progress</div>
+        </div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>
+  `);
+}
+
+function renderEloChart(history) {
+  if (!history || history.length < 2) {
+    return section("trend", "ELO trend", `
+      <div class="card chart-empty">
+        ${history && history.length === 1 ? "Only 1 data point so far. Chart appears after the next sync." : "No history yet — points appear daily after the cron runs."}
+      </div>`);
+  }
+  // Plot rapid + lichess puzzle on same chart, normalize to fit
+  const W = 600, H = 200, PAD = 36;
+  const ratings = history.map(h => h.chesscom_rapid).filter(v => v != null);
+  const puzzles = history.map(h => h.lichess_puzzle ?? h.chesscom_puzzle).filter(v => v != null);
+  const all = [...ratings, ...puzzles];
+  if (all.length === 0) return section("trend", "ELO trend", `<div class="card chart-empty">No rating data captured yet.</div>`);
+  const minR = Math.min(...all) - 30;
+  const maxR = Math.max(...all) + 30;
+  const xs = (i) => PAD + ((W - 2*PAD) * (i / Math.max(1, history.length - 1)));
+  const ys = (v) => H - PAD - ((H - 2*PAD) * ((v - minR) / Math.max(1, maxR - minR)));
+
+  function line(values, color, dash="") {
+    const pts = values.map((v, i) => v != null ? `${xs(i)},${ys(v)}` : null);
+    const segs = [];
+    let cur = [];
+    for (const p of pts) {
+      if (p === null) { if (cur.length) { segs.push(cur); cur = []; } }
+      else cur.push(p);
+    }
+    if (cur.length) segs.push(cur);
+    return segs.map(s => `<polyline points="${s.join(" ")}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="${dash}" />`).join("");
+  }
+  const rapidLine = line(history.map(h => h.chesscom_rapid), "#4a6b3a");
+  const puzzleLine = line(history.map(h => h.lichess_puzzle ?? h.chesscom_puzzle), "#c9a14b", "4 4");
+
+  // Y-axis labels
+  const yTicks = [minR, Math.round((minR + maxR) / 2), maxR].map(t => `
+    <text x="6" y="${ys(t) + 4}" font-size="10" fill="#7a5a3e">${t}</text>
+    <line x1="${PAD}" x2="${W - PAD}" y1="${ys(t)}" y2="${ys(t)}" stroke="#d4b896" stroke-width="0.5" stroke-dasharray="2,4" />
+  `).join("");
+
+  // First / last date labels
+  const firstDate = history[0].date;
+  const lastDate = history[history.length - 1].date;
+
+  return section("trend", "ELO trend", `
+    <div class="card">
+      <svg viewBox="0 0 ${W} ${H}" class="elo-chart" preserveAspectRatio="xMidYMid meet">
+        ${yTicks}
+        ${rapidLine}
+        ${puzzleLine}
+        <text x="${PAD}" y="${H - 10}" font-size="10" fill="#7a5a3e">${firstDate}</text>
+        <text x="${W - PAD}" y="${H - 10}" font-size="10" fill="#7a5a3e" text-anchor="end">${lastDate}</text>
+      </svg>
+      <div style="display:flex; gap:16px; justify-content:center; font-size:12px; color:var(--brown-mid); margin-top:8px;">
+        <span><span style="color:#4a6b3a;">━━</span> Rapid</span>
+        <span><span style="color:#c9a14b;">┄┄</span> Puzzle</span>
+      </div>
+    </div>
+  `);
+}
+
+function renderThisWeek(week) {
+  return section("week", "This week", `
+    <div class="card">
+      <div class="theme-name">${escapeHtml(week.theme || "Theme not set")}</div>
+      <div class="theme-meta">Cycle ${week.cycle ?? "—"} · Week ${week.cycle_week ?? "—"} of 8 · Program week ${week.program_week ?? "—"}</div>
+      ${week.lichess_puzzle_url ? `<a class="theme-link" href="${escapeHtml(week.lichess_puzzle_url)}" target="_blank" rel="noopener">▶ Drill on Lichess</a>` : ""}
+    </div>
+  `);
+}
+
+function renderFeaturedPattern(gallery, currentTheme) {
+  if (!gallery || gallery.length === 0) return "";
+  // Find a position from current theme; fallback to first
+  const featured = gallery.find(p => p.theme === currentTheme) || gallery[0];
+  return section("pattern", "Featured pattern", `
+    <div class="card featured-board-wrap">
+      <img class="featured-board" src="${lichessImage(featured.fen)}" alt="${escapeHtml(featured.label)}" />
+      <div class="featured-label">${escapeHtml(featured.label)}</div>
+      <div class="featured-explanation">${escapeHtml(featured.explanation)}</div>
+      <div style="margin-top:10px;">
+        <a class="theme-link" href="${lichessAnalysis(featured.fen)}" target="_blank" rel="noopener">Open in Lichess analysis</a>
+      </div>
+    </div>
+  `);
+}
+
+function renderCycleCalendar(cal) {
+  if (!cal || cal.length === 0) return "";
+  const html = cal.map(w => `
+    <a class="cycle-week ${w.is_current ? "is-current" : ""}" href="${escapeHtml(w.lichess_puzzle_url)}" target="_blank" rel="noopener" title="${escapeHtml(w.dates)}">
+      <div class="cycle-week-label">${escapeHtml(w.week_label)}</div>
+      <div class="cycle-week-theme">${escapeHtml(w.theme)}</div>
+    </a>
+  `).join("");
+  return section("cycle", "Cycle 1 calendar (May 4 — Jun 28)", `<div class="card"><div class="cycle-strip">${html}</div></div>`);
+}
+
+function renderRecentGames(games) {
+  if (!games || games.length === 0) {
+    return section("games", "Recent games", `<div class="card chart-empty">No game data captured today. Hermes auto-logs games within 15 min of finishing.</div>`);
+  }
+  const html = games.slice(0, 3).map(g => {
+    const result = (g.result || "").toLowerCase();
+    const cls = result.includes("win") ? "win" : result.includes("loss") ? "loss" : "draw";
+    const worst = (g.worst || {}).move || "";
+    const fen = (g.worst || {}).fen || g.fen;
+    return `
+      <div class="game-card">
+        <span class="game-result ${cls}">${escapeHtml(g.result || "?")}</span>
+        <div class="game-meta">vs ${escapeHtml(g.opponent || "?")}${g.opp_rating ? ` (${g.opp_rating})` : ""}</div>
+        ${fen ? `<img class="game-board" src="${lichessImage(fen)}" alt="game position" />` : ""}
+        ${worst ? `<div class="game-worst">worst: ${escapeHtml(worst)}</div>` : ""}
+      </div>`;
+  }).join("");
+  return section("games", "Recent games", `<div class="games-row">${html}</div>`);
+}
+
+function renderWeaknessZones(zones) {
+  if (!zones || zones.length === 0) return "";
+  const html = zones.map(z => `
+    <div class="zone ${escapeHtml(z.severity || "")}">
+      <div class="zone-range">${escapeHtml(z.zone)}</div>
+      <div class="zone-stat">${z.mistakes}</div>
+      <div class="zone-detail">avg ${z.avg_pawn_loss} pawns lost</div>
+    </div>
+  `).join("");
+  return section("weakness", "Weakness zones (Stockfish-validated)", `<div class="zones">${html}</div>`);
+}
+
+let __galleryFilter = "all";
+function renderPatternGallery(gallery) {
+  if (!gallery || gallery.length === 0) return "";
+  const themes = [...new Set(gallery.map(p => p.theme))];
+  const filters = ["all", ...themes].map(t => `
+    <button class="filter-btn ${__galleryFilter === t ? "active" : ""}" data-filter="${escapeHtml(t)}">${escapeHtml(t === "all" ? "All themes" : t)}</button>
+  `).join("");
+  const visible = __galleryFilter === "all" ? gallery : gallery.filter(p => p.theme === __galleryFilter);
+  const items = visible.map(p => `
+    <div class="gallery-item">
+      <img class="gallery-board" src="${lichessImage(p.fen)}" alt="${escapeHtml(p.label)}" />
+      <div class="gallery-content">
+        <div class="gallery-badges">
+          <span class="badge theme">${escapeHtml(p.theme)}</span>
+          ${p.kind === "puzzle" ? `<span class="badge kind">Find the move</span>` : `<span class="badge kind">See the pattern</span>`}
+        </div>
+        <div class="gallery-title">${escapeHtml(p.label)}</div>
+        <div class="gallery-summary">${escapeHtml(p.explanation)}</div>
+        <a class="gallery-link" href="${lichessAnalysis(p.fen)}" target="_blank" rel="noopener">Open in Lichess →</a>
+      </div>
+    </div>
+  `).join("");
+  return section("gallery", "Pattern gallery — Levy's tactical patterns", `
+    <div class="gallery-filters" id="galleryFilters">${filters}</div>
+    <div class="gallery">${items}</div>
+  `);
+}
+
+let __openingsFilter = "all";
+function renderOpeningsLibrary(openings) {
+  if (!openings || openings.length === 0) return "";
+  const filters = ["all", "white", "black", "levy"].map(f => `
+    <button class="filter-btn ${__openingsFilter === f ? "active" : ""}" data-openings-filter="${f}">
+      ${f === "all" ? "All" : f === "white" ? "♔ White" : f === "black" ? "♚ Black" : "⭐ Levy's picks"}
+    </button>
+  `).join("");
+  let visible = openings;
+  if (__openingsFilter === "white") visible = openings.filter(o => o.color === "white");
+  else if (__openingsFilter === "black") visible = openings.filter(o => o.color === "black");
+  else if (__openingsFilter === "levy")  visible = openings.filter(o => o.is_levy_pick);
+
+  const items = visible.map(o => `
+    <div class="gallery-item">
+      <img class="gallery-board" src="${lichessImage(o.fen)}" alt="${escapeHtml(o.name)}" />
+      <div class="gallery-content">
+        <div class="gallery-badges">
+          <span class="badge ${o.color === 'white' ? 'color-w' : 'color-b'}">${o.color === "white" ? "♔ White" : "♚ Black"}</span>
+          ${o.is_levy_pick ? `<span class="badge levy">⭐ Levy's pick</span>` : ""}
+        </div>
+        <div class="gallery-title">${escapeHtml(o.name)}</div>
+        <div class="gallery-summary"><strong>${escapeHtml(o.moves)}</strong><br><br>${escapeHtml(o.summary)}</div>
+        <a class="gallery-link" href="${lichessAnalysis(o.fen)}" target="_blank" rel="noopener">Open in Lichess →</a>
+      </div>
+    </div>
+  `).join("");
+  return section("openings", "Openings library", `
+    <div class="gallery-filters" id="openingsFilters">${filters}</div>
+    <div class="gallery">${items}</div>
+  `);
+}
+
+function renderQuickLinks(links) {
+  if (!links || links.length === 0) return "";
+  const html = links.map(l => `
+    <a class="quick-link" href="${escapeHtml(l.url)}" target="_blank" rel="noopener">${escapeHtml(l.label)}</a>
+  `).join("");
+  return section("links", "Quick links", `<div class="quick-links">${html}</div>`);
+}
+
+function renderAll(data) {
+  const c = document.getElementById("content");
+  c.innerHTML = "";
+  c.insertAdjacentHTML("beforeend", renderGoal(data.goal || {}));
+  c.insertAdjacentHTML("beforeend", renderEloChart(data.elo_history || []));
+  c.insertAdjacentHTML("beforeend", renderThisWeek(data.this_week || {}));
+  c.insertAdjacentHTML("beforeend", renderFeaturedPattern(data.pattern_gallery || [], (data.this_week || {}).theme));
+  c.insertAdjacentHTML("beforeend", renderCycleCalendar(data.cycle_calendar || []));
+  c.insertAdjacentHTML("beforeend", renderRecentGames(data.recent_games || []));
+  c.insertAdjacentHTML("beforeend", renderWeaknessZones(data.weakness_zones || []));
+  c.insertAdjacentHTML("beforeend", renderPatternGallery(data.pattern_gallery || []));
+  c.insertAdjacentHTML("beforeend", renderOpeningsLibrary(data.openings_library || []));
+  c.insertAdjacentHTML("beforeend", renderQuickLinks(data.quick_links || []));
+
+  // Wire filter buttons
+  document.querySelectorAll("[data-filter]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      __galleryFilter = btn.dataset.filter;
+      renderAll(__lastData);
+    });
+  });
+  document.querySelectorAll("[data-openings-filter]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      __openingsFilter = btn.dataset.openingsFilter;
+      renderAll(__lastData);
+    });
+  });
+
+  // Last synced
+  const sync = document.getElementById("lastSynced");
+  if (sync && data._meta && data._meta.generated_at) {
+    sync.textContent = "Last synced: " + fmtDate(data._meta.generated_at);
+  }
+}
+
+let __lastData = null;
+async function load() {
+  try {
+    const resp = await fetch(DATA_URL);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    __lastData = data;
+    renderAll(data);
+  } catch (err) {
+    document.getElementById("content").innerHTML = `<div class="error">Failed to load data.json: ${escapeHtml(err.message)}</div>`;
+  }
+}
+load();
+</script>
+</body>
+</html>

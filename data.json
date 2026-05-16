@@ -1,0 +1,416 @@
+{
+  "_meta": {
+    "generated_at": "2026-05-16T02:52:37.653554+00:00",
+    "generator": "chess_dashboard_data.py",
+    "version": "1.0"
+  },
+  "goal": {
+    "target_rapid": 1500,
+    "current_rapid": 896,
+    "current_blitz": 653,
+    "current_chesscom_puzzle": 1732,
+    "current_lichess_puzzle": null,
+    "baseline_rapid": 937,
+    "progress_pct": 0,
+    "program_start": "2026-05-04",
+    "program_end": "2026-12-31",
+    "days_elapsed": 11,
+    "days_remaining": 230
+  },
+  "elo_history": [
+    {
+      "date": "2026-05-15",
+      "chesscom_rapid": 896,
+      "chesscom_blitz": 653,
+      "chesscom_puzzle": 1732,
+      "lichess_puzzle": null
+    }
+  ],
+  "this_week": {
+    "program_week": 2,
+    "cycle": 1,
+    "cycle_week": 2,
+    "theme": "Pins",
+    "lichess_puzzle_url": "https://lichess.org/training/pin"
+  },
+  "cycle_calendar": [
+    {
+      "week_label": "W1",
+      "dates": "May 4 \u2014 May 10",
+      "theme": "Forks",
+      "lichess_puzzle_url": "https://lichess.org/training/fork",
+      "is_current": false
+    },
+    {
+      "week_label": "W2",
+      "dates": "May 11 \u2014 May 17",
+      "theme": "Pins",
+      "lichess_puzzle_url": "https://lichess.org/training/pin",
+      "is_current": true
+    },
+    {
+      "week_label": "W3",
+      "dates": "May 18 \u2014 May 24",
+      "theme": "Skewers",
+      "lichess_puzzle_url": "https://lichess.org/training/skewer",
+      "is_current": false
+    },
+    {
+      "week_label": "W4",
+      "dates": "May 25 \u2014 May 31",
+      "theme": "Discovered Attacks",
+      "lichess_puzzle_url": "https://lichess.org/training/discoveredAttack",
+      "is_current": false
+    },
+    {
+      "week_label": "W5",
+      "dates": "Jun 1 \u2014 Jun 7",
+      "theme": "Back-Rank Mates",
+      "lichess_puzzle_url": "https://lichess.org/training/backRankMate",
+      "is_current": false
+    },
+    {
+      "week_label": "W6",
+      "dates": "Jun 8 \u2014 Jun 14",
+      "theme": "K+Q & K+R Mates",
+      "lichess_puzzle_url": "https://lichess.org/training/mateIn2",
+      "is_current": false
+    },
+    {
+      "week_label": "W7",
+      "dates": "Jun 15 \u2014 Jun 21",
+      "theme": "Opposition & K+Pawn",
+      "lichess_puzzle_url": "https://lichess.org/training/endgame",
+      "is_current": false
+    },
+    {
+      "week_label": "W8",
+      "dates": "Jun 22 \u2014 Jun 28",
+      "theme": "Opening Principles",
+      "lichess_puzzle_url": "https://lichess.org/training/opening",
+      "is_current": false
+    }
+  ],
+  "recent_games": [],
+  "lichess_puzzles_today": {
+    "wins": 9,
+    "losses": 5,
+    "draws": 0,
+    "total": 14,
+    "rating_before": 1286,
+    "rating_after": 1254,
+    "rating_delta": -32,
+    "window_hours": 24,
+    "contributing_day_entries": 1
+  },
+  "pattern_gallery": [
+    {
+      "fen": "q3k3/2N5/8/8/8/8/8/6K1 b - - 0 1",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Royal Fork \u2014 knight forks king and queen",
+      "explanation": "White's knight on c7 simultaneously attacks the Black king on e8 and the Black queen on a8. Black must move the king out of check, losing the queen on the next move.",
+      "key_lesson": "The Royal Fork (knight attacks K + Q at the same time) is the most devastating tactical pattern in chess. Watch for any geometry where your knight could land on a square attacking both.",
+      "theme": "Forks"
+    },
+    {
+      "fen": "6k1/8/8/2r1b3/8/8/3P4/6K1 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Pawn Fork \u2014 d2-d4 attacks rook AND bishop",
+      "explanation": "White plays d4! The pawn now attacks Black's rook on c5 AND Black's bishop on e5 simultaneously. Black can only save one. Pawn forks are the cheapest possible attacker.",
+      "key_lesson": "Before every pawn move, ask: does this pawn attack two enemy pieces on the diagonal squares ahead? Pawns capture diagonally \u2014 a single pawn push can win material.",
+      "theme": "Forks"
+    },
+    {
+      "fen": "r1bqk2r/pppp1ppp/2n2n2/2b1p1B1/2B1P3/3P1N2/PPP2PPP/RN1QK2R b KQkq - 0 5",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Italian Game \u2014 White's Bg5 pin on the f6 knight",
+      "explanation": "After 1.e4 e5 2.Nf3 Nc6 3.Bc4 Nf6 4.d3 Bc5 5.Bg5, White's bishop pins Black's knight on f6 to the queen on d8. The knight is functionally frozen \u2014 moving it costs the queen.",
+      "key_lesson": "Relative pins on knights to queens are everywhere in classical openings. Defenses: ...h6 (kick the bishop), ...d6 (preserve the pin geometry), ...Be7 (block the pin).",
+      "theme": "Pins"
+    },
+    {
+      "fen": "4k3/8/8/4q3/8/8/4R3/7K b - - 0 1",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Absolute pin \u2014 queen frozen on the e-file",
+      "explanation": "Black's queen is pinned to the king by White's rook on the e-file. ABSOLUTE PIN \u2014 Black cannot legally move the queen (would expose the king to check).",
+      "key_lesson": "Recognize this geometry instantly. King + valuable piece + opposing rook (or queen, or bishop on diagonal) on the same line = absolute pin. This is why castling early and making a luft matter.",
+      "theme": "Pins"
+    },
+    {
+      "fen": "8/8/8/8/8/3k4/8/B2K3q w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Bishop Skewer \u2014 win the queen",
+      "explanation": "White plays Bf6+ (or any bishop check on the long diagonal). The Black king on d3 must move out of check. Once the king moves, the bishop captures the queen on h1 behind it.",
+      "key_lesson": "Skewer = pin in reverse. Higher-value piece in front (king, must move), lower-value behind (queen, gets captured). Long-range pieces (bishop, rook, queen) on long lines = skewer territory.",
+      "theme": "Skewers"
+    },
+    {
+      "fen": "8/8/8/8/3K4/8/8/r2k3R w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Rook Skewer \u2014 endgame win",
+      "explanation": "White plays Rh1+ \u2014 wait, the rook is already on h1. White's rook attacks Black's king on d1. Black king must move, exposing Black's rook on a1 to capture.",
+      "key_lesson": "Rook skewers along ranks and files dominate endgames. King exposed on the back rank = vulnerability. Always look for skewer geometry in simplified positions.",
+      "theme": "Skewers"
+    },
+    {
+      "fen": "r3k2r/ppp2ppp/2n5/3qp1B1/3P4/2N5/PPPQ1PPP/R3K2R w KQkq - 0 10",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Discovered Attack \u2014 bishop moves, queen attacks",
+      "explanation": "White's bishop on g5 is in front of the queen's diagonal to d5 (Black's queen). If the bishop moves anywhere safely (e.g. Bxf6), it reveals the queen's attack on Black's queen. Discovered attack wins material.",
+      "key_lesson": "Stack pieces on a line (bishop + queen on a diagonal, rook + knight on a file). Move the front piece for free \u2192 reveal the attack from behind. Most powerful when the moving piece ALSO creates its own threat.",
+      "theme": "Discovered Attacks"
+    },
+    {
+      "fen": "rnb1kbnr/pppp1Bpp/8/8/8/8/PPPPP1PP/RNBqK1NR w KQkq - 0 4",
+      "side_to_move": "White",
+      "kind": "setup",
+      "label": "L\u00e9gal's Mate setup \u2014 discovered idea (pre-sacrifice)",
+      "explanation": "After ...Bxd1?? in L\u00e9gal's trap. White has just played Bxf7+. Now after King moves to e7, Nd5 is checkmate \u2014 knight check + discovered mate from bishop. The most famous discovered-attack-into-mate pattern.",
+      "key_lesson": "Discovered checks are forcing. Combined with a mate threat from the moving piece's destination = forced sequence. Memorize L\u00e9gal's Mate (1750!) as the canonical pattern.",
+      "theme": "Discovered Attacks"
+    },
+    {
+      "fen": "6k1/5ppp/8/8/8/8/8/4R1K1 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Classic Back-Rank Mate \u2014 rook delivers",
+      "explanation": "White plays Re8#. The Black king on g8 is trapped by its own pawns on f7, g7, h7 \u2014 no escape squares. Rook on the 8th rank delivers checkmate. The defining mate pattern of millions of games.",
+      "key_lesson": "After both sides castle, the back rank becomes vulnerable. Defense: make a luft (push h6/h3 for an escape square). Offense: scan for opponent's blocked king every move with major pieces.",
+      "theme": "Back-Rank Mates"
+    },
+    {
+      "fen": "r5k1/5ppp/8/8/8/8/PPP2PPP/4R1K1 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Back-Rank with defender \u2014 sacrifice to remove",
+      "explanation": "Black's rook on a8 defends the 8th rank. White plays Re8+! Rxe8 (forced \u2014 king has no moves), but White has set up the position for a follow-up battery in real games. Setup demonstrates removing the defender via trade.",
+      "key_lesson": "When the back rank has ONE defender, look for ways to remove it (capture, deflect, pin). Removing the defender = back rank becomes mateable.",
+      "theme": "Back-Rank Mates"
+    },
+    {
+      "fen": "7k/8/6KQ/8/8/8/8/8 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "King + Queen Mate \u2014 knight opposition delivers",
+      "explanation": "White plays Qg7# (or Qh7#). The White king on g6 supports the queen, the Black king on h8 has no escape. Classic K+Q mate where the queen lands on a square defended by the king, attacking the cornered king.",
+      "key_lesson": "K+Q mate technique: use knight opposition to box the king into a corner, leave 2 squares for shuffling, march your king up to support, deliver the ONE check that ends it. Never give early checks.",
+      "theme": "K+Q & K+R Mates"
+    },
+    {
+      "fen": "7k/R7/6K1/8/8/8/8/8 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "King + Rook Mate \u2014 direct opposition delivers",
+      "explanation": "White plays Ra8#. The White king on g6 covers g7 and h7 (Black king's only potential escape squares). The rook delivers mate on the 8th rank. The kings are in direct opposition, then rook check = mate.",
+      "key_lesson": "K+R mate technique: rook cuts a file/rank, your king uses direct opposition to push enemy king to the edge, then rook check = mate. Use waiting moves (slide rook on the cut file) to force enemy king into opposition.",
+      "theme": "K+Q & K+R Mates"
+    },
+    {
+      "fen": "8/8/8/3k4/8/3K4/3P4/8 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "setup",
+      "label": "Direct Opposition \u2014 kings face one square apart",
+      "explanation": "Kings on d3 and d5 face each other one square apart, with White's pawn on d2. WHITE TO MOVE means Black has the opposition \u2014 White's king must yield (move sideways), Black king can advance to the key squares c4/d4/e4 to block the pawn.",
+      "key_lesson": "The player NOT to move has the opposition. In K+P endings, this determines who can promote. Count parity carefully \u2014 sometimes triangulate to switch who has the move.",
+      "theme": "Opposition & K+Pawn"
+    },
+    {
+      "fen": "4k3/8/4K3/4P3/8/8/8/8 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Outflanking \u2014 king escorts the pawn",
+      "explanation": "White's king on e6 is in front of the pawn AND has the opposition (Black to move after White's first move). The textbook winning K+P endgame: king clears the path, pawn promotes.",
+      "key_lesson": "Rule for K+P vs K: if the attacking king is IN FRONT of its pawn AND has the opposition, the pawn promotes. Memorize this \u2014 it converts countless endgames.",
+      "theme": "Opposition & K+Pawn"
+    },
+    {
+      "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Three Principles in action \u2014 Center + Develop",
+      "explanation": "After 1.e4 e5 2.Nf3, White has placed a pawn in the center (Center \u2713) and developed a knight toward the center attacking e5 (Develop \u2713). Black has the same. Both are following the opening principles.",
+      "key_lesson": "Every good opening implements: (1) Center \u2014 control with pawns, (2) Develop \u2014 knights and bishops out, (3) Castle \u2014 king to safety. Pieces in the center see more (knight in center: 8 squares; in corner: 2).",
+      "theme": "Opening Principles"
+    },
+    {
+      "fen": "rnbqkb1r/pppppppp/5n2/8/3P4/5N2/PPP1PPPP/RNBQKB1R w KQkq - 2 2",
+      "side_to_move": "White",
+      "kind": "setup",
+      "label": "Reti / KID setup \u2014 flexible center principle",
+      "explanation": "After 1.d4 Nf6 2.Nf3, both sides have developed knights toward the center without committing the e/c pawns. Modern flexible opening showing 'develop first, commit later' philosophy.",
+      "key_lesson": "Opening principles are flexible. You don't have to push BOTH central pawns immediately \u2014 sometimes 'control' the center via pieces (hypermodern). The principle is intent, not literal pawn placement.",
+      "theme": "Opening Principles"
+    }
+  ],
+  "openings_library": [
+    {
+      "id": "london",
+      "name": "London System",
+      "color": "white",
+      "is_levy_pick": true,
+      "moves": "1.d4 d5 2.Nf3 Nf6 3.Bf4",
+      "fen": "rnbqkb1r/ppp1pppp/5n2/3p4/3P1B2/5N2/PPP1PPPP/RN1QKB1R b KQkq - 4 3",
+      "side_to_move": "Black",
+      "summary": "Universal d4 system. Bishop comes out to f4 BEFORE getting blocked. Same plan against almost anything Black plays \u2014 Levy's #1 pick for sub-1500."
+    },
+    {
+      "id": "vienna",
+      "name": "Vienna System",
+      "color": "white",
+      "is_levy_pick": true,
+      "moves": "1.e4 e5 2.Nc3",
+      "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 1 2",
+      "side_to_move": "Black",
+      "summary": "Levy's e4 weapon \u2014 70% personal win rate. Sets up the Vienna Gambit (3.f4) against ...Nf6. Off the beaten path; opponents rarely know it."
+    },
+    {
+      "id": "alapin-sicilian",
+      "name": "Alapin Sicilian (anti-Sicilian for White)",
+      "color": "white",
+      "is_levy_pick": true,
+      "moves": "1.e4 c5 2.c3",
+      "fen": "rnbqkbnr/pp1ppppp/8/2p5/4P3/2P5/PP1P1PPP/RNBQKBNR b KQkq - 0 2",
+      "side_to_move": "Black",
+      "summary": "Sidesteps 90% of Sicilian theory by playing 2.c3 instead of 2.Nf3. Prepares d4. Removes opponent's prep advantage."
+    },
+    {
+      "id": "italian",
+      "name": "Italian Game",
+      "color": "white",
+      "is_levy_pick": false,
+      "moves": "1.e4 e5 2.Nf3 Nc6 3.Bc4",
+      "fen": "r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3",
+      "side_to_move": "Black",
+      "summary": "Classical e4 opening, named after 17th-c. Italian master Greco. Bishop aims at f7 (Black's weakest square). Solid, principled."
+    },
+    {
+      "id": "ruy-lopez",
+      "name": "Ruy L\u00f3pez (Spanish Opening)",
+      "color": "white",
+      "is_levy_pick": false,
+      "moves": "1.e4 e5 2.Nf3 Nc6 3.Bb5",
+      "fen": "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3",
+      "side_to_move": "Black",
+      "summary": "The most-studied opening at master level. Bishop attacks the c6 knight defending the e5 pawn. Carlsen's go-to \u2014 but theory-heavy."
+    },
+    {
+      "id": "queens-gambit",
+      "name": "Queen's Gambit",
+      "color": "white",
+      "is_levy_pick": false,
+      "moves": "1.d4 d5 2.c4",
+      "fen": "rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq - 0 2",
+      "side_to_move": "Black",
+      "summary": "Classic d4 opening offering the c-pawn. Black usually declines (QGD). Got mainstream attention via the Netflix series."
+    },
+    {
+      "id": "caro-kann",
+      "name": "Caro-Kann Defense",
+      "color": "black",
+      "is_levy_pick": true,
+      "moves": "1.e4 c6 2.d4 d5",
+      "fen": "rnbqkbnr/pp2pppp/2p5/3p4/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 0 3",
+      "side_to_move": "White",
+      "summary": "Levy's PERSONAL favorite \u2014 beat 100+ GMs with it. Building-block defense (c6 supports d5). Solid pawn structure. Drops White's win rate from 51% to 47% at sub-1600."
+    },
+    {
+      "id": "scandinavian",
+      "name": "Scandinavian Defense",
+      "color": "black",
+      "is_levy_pick": true,
+      "moves": "1.e4 d5 2.exd5 Qxd5 3.Nc3 Qa5",
+      "fen": "rnb1kbnr/ppp1pppp/8/q7/8/2N5/PPPP1PPP/R1BQKBNR w KQkq - 2 3",
+      "side_to_move": "White",
+      "summary": "Force White to react on move 1. Queen out early (the exception that proves the rule). Memorize: Qd5 \u2192 Qa5 \u2192 c6 (queen escape)."
+    },
+    {
+      "id": "sicilian",
+      "name": "Sicilian Defense",
+      "color": "black",
+      "is_levy_pick": false,
+      "moves": "1.e4 c5",
+      "fen": "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+      "side_to_move": "White",
+      "summary": "Most popular Black response at GM level. Asymmetric counter-attack. Theory-dense (Najdorf, Dragon, Sveshnikov, etc.) \u2014 Levy doesn't recommend for sub-1500."
+    },
+    {
+      "id": "french",
+      "name": "French Defense",
+      "color": "black",
+      "is_levy_pick": false,
+      "moves": "1.e4 e6 2.d4 d5",
+      "fen": "rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/8/PPP2PPP/RNBQKBNR w KQkq - 0 3",
+      "side_to_move": "White",
+      "summary": "Building-block sister to Caro-Kann (e6 supports d5 instead of c6). Creates closed positions. Light-squared bishop is the problem child."
+    },
+    {
+      "id": "qgd-setup",
+      "name": "Queen's Gambit Declined (setup)",
+      "color": "black",
+      "is_levy_pick": true,
+      "moves": "1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.Bg5 Be7",
+      "fen": "rnbqk2r/ppp1bppp/4pn2/3p2B1/2PP4/2N5/PP2PPP1/R2QKBNR w KQkq - 4 5",
+      "side_to_move": "White",
+      "summary": "Levy's pick vs d4 (and other slow openings). Decline the c4 pawn \u2014 accepting bumps White's win rate to 56%. Setup transposes to London, English, Reti."
+    },
+    {
+      "id": "kid",
+      "name": "King's Indian Defense (KID)",
+      "color": "black",
+      "is_levy_pick": false,
+      "moves": "1.d4 Nf6 2.c4 g6 3.Nc3 Bg7",
+      "fen": "rnbqk2r/ppppppbp/5np1/8/2PP4/2N5/PP2PPPP/R1BQKBNR w KQkq - 4 4",
+      "side_to_move": "White",
+      "summary": "Setup-based defense playable against most White openings. Kasparov's favorite. Counterpunching style \u2014 closed positions, kingside pawn storms."
+    }
+  ],
+  "weakness_zones": [
+    {
+      "zone": "Moves 1-10",
+      "mistakes": 48,
+      "avg_pawn_loss": 3.2,
+      "severity": "warning"
+    },
+    {
+      "zone": "Moves 11-20",
+      "mistakes": 32,
+      "avg_pawn_loss": 6.0,
+      "severity": "warning"
+    },
+    {
+      "zone": "Moves 21-35",
+      "mistakes": 22,
+      "avg_pawn_loss": 10.7,
+      "severity": "danger"
+    }
+  ],
+  "quick_links": [
+    {
+      "label": "Chess Training (Notion)",
+      "url": "https://www.notion.so/ophir-ram/Chess-Training-35a6780ba39281dbab8cc138d8354193"
+    },
+    {
+      "label": "Levy's Theory (Notion)",
+      "url": "https://www.notion.so/3616780ba392810d96bdca6c7c9d804d"
+    },
+    {
+      "label": "Chess.com \u2014 OphirRam",
+      "url": "https://www.chess.com/member/ophir-ram"
+    },
+    {
+      "label": "Lichess \u2014 ophir8",
+      "url": "https://lichess.org/@/ophir8"
+    },
+    {
+      "label": "This week's puzzles",
+      "url": "https://lichess.org/training/pin"
+    }
+  ]
+}
