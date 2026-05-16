@@ -598,62 +598,15 @@ function escapeHtml(s) {
   }[c]));
 }
 function lichessImage(fen) {
-  // KEEP https — this is the board image API; not a click target.
   return "https://lichess.org/export/fen.gif?fen=" + encodeURIComponent(fen);
 }
 function lichessAnalysis(fen) {
-  // Deep link: iOS Lichess app intercepts lichess:// scheme.
-  // Falls back to web if app not installed (browser shows "no app" or works in Safari).
-  return "lichess://analysis/" + fen.replace(/ /g, "_");
+  return "https://lichess.org/analysis/" + fen.replace(/ /g, "_");
 }
-// Convert any link target to its native-app deep link if recognized.
-// - Lichess paths → lichess://... (Lichess iOS app registers this scheme — confirmed)
-// - Chess.com paths → chesscom://... (NOTE: iOS Chess.com app deep-link scheme is not officially documented;
-//   we try it AND keep a web fallback wrapper via JS so the user always lands somewhere)
-// Anything else passes through unchanged.
-function toAppLink(url) {
-  if (!url) return url;
-  if (url.startsWith("https://lichess.org/export/")) return url; // image API stays https — not a click target
-  if (url.startsWith("https://lichess.org/")) {
-    return url.replace("https://lichess.org/", "lichess://");
-  }
-  if (url.startsWith("http://lichess.org/")) {
-    return url.replace("http://lichess.org/", "lichess://");
-  }
-  if (url.startsWith("https://www.chess.com/")) {
-    return url.replace("https://www.chess.com/", "chesscom://");
-  }
-  if (url.startsWith("https://chess.com/")) {
-    return url.replace("https://chess.com/", "chesscom://");
-  }
-  return url;
-}
-// Click-time fallback: if the deep link doesn't resolve (app not installed),
-// rewrite back to the web URL after a brief delay. This keeps things working even when the scheme
-// isn't recognized by the OS. Attached at the end of renderAll().
-function attachAppLinkFallbacks(root) {
-  root.querySelectorAll('a[href^="lichess://"], a[href^="chesscom://"]').forEach(a => {
-    const deep = a.getAttribute("href");
-    const web =
-      deep.startsWith("lichess://")  ? "https://lichess.org/" + deep.slice("lichess://".length) :
-      deep.startsWith("chesscom://") ? "https://www.chess.com/" + deep.slice("chesscom://".length) : null;
-    if (!web) return;
-    a.addEventListener("click", e => {
-      // Let the OS try the deep link. If we're still focused on this page after ~1.2s,
-      // the app wasn't installed → fall back to web.
-      const start = Date.now();
-      const fallback = setTimeout(() => {
-        if (!document.hidden && Date.now() - start >= 1100) {
-          window.open(web, "_blank", "noopener");
-        }
-      }, 1200);
-      // Cancel fallback if the tab gets backgrounded (app likely opened)
-      document.addEventListener("visibilitychange", () => {
-        if (document.hidden) clearTimeout(fallback);
-      }, { once: true });
-    });
-  });
-}
+// Identity pass-through (kept for forward compat — earlier attempted lichess:// scheme
+// turned out to be unsupported by Lichess iOS app, so we rely on Universal Links via https).
+function toAppLink(url) { return url; }
+function attachAppLinkFallbacks(root) { /* no-op; Universal Links handle routing */ }
 function fmtDate(iso) {
   if (!iso) return "—";
   return new Date(iso).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
