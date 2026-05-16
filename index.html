@@ -603,10 +603,43 @@ function lichessImage(fen) {
 function lichessAnalysis(fen) {
   return "https://lichess.org/analysis/" + fen.replace(/ /g, "_");
 }
-// Identity pass-through (kept for forward compat — earlier attempted lichess:// scheme
-// turned out to be unsupported by Lichess iOS app, so we rely on Universal Links via https).
-function toAppLink(url) { return url; }
-function attachAppLinkFallbacks(root) { /* no-op; Universal Links handle routing */ }
+// iOS in-app browsers (SFSafariViewController inside PWAs / Telegram webviews)
+// trap link clicks and refuse to open external apps via Universal Links. The
+// `x-safari-https://` scheme is an undocumented-but-widely-used iOS trick that
+// forces the URL out of the in-app browser into real Safari. From real Safari,
+// Universal Links route to the installed Lichess / Chess.com app automatically.
+//
+// On non-iOS (desktop, Android), `x-safari-https://` is unrecognized; the
+// attachAppLinkFallbacks() helper detects the failure and falls back to https.
+function toAppLink(url) {
+  if (!url) return url;
+  if (typeof url !== "string") return url;
+  // Image API stays plain https — it's a fetch target, not a click.
+  if (url.startsWith("https://lichess.org/export/")) return url;
+  if (url.startsWith("https://")) return "x-safari-" + url;
+  if (url.startsWith("http://"))  return "x-safari-" + url;
+  return url;
+}
+// Web fallback if the x-safari- scheme isn't recognized (desktop, Android).
+// After clicking, if the tab is still visible after 1.2s, open the original
+// https URL in a new tab as a backup.
+function attachAppLinkFallbacks(root) {
+  root.querySelectorAll('a[href^="x-safari-"]').forEach(a => {
+    const deep = a.getAttribute("href");
+    const web = deep.replace(/^x-safari-/, "");
+    a.addEventListener("click", () => {
+      const start = Date.now();
+      const fallback = setTimeout(() => {
+        if (!document.hidden && Date.now() - start >= 1100) {
+          window.open(web, "_blank", "noopener");
+        }
+      }, 1200);
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) clearTimeout(fallback);
+      }, { once: true });
+    });
+  });
+}
 function fmtDate(iso) {
   if (!iso) return "—";
   return new Date(iso).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
