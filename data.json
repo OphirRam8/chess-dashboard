@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated_at": "2026-05-16T04:30:51.106174+00:00",
+    "generated_at": "2026-05-17T04:30:50.316027+00:00",
     "generator": "chess_dashboard_data.py",
     "version": "1.0"
   },
@@ -14,12 +14,19 @@
     "progress_pct": 0,
     "program_start": "2026-05-04",
     "program_end": "2026-12-31",
-    "days_elapsed": 11,
-    "days_remaining": 230
+    "days_elapsed": 12,
+    "days_remaining": 229
   },
   "elo_history": [
     {
       "date": "2026-05-15",
+      "chesscom_rapid": 896,
+      "chesscom_blitz": 653,
+      "chesscom_puzzle": 1732,
+      "lichess_puzzle": null
+    },
+    {
+      "date": "2026-05-16",
       "chesscom_rapid": 896,
       "chesscom_blitz": 653,
       "chesscom_puzzle": 1732,
@@ -93,13 +100,13 @@
   ],
   "recent_games": [],
   "lichess_puzzles_today": {
-    "wins": 9,
-    "losses": 5,
+    "wins": 3,
+    "losses": 3,
     "draws": 0,
-    "total": 14,
-    "rating_before": 1286,
-    "rating_after": 1254,
-    "rating_delta": -32,
+    "total": 6,
+    "rating_before": 1254,
+    "rating_after": 1230,
+    "rating_delta": -24,
     "window_hours": 24,
     "contributing_day_entries": 1
   },
