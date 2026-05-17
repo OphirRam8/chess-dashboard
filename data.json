@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated_at": "2026-05-17T04:30:50.316027+00:00",
+    "generated_at": "2026-05-17T15:18:02.843885+00:00",
     "generator": "chess_dashboard_data.py",
     "version": "1.0"
   },
@@ -14,8 +14,8 @@
     "progress_pct": 0,
     "program_start": "2026-05-04",
     "program_end": "2026-12-31",
-    "days_elapsed": 12,
-    "days_remaining": 229
+    "days_elapsed": 13,
+    "days_remaining": 228
   },
   "elo_history": [
     {
@@ -27,6 +27,13 @@
     },
     {
       "date": "2026-05-16",
+      "chesscom_rapid": 896,
+      "chesscom_blitz": 653,
+      "chesscom_puzzle": 1732,
+      "lichess_puzzle": null
+    },
+    {
+      "date": "2026-05-17",
       "chesscom_rapid": 896,
       "chesscom_blitz": 653,
       "chesscom_puzzle": 1732,
@@ -43,73 +50,63 @@
   "cycle_calendar": [
     {
       "week_label": "W1",
-      "dates": "May 4 \u2014 May 10",
+      "dates": "May 10 \u2014 May 16",
       "theme": "Forks",
       "lichess_puzzle_url": "https://lichess.org/training/fork",
       "is_current": false
     },
     {
       "week_label": "W2",
-      "dates": "May 11 \u2014 May 17",
+      "dates": "May 17 \u2014 May 23",
       "theme": "Pins",
       "lichess_puzzle_url": "https://lichess.org/training/pin",
       "is_current": true
     },
     {
       "week_label": "W3",
-      "dates": "May 18 \u2014 May 24",
+      "dates": "May 24 \u2014 May 30",
       "theme": "Skewers",
       "lichess_puzzle_url": "https://lichess.org/training/skewer",
       "is_current": false
     },
     {
       "week_label": "W4",
-      "dates": "May 25 \u2014 May 31",
+      "dates": "May 31 \u2014 Jun 6",
       "theme": "Discovered Attacks",
       "lichess_puzzle_url": "https://lichess.org/training/discoveredAttack",
       "is_current": false
     },
     {
       "week_label": "W5",
-      "dates": "Jun 1 \u2014 Jun 7",
+      "dates": "Jun 7 \u2014 Jun 13",
       "theme": "Back-Rank Mates",
       "lichess_puzzle_url": "https://lichess.org/training/backRankMate",
       "is_current": false
     },
     {
       "week_label": "W6",
-      "dates": "Jun 8 \u2014 Jun 14",
+      "dates": "Jun 14 \u2014 Jun 20",
       "theme": "K+Q & K+R Mates",
       "lichess_puzzle_url": "https://lichess.org/training/mateIn2",
       "is_current": false
     },
     {
       "week_label": "W7",
-      "dates": "Jun 15 \u2014 Jun 21",
+      "dates": "Jun 21 \u2014 Jun 27",
       "theme": "Opposition & K+Pawn",
       "lichess_puzzle_url": "https://lichess.org/training/endgame",
       "is_current": false
     },
     {
       "week_label": "W8",
-      "dates": "Jun 22 \u2014 Jun 28",
+      "dates": "Jun 28 \u2014 Jul 4",
       "theme": "Opening Principles",
       "lichess_puzzle_url": "https://lichess.org/training/opening",
       "is_current": false
     }
   ],
   "recent_games": [],
-  "lichess_puzzles_today": {
-    "wins": 3,
-    "losses": 3,
-    "draws": 0,
-    "total": 6,
-    "rating_before": 1254,
-    "rating_after": 1230,
-    "rating_delta": -24,
-    "window_hours": 24,
-    "contributing_day_entries": 1
-  },
+  "lichess_puzzles_today": null,
   "pattern_gallery": [
     {
       "fen": "q3k3/2N5/8/8/8/8/8/6K1 b - - 0 1",
