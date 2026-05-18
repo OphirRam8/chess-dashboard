@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "generated_at": "2026-05-18T04:30:49.734828+00:00",
+    "generated_at": "2026-05-18T19:34:21.414336+00:00",
     "generator": "chess_dashboard_data.py",
-    "version": "1.0"
+    "version": "2.0"
   },
   "goal": {
     "target_rapid": 1500,
@@ -14,8 +14,8 @@
     "progress_pct": 1,
     "program_start": "2026-05-04",
     "program_end": "2026-12-31",
-    "days_elapsed": 13,
-    "days_remaining": 228
+    "days_elapsed": 14,
+    "days_remaining": 227
   },
   "elo_history": [
     {
@@ -34,6 +34,13 @@
     },
     {
       "date": "2026-05-17",
+      "chesscom_rapid": 944,
+      "chesscom_blitz": 653,
+      "chesscom_puzzle": 1732,
+      "lichess_puzzle": null
+    },
+    {
+      "date": "2026-05-18",
       "chesscom_rapid": 944,
       "chesscom_blitz": 653,
       "chesscom_puzzle": 1732,
@@ -106,17 +113,7 @@
     }
   ],
   "recent_games": [],
-  "lichess_puzzles_today": {
-    "wins": 8,
-    "losses": 5,
-    "draws": 0,
-    "total": 13,
-    "rating_before": 1254,
-    "rating_after": 1226,
-    "rating_delta": -28,
-    "window_hours": 24,
-    "contributing_day_entries": 1
-  },
+  "lichess_puzzles_today": null,
   "pattern_gallery": [
     {
       "fen": "q3k3/2N5/8/8/8/8/8/6K1 b - - 0 1",
@@ -786,5 +783,44 @@
       "label": "This week's puzzles",
       "url": "https://lichess.org/training/pin"
     }
-  ]
+  ],
+  "today_concept": {
+    "term": "Pin",
+    "one_liner": "Tactical motif where a piece can't move because doing so would expose a more valuable piece behind it. Absolute pin (against the king) is illegal to break; relative pin is just costly.",
+    "manual_section": "knowledge/chess/tactics/pin.md",
+    "atom_slug": "pin",
+    "folder": "tactics"
+  },
+  "saba_quote": "Saba played for the love of it. Carry that.",
+  "master_skills": {
+    "framework": {
+      "recognition": "See the geometry \u2014 patterns, threats, motifs",
+      "utilization": "Apply known patterns \u2014 pile attackers, remove defenders",
+      "creation": "Originate moves, calculate novel ideas, annotate own games"
+    },
+    "creation_unlocks_at": 1200,
+    "creation_active": false,
+    "week_data": {
+      "week_skill_counts": {},
+      "week_pattern_counts": {},
+      "month_pattern_counts": {},
+      "total_patterns_logged": 0
+    }
+  },
+  "srs": {
+    "total_concepts": 63,
+    "status_counts": {
+      "New": 63,
+      "Learning": 0,
+      "Reviewing": 0,
+      "Mastered": 0
+    },
+    "due_today": [],
+    "progress_pct": 0
+  },
+  "weekly_synthesis": {
+    "title": "Week 2 Synthesis \u2014 Pins \u2014 2026-05-12 \u2192 2026-05-18",
+    "url": "https://www.notion.so/Week-2-Synthesis-Pins-2026-05-12-2026-05-18-3646780ba39281548aa0d89e49f5f326",
+    "last_edited": "2026-05-18T18:50:00.000Z"
+  }
 }

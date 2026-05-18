@@ -1,939 +1,611 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>♟ Chess Dashboard — Ophir's Path to 1500</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#3a2419" />
+<title>♟ Chess — Ophir</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♟</text></svg>" />
 <style>
-/* ============== CHESS-VIBES PALETTE ============== */
 :root {
-  --board-light: #f0d9b5;       /* lichess light squares */
-  --board-dark:  #b58863;        /* lichess dark squares */
-  --cream:       #faf6ee;        /* page background */
-  --cream-card:  #ffffff;        /* card background */
-  --brown-deep:  #4a3526;        /* primary text */
-  --brown-mid:   #7a5a3e;        /* secondary text */
-  --brown-soft:  #d4b896;        /* dividers, subtle */
-  --gold:        #c9a14b;        /* highlights, Levy's-pick badges */
-  --gold-soft:   #f0e0bb;        /* gold backgrounds */
-  --green-deep:  #4a6b3a;        /* progress, current */
-  --green-soft:  #d9e6c9;        /* green backgrounds */
-  --red-deep:    #a04545;        /* danger zones */
-  --red-soft:    #f0d4d4;        /* red backgrounds */
-  --shadow-sm:   0 1px 3px rgba(74,53,38,0.08);
-  --shadow-md:   0 4px 12px rgba(74,53,38,0.12);
-  --radius:      12px;
-  --radius-sm:   8px;
+  --cream:#f5ecd9;
+  --cream-deep:#ebdcb8;
+  --brown:#3a2419;
+  --brown-soft:#5b3d2d;
+  --brown-muted:#8a6b54;
+  --accent:#6a8a4a;
+  --accent-deep:#4a6a3a;
+  --warm:#c97a3a;
+  --danger:#b94a3a;
+  --gold:#c9a04a;
+  --paper:#fffaee;
+  --shadow:0 2px 8px rgba(58,36,25,0.08);
+  --shadow-md:0 4px 14px rgba(58,36,25,0.12);
 }
+* { box-sizing:border-box; margin:0; padding:0; }
+html, body {
+  background:var(--cream);
+  color:var(--brown);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size:16px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+body { max-width:760px; margin:0 auto; padding:0 16px 80px; }
+a { color:var(--accent-deep); text-decoration:none; }
+a:active { opacity:0.7; }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+header { padding:18px 0 12px; border-bottom:1px solid rgba(58,36,25,0.10); margin-bottom:18px; }
+.headline { display:flex; align-items:center; gap:10px; }
+.logo { font-size:32px; }
+.headline h1 { font-family:Georgia, "Times New Roman", serif; font-size:22px; font-weight:700; letter-spacing:-0.01em; }
+.subhead { font-size:12px; color:var(--brown-muted); margin-top:2px; letter-spacing:0.05em; text-transform:uppercase; }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
-  background: var(--cream);
-  color: var(--brown-deep);
-  line-height: 1.5;
-  padding: 0;
-  /* Chess-board-pattern subtle background */
-  background-image:
-    linear-gradient(45deg, rgba(181,136,99,0.04) 25%, transparent 25%),
-    linear-gradient(-45deg, rgba(181,136,99,0.04) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, rgba(181,136,99,0.04) 75%),
-    linear-gradient(-45deg, transparent 75%, rgba(181,136,99,0.04) 75%);
-  background-size: 60px 60px;
-  background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
-  min-height: 100vh;
-}
-
-.app {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 16px 14px 80px;
-}
-
-/* ============== HEADER ============== */
-.app-header {
-  text-align: center;
-  padding: 18px 8px 12px;
-  margin-bottom: 24px;
-}
-.app-title {
-  font-size: 28px;
-  font-weight: 600;
-  letter-spacing: -0.5px;
-  color: var(--brown-deep);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-.app-title .pieces {
-  font-size: 24px;
-  letter-spacing: 4px;
-  color: var(--brown-mid);
-}
-.app-subtitle {
-  font-size: 13px;
-  color: var(--brown-mid);
-  margin-top: 6px;
-}
-.last-synced {
-  font-size: 11px;
-  color: var(--brown-mid);
-  opacity: 0.7;
-  margin-top: 4px;
-}
-
-/* ============== SECTION ============== */
-.section {
-  margin-bottom: 28px;
-}
-.section-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  padding-left: 4px;
-}
-.section-icon {
-  font-size: 18px;
-  color: var(--brown-mid);
-}
-.section-title {
-  font-size: 14px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  color: var(--brown-mid);
-}
-
-/* ============== CARD ============== */
 .card {
-  background: var(--cream-card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  padding: 18px;
-  border: 1px solid rgba(122, 90, 62, 0.08);
+  background:var(--paper); border:1px solid rgba(58,36,25,0.08);
+  border-radius:14px; padding:18px; margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+.card-title {
+  font-size:11px; font-weight:700; color:var(--brown-muted);
+  text-transform:uppercase; letter-spacing:0.10em; margin-bottom:10px;
 }
 
-/* ============== GOAL BANNER ============== */
-.goal-banner {
-  background: linear-gradient(135deg, var(--green-soft) 0%, var(--gold-soft) 100%);
-  padding: 22px;
-  border-radius: var(--radius);
-  position: relative;
-  overflow: hidden;
+.hero {
+  background:linear-gradient(135deg, var(--brown) 0%, var(--brown-soft) 100%);
+  color:var(--cream); border:none; border-radius:18px;
+  padding:22px 20px 24px; margin-bottom:16px; box-shadow:var(--shadow-md);
 }
-.goal-banner::before {
-  content: "♔";
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  font-size: 130px;
-  opacity: 0.06;
-  color: var(--brown-deep);
-}
-.goal-rating-line {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
-.goal-current {
-  font-size: 38px;
-  font-weight: 700;
-  color: var(--brown-deep);
-  letter-spacing: -1px;
-}
-.goal-arrow {
-  color: var(--brown-mid);
-  font-size: 22px;
-}
-.goal-target {
-  font-size: 28px;
-  color: var(--brown-mid);
-  font-weight: 500;
-}
-.goal-tag {
-  background: var(--gold);
-  color: white;
-  padding: 3px 9px;
-  border-radius: 12px;
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.goal-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 12px;
-  margin-top: 14px;
-}
-.goal-stat {
-  text-align: center;
-}
-.goal-stat-value {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--brown-deep);
-}
-.goal-stat-label {
-  font-size: 11px;
-  color: var(--brown-mid);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-top: 2px;
-}
-.progress-bar {
-  height: 8px;
-  background: rgba(255,255,255,0.6);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-top: 16px;
-}
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--green-deep) 0%, var(--gold) 100%);
-  transition: width 0.6s ease-out;
-}
+.hero-elo-row { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:14px; }
+.hero-elo { font-family:Georgia, serif; font-size:48px; font-weight:700; line-height:1; letter-spacing:-0.02em; }
+.hero-elo-label { font-size:10px; color:rgba(245,236,217,0.65); text-transform:uppercase; letter-spacing:0.10em; margin-bottom:4px; }
+.hero-goal { text-align:right; font-size:12px; color:rgba(245,236,217,0.70); }
+.hero-goal-val { font-size:18px; color:var(--gold); font-weight:600; }
+.hero-progress { height:6px; background:rgba(245,236,217,0.15); border-radius:3px; overflow:hidden; margin-bottom:14px; }
+.hero-progress-fill { height:100%; background:linear-gradient(90deg, var(--gold), var(--warm)); border-radius:3px; transition:width 0.4s ease; }
+.hero-meta { display:flex; justify-content:space-between; font-size:11px; color:rgba(245,236,217,0.65); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:18px; }
+.hero-divider { height:1px; background:rgba(245,236,217,0.12); margin:14px -20px 18px; }
+.hero-theme-label { font-size:11px; color:rgba(245,236,217,0.55); text-transform:uppercase; letter-spacing:0.10em; }
+.hero-theme { font-family:Georgia, serif; font-size:24px; font-weight:600; margin-top:2px; color:#fffaee; }
+.hero-theme-meta { font-size:12px; color:rgba(245,236,217,0.55); margin-top:4px; }
+.hero-concept { margin-top:14px; padding:12px 14px; background:rgba(245,236,217,0.06); border-left:3px solid var(--gold); border-radius:8px; }
+.hero-concept-label { font-size:10px; color:rgba(245,236,217,0.50); text-transform:uppercase; letter-spacing:0.10em; margin-bottom:4px; }
+.hero-concept-term { font-size:14px; font-weight:600; color:var(--gold); margin-bottom:3px; }
+.hero-concept-line { font-size:13px; color:rgba(245,236,217,0.80); line-height:1.45; }
+.saba { margin-top:14px; font-size:12px; font-style:italic; color:rgba(245,236,217,0.55); text-align:center; padding-top:12px; border-top:1px dashed rgba(245,236,217,0.10); }
+.saba::before { content:"\201C "; opacity:0.5; }
+.saba::after { content:" \201D"; opacity:0.5; }
 
-/* ============== ELO CHART ============== */
-.elo-chart {
-  width: 100%;
-  height: 200px;
-}
-.chart-empty {
-  text-align: center;
-  color: var(--brown-mid);
-  font-style: italic;
-  padding: 60px 20px;
-  font-size: 14px;
-}
+.masterskills-section { margin-bottom:16px; }
+.masterskills-title { font-family:Georgia, serif; font-size:18px; font-weight:600; margin-bottom:4px; padding-left:4px; }
+.masterskills-tagline { font-size:11px; color:var(--brown-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px; padding-left:4px; }
+.skill-cards { display:grid; grid-template-columns:1fr; gap:10px; }
+@media (min-width:640px) { .skill-cards { grid-template-columns:repeat(3, 1fr); } }
+.skill-card { background:var(--paper); border:1px solid rgba(58,36,25,0.08); border-left:4px solid var(--accent); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow); }
+.skill-card.recognition { border-left-color:#4a7ab3; }
+.skill-card.utilization { border-left-color:var(--warm); }
+.skill-card.creation { border-left-color:#8a5fb3; }
+.skill-card.creation.locked { opacity:0.55; }
+.skill-icon { font-size:22px; margin-bottom:4px; }
+.skill-name { font-size:14px; font-weight:700; color:var(--brown); margin-bottom:2px; }
+.skill-tag { font-size:10px; color:var(--brown-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; }
+.skill-desc { font-size:12px; color:var(--brown-soft); line-height:1.45; margin-bottom:10px; }
+.skill-stat { display:flex; align-items:baseline; gap:6px; }
+.skill-stat-num { font-family:Georgia, serif; font-size:22px; font-weight:600; color:var(--brown); }
+.skill-stat-label { font-size:11px; color:var(--brown-muted); }
+.skill-card.creation .skill-stat-label.locked-msg { color:var(--warm); font-style:italic; }
 
-/* ============== THIS WEEK ============== */
-.this-week-card {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-.theme-name {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--brown-deep);
-  margin-bottom: 4px;
-}
-.theme-meta {
-  font-size: 13px;
-  color: var(--brown-mid);
-  margin-bottom: 12px;
-}
-.theme-link {
-  display: inline-block;
-  padding: 8px 14px;
-  background: var(--green-deep);
-  color: white;
-  text-decoration: none;
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  font-weight: 500;
-  margin-top: 8px;
-  transition: background 0.2s;
-}
-.theme-link:hover { background: var(--brown-deep); }
+.game-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid rgba(58,36,25,0.06); font-size:13px; }
+.game-row:last-child { border-bottom:none; }
+.game-result { font-size:18px; flex:0 0 24px; text-align:center; }
+.game-result.win { color:var(--accent-deep); }
+.game-result.loss { color:var(--danger); }
+.game-result.draw { color:var(--brown-muted); }
+.game-meta { flex:1; min-width:0; }
+.game-opponent { font-weight:600; }
+.game-info { font-size:11px; color:var(--brown-muted); margin-top:2px; }
+.game-chips { display:flex; gap:4px; flex-wrap:wrap; margin-top:4px; }
+.chip { font-size:10px; padding:2px 7px; border-radius:10px; text-transform:uppercase; letter-spacing:0.05em; }
+.chip.pattern { background:#f0e2c9; color:var(--brown-soft); }
+.no-games { font-size:13px; color:var(--brown-muted); padding:8px 0; text-align:center; font-style:italic; }
 
-/* ============== FEATURED PATTERN ============== */
-.featured-board-wrap {
-  text-align: center;
-}
-.featured-board {
-  width: 100%;
-  max-width: 360px;
-  height: auto;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-md);
-  margin: 8px auto;
-}
-.featured-label {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--brown-deep);
-  margin-top: 12px;
-}
-.featured-explanation {
-  font-size: 13px;
-  color: var(--brown-mid);
-  margin-top: 8px;
-  max-width: 480px;
-  margin-left: auto;
-  margin-right: auto;
-}
+.srs-row { display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-bottom:12px; }
+.srs-cell { text-align:center; padding:8px 4px; background:var(--cream-deep); border-radius:8px; }
+.srs-cell-num { font-family:Georgia, serif; font-size:22px; font-weight:600; color:var(--brown); }
+.srs-cell-label { font-size:10px; color:var(--brown-muted); text-transform:uppercase; letter-spacing:0.05em; margin-top:2px; }
+.srs-cell.new { background:#f0e8d6; }
+.srs-cell.learning { background:#f5dfc7; }
+.srs-cell.reviewing { background:#dde7f1; }
+.srs-cell.mastered { background:#dbe9d2; }
+.srs-progress { height:8px; background:var(--cream-deep); border-radius:4px; overflow:hidden; margin-bottom:10px; }
+.srs-progress-fill { height:100%; background:linear-gradient(90deg, var(--accent), var(--accent-deep)); }
+.srs-progress-label { font-size:11px; color:var(--brown-muted); text-align:right; margin-bottom:14px; }
+.srs-due-title { font-size:11px; color:var(--brown-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
+.srs-due-list { display:flex; flex-direction:column; gap:6px; }
+.srs-due-item { font-size:13px; padding:6px 10px; background:var(--cream); border-radius:6px; display:flex; justify-content:space-between; align-items:center; }
+.srs-due-folder { font-size:10px; color:var(--brown-muted); text-transform:uppercase; letter-spacing:0.05em; }
+.no-due { font-size:13px; color:var(--brown-muted); padding:8px 0; text-align:center; font-style:italic; }
 
-/* ============== CYCLE CALENDAR ============== */
-.cycle-strip {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 6px;
-  margin-top: 4px;
-}
-.cycle-week {
-  text-align: center;
-  padding: 10px 4px;
-  border-radius: var(--radius-sm);
-  background: white;
-  border: 1px solid var(--brown-soft);
-  transition: all 0.2s;
-  text-decoration: none;
-  color: var(--brown-mid);
-}
-.cycle-week.is-current {
-  background: var(--green-soft);
-  border-color: var(--green-deep);
-  color: var(--brown-deep);
-  font-weight: 600;
-  box-shadow: var(--shadow-sm);
-}
-.cycle-week-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.cycle-week-theme {
-  font-size: 10px;
-  margin-top: 4px;
-  line-height: 1.2;
-}
+.bar-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.bar-label { font-size:12px; color:var(--brown); flex:0 0 130px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bar-track { flex:1; height:10px; background:var(--cream-deep); border-radius:5px; overflow:hidden; }
+.bar-fill { height:100%; background:linear-gradient(90deg, var(--warm), var(--danger)); transition:width 0.4s ease; }
+.bar-count { font-size:12px; color:var(--brown-muted); flex:0 0 30px; text-align:right; }
 
-/* ============== RECENT GAMES ============== */
-.games-row {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-@media (min-width: 600px) {
-  .games-row { grid-template-columns: 1fr 1fr 1fr; }
-}
-.game-card {
-  background: white;
-  border-radius: var(--radius-sm);
-  padding: 12px;
-  border: 1px solid rgba(122, 90, 62, 0.08);
-  text-align: center;
-}
-.game-result {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.game-result.win  { background: var(--green-soft); color: var(--green-deep); }
-.game-result.loss { background: var(--red-soft);   color: var(--red-deep); }
-.game-result.draw { background: var(--gold-soft);  color: var(--gold); }
-.game-meta {
-  font-size: 12px;
-  color: var(--brown-mid);
-  margin: 6px 0;
-}
-.game-board {
-  width: 100%;
-  max-width: 200px;
-  border-radius: 4px;
-  margin: 8px 0;
-}
-.game-worst {
-  font-size: 11px;
-  color: var(--brown-mid);
-  font-family: 'SF Mono', Menlo, monospace;
-  margin-top: 4px;
-}
+.synth-card { background:linear-gradient(135deg, var(--accent), var(--accent-deep)); color:var(--paper); border:none; border-radius:14px; padding:16px 18px; margin-bottom:14px; box-shadow:var(--shadow-md); }
+.synth-card-title { font-size:11px; text-transform:uppercase; letter-spacing:0.10em; opacity:0.8; margin-bottom:6px; }
+.synth-title { font-family:Georgia, serif; font-size:16px; font-weight:600; margin-bottom:8px; line-height:1.3; }
+.synth-cta { display:inline-block; font-size:13px; background:rgba(255,255,255,0.16); padding:8px 14px; border-radius:8px; color:var(--paper); margin-top:4px; }
 
-/* ============== WEAKNESS ZONES ============== */
-.zones {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
-}
-.zone {
-  padding: 14px;
-  border-radius: var(--radius-sm);
-  text-align: center;
-  background: white;
-  border: 2px solid transparent;
-}
-.zone.warning { background: var(--gold-soft);  border-color: var(--gold); }
-.zone.danger  { background: var(--red-soft);   border-color: var(--red-deep); }
-.zone-range {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--brown-mid);
-}
-.zone-stat {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--brown-deep);
-  margin: 4px 0;
-}
-.zone-detail {
-  font-size: 11px;
-  color: var(--brown-mid);
-}
+.theme-carousel-wrap { margin-bottom:18px; }
+.theme-name { font-family:Georgia, serif; font-size:16px; font-weight:600; color:var(--brown); margin-bottom:8px; padding:0 4px; display:flex; justify-content:space-between; align-items:baseline; }
+.theme-name-current { color:var(--accent-deep); }
+.theme-name-meta { font-size:11px; color:var(--brown-muted); text-transform:uppercase; letter-spacing:0.05em; font-family:-apple-system, sans-serif; font-weight:normal; }
+.carousel { display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:12px; -webkit-overflow-scrolling:touch; scrollbar-width:thin; }
+.carousel::-webkit-scrollbar { height:4px; }
+.carousel::-webkit-scrollbar-track { background:transparent; }
+.carousel::-webkit-scrollbar-thumb { background:var(--cream-deep); border-radius:2px; }
+.pattern-card { flex:0 0 240px; scroll-snap-align:start; background:var(--paper); border:1px solid rgba(58,36,25,0.08); border-radius:12px; overflow:hidden; box-shadow:var(--shadow); }
+.pattern-card img { width:100%; height:240px; display:block; background:var(--cream-deep); }
+.pattern-card-body { padding:10px 12px; }
+.pattern-label { font-size:13px; font-weight:600; color:var(--brown); margin-bottom:4px; line-height:1.3; }
+.pattern-side { font-size:11px; color:var(--brown-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px; }
+.pattern-spoiler { background:var(--cream-deep); padding:8px 10px; border-radius:8px; font-size:12px; cursor:pointer; user-select:none; color:var(--brown-soft); }
+.pattern-spoiler.revealed { background:transparent; cursor:default; padding:6px 0; color:var(--brown); }
+.pattern-spoiler-hint { font-style:italic; opacity:0.7; font-size:11px; }
+.pattern-lesson { margin-top:6px; font-size:11px; color:var(--accent-deep); font-style:italic; }
+.pattern-card-foot { padding:6px 12px 10px; font-size:11px; }
+.pattern-card-foot a { color:var(--brown-muted); }
 
-/* ============== PATTERN GALLERY & OPENINGS ============== */
-.gallery {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
-@media (min-width: 600px) {
-  .gallery { grid-template-columns: 1fr 1fr; }
-}
-@media (min-width: 900px) {
-  .gallery { grid-template-columns: 1fr 1fr 1fr; }
-}
-.gallery-item {
-  background: white;
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(122, 90, 62, 0.08);
-  display: flex;
-  flex-direction: column;
-}
-.gallery-board {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-bottom: 1px solid rgba(122, 90, 62, 0.08);
-}
-.gallery-content {
-  padding: 12px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-.gallery-badges {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 6px;
-  flex-wrap: wrap;
-}
-.badge {
-  font-size: 10px;
-  padding: 2px 7px;
-  border-radius: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-.badge.theme    { background: var(--green-soft); color: var(--green-deep); }
-.badge.color-w  { background: #f5f5f5; color: #333; border: 1px solid #ddd; }
-.badge.color-b  { background: #2a2a2a; color: white; }
-.badge.levy     { background: var(--gold); color: white; }
-.badge.kind     { background: var(--brown-soft); color: var(--brown-deep); }
-.gallery-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--brown-deep);
-  margin-bottom: 6px;
-  line-height: 1.3;
-}
-.gallery-summary {
-  font-size: 12px;
-  color: var(--brown-mid);
-  flex: 1;
-  margin-bottom: 8px;
-}
-.gallery-link {
-  font-size: 11px;
-  color: var(--green-deep);
-  text-decoration: none;
-  font-weight: 500;
-}
-.gallery-link:hover { text-decoration: underline; }
+.opening-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid rgba(58,36,25,0.06); font-size:13px; }
+.opening-row:last-child { border-bottom:none; }
+.opening-color { width:14px; height:14px; border-radius:50%; border:1px solid rgba(58,36,25,0.18); flex:0 0 auto; }
+.opening-color.white { background:#fffaee; }
+.opening-color.black { background:#2a1a12; }
+.opening-color.both { background:linear-gradient(135deg, #fffaee 50%, #2a1a12 50%); }
+.opening-name { flex:1; font-weight:600; }
+.opening-meta { font-size:11px; color:var(--brown-muted); font-family:Menlo, Monaco, monospace; }
 
-/* Section filters */
-.gallery-filters {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-}
-.filter-btn {
-  font-size: 12px;
-  padding: 6px 12px;
-  background: white;
-  border: 1px solid var(--brown-soft);
-  border-radius: 14px;
-  cursor: pointer;
-  color: var(--brown-mid);
-  transition: all 0.15s;
-  font-family: inherit;
-}
-.filter-btn:hover { border-color: var(--brown-mid); }
-.filter-btn.active {
-  background: var(--brown-deep);
-  color: white;
-  border-color: var(--brown-deep);
-}
+.cycle-row { display:grid; grid-template-columns:32px 1fr 90px; gap:8px; align-items:center; padding:8px 0; font-size:13px; border-bottom:1px solid rgba(58,36,25,0.06); }
+.cycle-row:last-child { border-bottom:none; }
+.cycle-row.current { background:rgba(106,138,74,0.10); border-radius:8px; padding:8px; margin:2px -8px; border-bottom-color:transparent; }
+.cycle-week { font-weight:600; color:var(--brown-muted); }
+.cycle-row.current .cycle-week { color:var(--accent-deep); }
+.cycle-theme { color:var(--brown); }
+.cycle-row.current .cycle-theme { font-weight:600; }
+.cycle-dates { font-size:11px; color:var(--brown-muted); text-align:right; font-family:Menlo, Monaco, monospace; }
 
-/* ============== QUICK LINKS ============== */
-.quick-links {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-}
-@media (min-width: 600px) {
-  .quick-links { grid-template-columns: 1fr 1fr; }
-}
-.quick-link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-  background: white;
-  border-radius: var(--radius-sm);
-  text-decoration: none;
-  color: var(--brown-deep);
-  border: 1px solid rgba(122, 90, 62, 0.1);
-  transition: all 0.15s;
-  font-size: 13px;
-}
-.quick-link:hover {
-  background: var(--gold-soft);
-  border-color: var(--gold);
-}
-.quick-link::before {
-  content: "→";
-  color: var(--brown-mid);
-  font-size: 16px;
-}
+.zone-row { display:grid; grid-template-columns:90px 1fr 70px; gap:8px; align-items:center; padding:6px 0; font-size:13px; }
+.zone-label { font-weight:600; }
+.zone-bar { height:8px; background:var(--cream-deep); border-radius:4px; overflow:hidden; }
+.zone-fill { height:100%; }
+.zone-fill.warning { background:var(--warm); }
+.zone-fill.danger { background:var(--danger); }
+.zone-val { font-size:11px; color:var(--brown-muted); text-align:right; }
 
-/* ============== FOOTER ============== */
-.app-footer {
-  text-align: center;
-  padding-top: 30px;
-  font-size: 11px;
-  color: var(--brown-mid);
-  opacity: 0.6;
-}
-.app-footer .chess-pieces {
-  font-size: 14px;
-  letter-spacing: 6px;
-  margin-bottom: 6px;
-  color: var(--brown-mid);
-}
+.links { display:flex; flex-direction:column; gap:6px; }
+.links a { display:block; padding:10px 12px; background:var(--cream-deep); border-radius:8px; font-size:13px; color:var(--brown-soft); }
 
-/* ============== UTILITIES ============== */
-.loading {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--brown-mid);
-}
-.error {
-  background: var(--red-soft);
-  color: var(--red-deep);
-  padding: 14px;
-  border-radius: var(--radius-sm);
-  text-align: center;
-}
+footer { margin-top:24px; font-size:11px; color:var(--brown-muted); text-align:center; line-height:1.5; }
 </style>
 </head>
 <body>
-<div class="app">
 
-  <!-- ============== HEADER ============== -->
-  <div class="app-header">
-    <div class="app-title">
-      <span class="pieces">♜♞♝</span>
-      Chess Dashboard
-      <span class="pieces">♛♚♟</span>
+<header>
+  <div class="headline">
+    <span class="logo">♟</span>
+    <div>
+      <h1>Chess Dashboard</h1>
+      <div class="subhead">Ophir → Rapid 1500 by EOY 2026</div>
     </div>
-    <div class="app-subtitle">Ophir's path from rapid 937 → <strong>1500 by EOY 2026</strong></div>
-    <div class="last-synced" id="lastSynced">…</div>
   </div>
+</header>
 
-  <div id="content">
-    <div class="loading">Loading data…</div>
+<div class="hero" id="hero">
+  <div class="hero-elo-row">
+    <div>
+      <div class="hero-elo-label">Rapid</div>
+      <div class="hero-elo" id="hero-rapid">—</div>
+    </div>
+    <div class="hero-goal">
+      <div class="hero-elo-label">Goal</div>
+      <div class="hero-goal-val">1500</div>
+    </div>
   </div>
-
-  <!-- ============== FOOTER ============== -->
-  <div class="app-footer">
-    <div class="chess-pieces">♔ ♕ ♖ ♗ ♘ ♙</div>
-    <div>Synced daily from Hermes + Chess.com + Lichess. Built with Levy Rozman's <em>How to Win at Chess</em>.</div>
+  <div class="hero-progress">
+    <div class="hero-progress-fill" id="hero-progress" style="width:0%"></div>
   </div>
-
+  <div class="hero-meta">
+    <span id="hero-progress-pct">0%</span>
+    <span id="hero-days">— days left</span>
+  </div>
+  <div class="hero-divider"></div>
+  <div class="hero-theme-label">This week's theme</div>
+  <div class="hero-theme" id="hero-theme">—</div>
+  <div class="hero-theme-meta" id="hero-theme-meta">—</div>
+  <div class="hero-concept" id="hero-concept">
+    <div class="hero-concept-label">Today's concept (SRS)</div>
+    <div class="hero-concept-term" id="hero-concept-term">—</div>
+    <div class="hero-concept-line" id="hero-concept-line">—</div>
+  </div>
+  <div class="saba" id="saba">—</div>
 </div>
 
+<div class="masterskills-section">
+  <div class="masterskills-title">The Three Master Skills</div>
+  <div class="masterskills-tagline">Tony Robbins → Recognition → Utilization → Creation</div>
+  <div class="skill-cards" id="skill-cards"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">♟ Recent games</div>
+  <div id="games-list"><div class="no-games">Loading…</div></div>
+</div>
+
+<div class="card">
+  <div class="card-title">📚 Concept mastery (SRS)</div>
+  <div class="srs-row" id="srs-row"></div>
+  <div class="srs-progress">
+    <div class="srs-progress-fill" id="srs-progress-fill" style="width:0%"></div>
+  </div>
+  <div class="srs-progress-label" id="srs-progress-label">— of 63 concepts beyond Learning</div>
+  <div class="srs-due-title">⏰ Due for review today</div>
+  <div class="srs-due-list" id="srs-due-list"><div class="no-due">All caught up.</div></div>
+</div>
+
+<div class="card">
+  <div class="card-title">📊 Mistake patterns — last 30 days</div>
+  <div id="pattern-breakdown"><div class="no-due">No patterns logged yet — play games and the auto-tagger will fill this.</div></div>
+</div>
+
+<div id="synth-wrap"></div>
+
+<div class="card" style="background:transparent; box-shadow:none; border:none; padding:0;">
+  <div class="card-title" style="padding:0 4px;">🧩 Pattern gallery — 8 themes × 7 positions</div>
+  <div id="gallery-themes" style="margin-top:8px;"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">♟ Openings library</div>
+  <div id="openings-list"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">⚠️ Weakness zones (Stockfish, 8 games)</div>
+  <div id="zones-list"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">📅 Cycle 1 — 8 weeks (Sun–Sat)</div>
+  <div id="cycle-list"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">🔗 Quick links</div>
+  <div class="links" id="links-list"></div>
+</div>
+
+<footer>
+  ♟ <span id="footer-generated">—</span><br>
+  Hermes coaches · this dashboard mirrors
+</footer>
+
 <script>
-const DATA_URL = "data.json?v=" + Date.now();   // bypass cache on each load
+const DATA_URL = './data.json?ts=' + Date.now();
 
-const ICON = {
-  goal: "🎯",
-  trend: "📈",
-  week: "🚥",
-  pattern: "🎴",
-  cycle: "🗓",
-  games: "♟",
-  weakness: "🌡",
-  gallery: "🧩",
-  openings: "📚",
-  links: "🔗",
-};
+function $(id) { return document.getElementById(id); }
+function el(tag, attrs, ...children) {
+  attrs = attrs || {};
+  const e = document.createElement(tag);
+  for (const k in attrs) {
+    if (k === 'class') e.className = attrs[k];
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), attrs[k]);
+    else e.setAttribute(k, attrs[k]);
+  }
+  children.flat().forEach(c => {
+    if (c == null) return;
+    e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+  });
+  return e;
+}
 
-function el(html) {
-  const t = document.createElement("template");
-  t.innerHTML = html.trim();
-  return t.content.firstChild;
+function renderHero(d) {
+  const g = d.goal || {};
+  $('hero-rapid').textContent = g.current_rapid != null ? g.current_rapid : '—';
+  $('hero-progress').style.width = (g.progress_pct || 0) + '%';
+  $('hero-progress-pct').textContent = (g.progress_pct || 0) + '% to 1500';
+  $('hero-days').textContent = (g.days_remaining != null ? g.days_remaining : '—') + ' days left';
+  const tw = d.this_week || {};
+  $('hero-theme').textContent = tw.theme || '—';
+  $('hero-theme-meta').textContent = 'Cycle ' + (tw.cycle || '?') + ' · Week ' + (tw.cycle_week || '?') + ' of 8';
+  const tc = d.today_concept || {};
+  if (tc.term) {
+    $('hero-concept-term').textContent = tc.term;
+    $('hero-concept-line').textContent = tc.one_liner || '';
+  } else {
+    $('hero-concept').style.display = 'none';
+  }
+  $('saba').textContent = d.saba_quote || '';
 }
-function escapeHtml(s) {
-  return String(s ?? "").replace(/[&<>"']/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  }[c]));
-}
-function lichessImage(fen) {
-  return "https://lichess.org/export/fen.gif?fen=" + encodeURIComponent(fen);
-}
-function lichessAnalysis(fen) {
-  return "https://lichess.org/analysis/" + fen.replace(/ /g, "_");
-}
-// iOS in-app browsers (SFSafariViewController inside PWAs / Telegram webviews)
-// trap link clicks and refuse to open external apps via Universal Links. The
-// `x-safari-https://` scheme is an undocumented-but-widely-used iOS trick that
-// forces the URL out of the in-app browser into real Safari. From real Safari,
-// Universal Links route to the installed Lichess / Chess.com app automatically.
-//
-// On non-iOS (desktop, Android), `x-safari-https://` is unrecognized; the
-// attachAppLinkFallbacks() helper detects the failure and falls back to https.
-function toAppLink(url) {
-  if (!url) return url;
-  if (typeof url !== "string") return url;
-  // Image API stays plain https — it's a fetch target, not a click.
-  if (url.startsWith("https://lichess.org/export/")) return url;
-  if (url.startsWith("https://")) return "x-safari-" + url;
-  if (url.startsWith("http://"))  return "x-safari-" + url;
-  return url;
-}
-// Web fallback if the x-safari- scheme isn't recognized (desktop, Android).
-// After clicking, if the tab is still visible after 1.2s, open the original
-// https URL in a new tab as a backup.
-function attachAppLinkFallbacks(root) {
-  root.querySelectorAll('a[href^="x-safari-"]').forEach(a => {
-    const deep = a.getAttribute("href");
-    const web = deep.replace(/^x-safari-/, "");
-    a.addEventListener("click", () => {
-      const start = Date.now();
-      const fallback = setTimeout(() => {
-        if (!document.hidden && Date.now() - start >= 1100) {
-          window.open(web, "_blank", "noopener");
-        }
-      }, 1200);
-      document.addEventListener("visibilitychange", () => {
-        if (document.hidden) clearTimeout(fallback);
-      }, { once: true });
-    });
+
+function renderMasterSkills(d) {
+  const ms = d.master_skills || {};
+  const fw = ms.framework || {};
+  const week = (ms.week_data || {}).week_skill_counts || {};
+  const cards = $('skill-cards');
+  cards.innerHTML = '';
+  const data = [
+    { cls:'recognition', icon:'🔍', name:'Recognition', tag:'See the pattern',
+      desc:fw.recognition || '', count:week['Recognition gap'] || 0, countLabel:'gaps this week' },
+    { cls:'utilization', icon:'🎯', name:'Utilization', tag:'Apply the pattern',
+      desc:fw.utilization || '', count:week['Utilization gap'] || 0, countLabel:'gaps this week' },
+    { cls:'creation' + (ms.creation_active ? '' : ' locked'), icon:'✨', name:'Creation',
+      tag:ms.creation_active ? 'Originate moves' : 'Locked',
+      desc:fw.creation || '',
+      count: ms.creation_active ? (week['Creation gap'] || 0) : null,
+      countLabel: ms.creation_active ? 'gaps this week' : ('Unlocks at Rapid ' + (ms.creation_unlocks_at || 1200)) }
+  ];
+  data.forEach(s => {
+    cards.appendChild(
+      el('div', {class:'skill-card ' + s.cls},
+        el('div', {class:'skill-icon'}, s.icon),
+        el('div', {class:'skill-name'}, s.name),
+        el('div', {class:'skill-tag'}, s.tag),
+        el('div', {class:'skill-desc'}, s.desc),
+        el('div', {class:'skill-stat'},
+          s.count !== null ? el('span', {class:'skill-stat-num'}, String(s.count)) : null,
+          el('span', {class:'skill-stat-label' + (s.count===null ? ' locked-msg' : '')}, s.countLabel)
+        )
+      )
+    );
   });
 }
-function fmtDate(iso) {
-  if (!iso) return "—";
-  return new Date(iso).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
-}
-function section(iconKey, title, body) {
-  return `
-    <div class="section">
-      <div class="section-head">
-        <span class="section-icon">${ICON[iconKey] || ""}</span>
-        <span class="section-title">${escapeHtml(title)}</span>
-      </div>
-      ${body}
-    </div>`;
-}
 
-function renderGoal(goal) {
-  const cur = goal.current_rapid ?? "—";
-  const tgt = goal.target_rapid ?? "—";
-  const pct = goal.progress_pct ?? 0;
-  return section("goal", "Goal", `
-    <div class="goal-banner">
-      <div class="goal-rating-line">
-        <span class="goal-current">${cur}</span>
-        <span class="goal-arrow">→</span>
-        <span class="goal-target">${tgt}</span>
-        <span class="goal-tag">RAPID</span>
-      </div>
-      <div class="goal-stats">
-        <div class="goal-stat">
-          <div class="goal-stat-value">${goal.days_remaining ?? "—"}</div>
-          <div class="goal-stat-label">days left</div>
-        </div>
-        <div class="goal-stat">
-          <div class="goal-stat-value">${goal.current_lichess_puzzle ?? goal.current_chesscom_puzzle ?? "—"}</div>
-          <div class="goal-stat-label">puzzle ELO</div>
-        </div>
-        <div class="goal-stat">
-          <div class="goal-stat-value">${pct}%</div>
-          <div class="goal-stat-label">progress</div>
-        </div>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-    </div>
-  `);
-}
-
-function renderEloChart(history) {
-  if (!history || history.length < 2) {
-    return section("trend", "ELO trend", `
-      <div class="card chart-empty">
-        ${history && history.length === 1 ? "Only 1 data point so far. Chart appears after the next sync." : "No history yet — points appear daily after the cron runs."}
-      </div>`);
+function renderGames(d) {
+  const list = $('games-list');
+  const games = d.recent_games || [];
+  if (!games.length) {
+    list.innerHTML = '<div class="no-games">No games in the last 24h. Play one tonight — 15+10 rapid is your sweet spot.</div>';
+    return;
   }
-  // Plot rapid + lichess puzzle on same chart, normalize to fit
-  const W = 600, H = 200, PAD = 36;
-  const ratings = history.map(h => h.chesscom_rapid).filter(v => v != null);
-  const puzzles = history.map(h => h.lichess_puzzle ?? h.chesscom_puzzle).filter(v => v != null);
-  const all = [...ratings, ...puzzles];
-  if (all.length === 0) return section("trend", "ELO trend", `<div class="card chart-empty">No rating data captured yet.</div>`);
-  const minR = Math.min(...all) - 30;
-  const maxR = Math.max(...all) + 30;
-  const xs = (i) => PAD + ((W - 2*PAD) * (i / Math.max(1, history.length - 1)));
-  const ys = (v) => H - PAD - ((H - 2*PAD) * ((v - minR) / Math.max(1, maxR - minR)));
-
-  function line(values, color, dash="") {
-    const pts = values.map((v, i) => v != null ? `${xs(i)},${ys(v)}` : null);
-    const segs = [];
-    let cur = [];
-    for (const p of pts) {
-      if (p === null) { if (cur.length) { segs.push(cur); cur = []; } }
-      else cur.push(p);
-    }
-    if (cur.length) segs.push(cur);
-    return segs.map(s => `<polyline points="${s.join(" ")}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="${dash}" />`).join("");
-  }
-  const rapidLine = line(history.map(h => h.chesscom_rapid), "#4a6b3a");
-  const puzzleLine = line(history.map(h => h.lichess_puzzle ?? h.chesscom_puzzle), "#c9a14b", "4 4");
-
-  // Y-axis labels
-  const yTicks = [minR, Math.round((minR + maxR) / 2), maxR].map(t => `
-    <text x="6" y="${ys(t) + 4}" font-size="10" fill="#7a5a3e">${t}</text>
-    <line x1="${PAD}" x2="${W - PAD}" y1="${ys(t)}" y2="${ys(t)}" stroke="#d4b896" stroke-width="0.5" stroke-dasharray="2,4" />
-  `).join("");
-
-  // First / last date labels
-  const firstDate = history[0].date;
-  const lastDate = history[history.length - 1].date;
-
-  return section("trend", "ELO trend", `
-    <div class="card">
-      <svg viewBox="0 0 ${W} ${H}" class="elo-chart" preserveAspectRatio="xMidYMid meet">
-        ${yTicks}
-        ${rapidLine}
-        ${puzzleLine}
-        <text x="${PAD}" y="${H - 10}" font-size="10" fill="#7a5a3e">${firstDate}</text>
-        <text x="${W - PAD}" y="${H - 10}" font-size="10" fill="#7a5a3e" text-anchor="end">${lastDate}</text>
-      </svg>
-      <div style="display:flex; gap:16px; justify-content:center; font-size:12px; color:var(--brown-mid); margin-top:8px;">
-        <span><span style="color:#4a6b3a;">━━</span> Rapid</span>
-        <span><span style="color:#c9a14b;">┄┄</span> Puzzle</span>
-      </div>
-    </div>
-  `);
-}
-
-function renderThisWeek(week) {
-  return section("week", "This week", `
-    <div class="card">
-      <div class="theme-name">${escapeHtml(week.theme || "Theme not set")}</div>
-      <div class="theme-meta">Cycle ${week.cycle ?? "—"} · Week ${week.cycle_week ?? "—"} of 8 · Program week ${week.program_week ?? "—"}</div>
-      ${week.lichess_puzzle_url ? `<a class="theme-link" href="${escapeHtml(toAppLink(week.lichess_puzzle_url))}" target="_blank" rel="noopener">▶ Drill on Lichess</a>` : ""}
-    </div>
-  `);
-}
-
-function renderFeaturedPattern(gallery, currentTheme) {
-  if (!gallery || gallery.length === 0) return "";
-  // Find a position from current theme; fallback to first
-  const featured = gallery.find(p => p.theme === currentTheme) || gallery[0];
-  return section("pattern", "Featured pattern", `
-    <div class="card featured-board-wrap">
-      <img class="featured-board" src="${lichessImage(featured.fen)}" alt="${escapeHtml(featured.label)}" />
-      <div class="featured-label">${escapeHtml(featured.label)}</div>
-      <div class="featured-explanation">${escapeHtml(featured.explanation)}</div>
-      <div style="margin-top:10px;">
-        <a class="theme-link" href="${lichessAnalysis(featured.fen)}" target="_blank" rel="noopener">Open in Lichess analysis</a>
-      </div>
-    </div>
-  `);
-}
-
-function renderCycleCalendar(cal) {
-  if (!cal || cal.length === 0) return "";
-  const html = cal.map(w => `
-    <a class="cycle-week ${w.is_current ? "is-current" : ""}" href="${escapeHtml(toAppLink(w.lichess_puzzle_url))}" target="_blank" rel="noopener" title="${escapeHtml(w.dates)}">
-      <div class="cycle-week-label">${escapeHtml(w.week_label)}</div>
-      <div class="cycle-week-theme">${escapeHtml(w.theme)}</div>
-    </a>
-  `).join("");
-  return section("cycle", "Cycle 1 calendar (May 4 — Jun 28)", `<div class="card"><div class="cycle-strip">${html}</div></div>`);
-}
-
-function renderRecentGames(games) {
-  if (!games || games.length === 0) {
-    return section("games", "Recent games", `<div class="card chart-empty">No game data captured today. Hermes auto-logs games within 15 min of finishing.</div>`);
-  }
-  const html = games.slice(0, 3).map(g => {
-    const result = (g.result || "").toLowerCase();
-    const cls = result.includes("win") ? "win" : result.includes("loss") ? "loss" : "draw";
-    const worst = (g.worst || {}).move || "";
-    const fen = (g.worst || {}).fen || g.fen;
-    return `
-      <div class="game-card">
-        <span class="game-result ${cls}">${escapeHtml(g.result || "?")}</span>
-        <div class="game-meta">vs ${escapeHtml(g.opponent || "?")}${g.opp_rating ? ` (${g.opp_rating})` : ""}</div>
-        ${fen ? `<img class="game-board" src="${lichessImage(fen)}" alt="game position" />` : ""}
-        ${worst ? `<div class="game-worst">worst: ${escapeHtml(worst)}</div>` : ""}
-      </div>`;
-  }).join("");
-  return section("games", "Recent games", `<div class="games-row">${html}</div>`);
-}
-
-function renderWeaknessZones(zones) {
-  if (!zones || zones.length === 0) return "";
-  const html = zones.map(z => `
-    <div class="zone ${escapeHtml(z.severity || "")}">
-      <div class="zone-range">${escapeHtml(z.zone)}</div>
-      <div class="zone-stat">${z.mistakes}</div>
-      <div class="zone-detail">avg ${z.avg_pawn_loss} pawns lost</div>
-    </div>
-  `).join("");
-  return section("weakness", "Weakness zones (Stockfish-validated)", `<div class="zones">${html}</div>`);
-}
-
-let __galleryFilter = "all";
-function renderPatternGallery(gallery) {
-  if (!gallery || gallery.length === 0) return "";
-  const themes = [...new Set(gallery.map(p => p.theme))];
-  const filters = ["all", ...themes].map(t => `
-    <button class="filter-btn ${__galleryFilter === t ? "active" : ""}" data-filter="${escapeHtml(t)}">${escapeHtml(t === "all" ? "All themes" : t)}</button>
-  `).join("");
-  const visible = __galleryFilter === "all" ? gallery : gallery.filter(p => p.theme === __galleryFilter);
-  const items = visible.map(p => `
-    <div class="gallery-item">
-      <img class="gallery-board" src="${lichessImage(p.fen)}" alt="${escapeHtml(p.label)}" />
-      <div class="gallery-content">
-        <div class="gallery-badges">
-          <span class="badge theme">${escapeHtml(p.theme)}</span>
-          ${p.kind === "puzzle" ? `<span class="badge kind">Find the move</span>` : `<span class="badge kind">See the pattern</span>`}
-        </div>
-        <div class="gallery-title">${escapeHtml(p.label)}</div>
-        <div class="gallery-summary">${escapeHtml(p.explanation)}</div>
-        <a class="gallery-link" href="${lichessAnalysis(p.fen)}" target="_blank" rel="noopener">Open in Lichess →</a>
-      </div>
-    </div>
-  `).join("");
-  return section("gallery", "Pattern gallery — Levy's tactical patterns", `
-    <div class="gallery-filters" id="galleryFilters">${filters}</div>
-    <div class="gallery">${items}</div>
-  `);
-}
-
-let __openingsFilter = "all";
-function renderOpeningsLibrary(openings) {
-  if (!openings || openings.length === 0) return "";
-  const filters = ["all", "white", "black", "levy"].map(f => `
-    <button class="filter-btn ${__openingsFilter === f ? "active" : ""}" data-openings-filter="${f}">
-      ${f === "all" ? "All" : f === "white" ? "♔ White" : f === "black" ? "♚ Black" : "⭐ Levy's picks"}
-    </button>
-  `).join("");
-  let visible = openings;
-  if (__openingsFilter === "white") visible = openings.filter(o => o.color === "white");
-  else if (__openingsFilter === "black") visible = openings.filter(o => o.color === "black");
-  else if (__openingsFilter === "levy")  visible = openings.filter(o => o.is_levy_pick);
-
-  const items = visible.map(o => `
-    <div class="gallery-item">
-      <img class="gallery-board" src="${lichessImage(o.fen)}" alt="${escapeHtml(o.name)}" />
-      <div class="gallery-content">
-        <div class="gallery-badges">
-          <span class="badge ${o.color === 'white' ? 'color-w' : 'color-b'}">${o.color === "white" ? "♔ White" : "♚ Black"}</span>
-          ${o.is_levy_pick ? `<span class="badge levy">⭐ Levy's pick</span>` : ""}
-        </div>
-        <div class="gallery-title">${escapeHtml(o.name)}</div>
-        <div class="gallery-summary"><strong>${escapeHtml(o.moves)}</strong><br><br>${escapeHtml(o.summary)}</div>
-        <a class="gallery-link" href="${lichessAnalysis(o.fen)}" target="_blank" rel="noopener">Open in Lichess →</a>
-      </div>
-    </div>
-  `).join("");
-  return section("openings", "Openings library", `
-    <div class="gallery-filters" id="openingsFilters">${filters}</div>
-    <div class="gallery">${items}</div>
-  `);
-}
-
-function renderQuickLinks(links) {
-  if (!links || links.length === 0) return "";
-  const html = links.map(l => `
-    <a class="quick-link" href="${escapeHtml(toAppLink(l.url))}" target="_blank" rel="noopener">${escapeHtml(l.label)}</a>
-  `).join("");
-  return section("links", "Quick links", `<div class="quick-links">${html}</div>`);
-}
-
-function renderAll(data) {
-  const c = document.getElementById("content");
-  c.innerHTML = "";
-  c.insertAdjacentHTML("beforeend", renderGoal(data.goal || {}));
-  c.insertAdjacentHTML("beforeend", renderEloChart(data.elo_history || []));
-  c.insertAdjacentHTML("beforeend", renderThisWeek(data.this_week || {}));
-  c.insertAdjacentHTML("beforeend", renderFeaturedPattern(data.pattern_gallery || [], (data.this_week || {}).theme));
-  c.insertAdjacentHTML("beforeend", renderCycleCalendar(data.cycle_calendar || []));
-  c.insertAdjacentHTML("beforeend", renderRecentGames(data.recent_games || []));
-  c.insertAdjacentHTML("beforeend", renderWeaknessZones(data.weakness_zones || []));
-  c.insertAdjacentHTML("beforeend", renderPatternGallery(data.pattern_gallery || []));
-  c.insertAdjacentHTML("beforeend", renderOpeningsLibrary(data.openings_library || []));
-  c.insertAdjacentHTML("beforeend", renderQuickLinks(data.quick_links || []));
-
-  // Wire filter buttons
-  document.querySelectorAll("[data-filter]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      __galleryFilter = btn.dataset.filter;
-      renderAll(__lastData);
-    });
+  list.innerHTML = '';
+  games.forEach(g => {
+    const result = (g.result || '').toLowerCase();
+    const emoji = result === 'win' ? '✓' : result === 'loss' ? '✗' : '=';
+    const cls = result === 'win' ? 'win' : result === 'loss' ? 'loss' : 'draw';
+    const worst = g.worst || {};
+    list.appendChild(
+      el('div', {class:'game-row'},
+        el('span', {class:'game-result ' + cls}, emoji),
+        el('div', {class:'game-meta'},
+          el('div', {class:'game-opponent'}, (g.color || '?') + ' vs ' + (g.opponent || '?') + ' (' + (g.opp_rating || '?') + ')'),
+          el('div', {class:'game-info'},
+            (g.tc || g.time_control || '?') + ' · ' + (g.opening || '?') + ' · ' + (g.mistakes != null ? g.mistakes : 0) + ' mistakes'
+          ),
+          worst.move ? el('div', {class:'game-chips'},
+            el('span', {class:'chip pattern'}, 'worst: ' + worst.move + ' (-' + (worst.loss || 0).toFixed(1) + ')')
+          ) : null
+        )
+      )
+    );
   });
-  document.querySelectorAll("[data-openings-filter]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      __openingsFilter = btn.dataset.openingsFilter;
-      renderAll(__lastData);
-    });
+}
+
+function renderSRS(d) {
+  const srs = d.srs || {};
+  const counts = srs.status_counts || {};
+  const row = $('srs-row');
+  row.innerHTML = '';
+  ['New','Learning','Reviewing','Mastered'].forEach(s => {
+    row.appendChild(
+      el('div', {class:'srs-cell ' + s.toLowerCase()},
+        el('div', {class:'srs-cell-num'}, String(counts[s] || 0)),
+        el('div', {class:'srs-cell-label'}, s)
+      )
+    );
   });
-
-  // Last synced
-  const sync = document.getElementById("lastSynced");
-  if (sync && data._meta && data._meta.generated_at) {
-    sync.textContent = "Last synced: " + fmtDate(data._meta.generated_at);
-  }
-
-  // Attach web fallback for any deep-link anchors (lichess:// / chesscom://)
-  attachAppLinkFallbacks(c);
-}
-
-let __lastData = null;
-async function load() {
-  try {
-    const resp = await fetch(DATA_URL);
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const data = await resp.json();
-    __lastData = data;
-    renderAll(data);
-  } catch (err) {
-    document.getElementById("content").innerHTML = `<div class="error">Failed to load data.json: ${escapeHtml(err.message)}</div>`;
+  $('srs-progress-fill').style.width = (srs.progress_pct || 0) + '%';
+  $('srs-progress-label').textContent =
+    ((counts.Reviewing || 0) + (counts.Mastered || 0)) + ' of ' + (srs.total_concepts || '?')
+    + ' in Reviewing+ · ' + (srs.progress_pct || 0) + '%';
+  const due = $('srs-due-list');
+  if (!srs.due_today || !srs.due_today.length) {
+    due.innerHTML = '<div class="no-due">All caught up — no concepts due today.</div>';
+  } else {
+    due.innerHTML = '';
+    srs.due_today.slice(0,6).forEach(c => {
+      due.appendChild(
+        el('div', {class:'srs-due-item'},
+          el('span', {}, c.term),
+          el('span', {class:'srs-due-folder'}, c.folder || '')
+        )
+      );
+    });
   }
 }
-load();
+
+function renderBreakdown(d) {
+  const wrap = $('pattern-breakdown');
+  const month = ((d.master_skills || {}).week_data || {}).month_pattern_counts || {};
+  const entries = Object.entries(month).sort((a,b) => b[1] - a[1]);
+  if (!entries.length) {
+    wrap.innerHTML = '<div class="no-due">No patterns logged yet — play games and the auto-tagger will fill this.</div>';
+    return;
+  }
+  const max = Math.max.apply(null, entries.map(e => e[1]));
+  wrap.innerHTML = '';
+  entries.forEach(pair => {
+    const name = pair[0], count = pair[1];
+    wrap.appendChild(
+      el('div', {class:'bar-row'},
+        el('div', {class:'bar-label'}, name),
+        el('div', {class:'bar-track'},
+          el('div', {class:'bar-fill', style:'width:' + Math.round(count/max*100) + '%'})
+        ),
+        el('div', {class:'bar-count'}, String(count))
+      )
+    );
+  });
+}
+
+function renderSynthesis(d) {
+  const s = d.weekly_synthesis || {};
+  if (!s.url) return;
+  const wrap = $('synth-wrap');
+  wrap.innerHTML = '';
+  wrap.appendChild(
+    el('a', {href:s.url, target:'_blank', class:'synth-card', style:'display:block;'},
+      el('div', {class:'synth-card-title'}, '🏁 Latest weekly synthesis'),
+      el('div', {class:'synth-title'}, s.title),
+      el('div', {class:'synth-cta'}, 'Open in Notion →')
+    )
+  );
+}
+
+function imageUrl(fen) {
+  return 'https://lichess.org/export/fen.gif?fen=' + encodeURIComponent(fen);
+}
+function analysisUrl(fen) {
+  return 'https://lichess.org/analysis/' + fen.replace(/ /g, '_');
+}
+function spoilerBlock(p) {
+  const block = el('div', {class:'pattern-spoiler'},
+    el('span', {class:'pattern-spoiler-hint'}, 'Tap to reveal the pattern')
+  );
+  block.addEventListener('click', function() {
+    block.classList.add('revealed');
+    block.innerHTML = '';
+    block.appendChild(el('div', {}, p.explanation || ''));
+    if (p.key_lesson) block.appendChild(el('div', {class:'pattern-lesson'}, '→ ' + p.key_lesson));
+  });
+  return block;
+}
+function renderGallery(d) {
+  const wrap = $('gallery-themes');
+  wrap.innerHTML = '';
+  const themes = {};
+  (d.pattern_gallery || []).forEach(p => {
+    if (!themes[p.theme]) themes[p.theme] = [];
+    themes[p.theme].push(p);
+  });
+  const currentTheme = (d.this_week || {}).theme;
+  // Sort: current theme first, then preserve original order
+  const themeOrder = Object.keys(themes).sort((a, b) => {
+    if (a === currentTheme) return -1;
+    if (b === currentTheme) return 1;
+    return 0;
+  });
+  themeOrder.forEach(themeName => {
+    const positions = themes[themeName];
+    const isCurrent = themeName === currentTheme;
+    wrap.appendChild(
+      el('div', {class:'theme-carousel-wrap'},
+        el('div', {class:'theme-name' + (isCurrent ? ' theme-name-current' : '')},
+          el('span', {}, themeName + (isCurrent ? ' ← current' : '')),
+          el('span', {class:'theme-name-meta'}, positions.length + ' positions')
+        ),
+        el('div', {class:'carousel'},
+          positions.map(p =>
+            el('div', {class:'pattern-card'},
+              el('img', {src:imageUrl(p.fen), alt:p.label, loading:'lazy'}),
+              el('div', {class:'pattern-card-body'},
+                el('div', {class:'pattern-label'}, p.label),
+                el('div', {class:'pattern-side'}, (p.side_to_move || '?') + ' to move'),
+                spoilerBlock(p)
+              ),
+              el('div', {class:'pattern-card-foot'},
+                el('a', {href:analysisUrl(p.fen), target:'_blank'}, 'Open in Lichess →')
+              )
+            )
+          )
+        )
+      )
+    );
+  });
+}
+
+function renderOpenings(d) {
+  const wrap = $('openings-list');
+  wrap.innerHTML = '';
+  (d.openings_library || []).forEach(o => {
+    const color = (o.colors_played || o.color || 'both').toLowerCase();
+    const cls = color.indexOf('white') >= 0 && color.indexOf('black') >= 0 ? 'both'
+              : color.indexOf('white') >= 0 ? 'white' : 'black';
+    wrap.appendChild(
+      el('div', {class:'opening-row'},
+        el('div', {class:'opening-color ' + cls}),
+        el('div', {class:'opening-name'}, o.name),
+        el('div', {class:'opening-meta'}, o.eco || '')
+      )
+    );
+  });
+}
+
+function renderZones(d) {
+  const wrap = $('zones-list');
+  wrap.innerHTML = '';
+  const zones = d.weakness_zones || [];
+  const max = Math.max.apply(null, zones.map(z => z.mistakes || 0).concat([1]));
+  zones.forEach(z => {
+    wrap.appendChild(
+      el('div', {class:'zone-row'},
+        el('div', {class:'zone-label'}, z.zone),
+        el('div', {class:'zone-bar'},
+          el('div', {class:'zone-fill ' + (z.severity || 'warning'),
+            style:'width:' + Math.round(z.mistakes/max*100) + '%'})
+        ),
+        el('div', {class:'zone-val'}, z.mistakes + ' · avg ' + (z.avg_pawn_loss != null ? z.avg_pawn_loss.toFixed(1) : '0.0'))
+      )
+    );
+  });
+}
+
+function renderCycle(d) {
+  const wrap = $('cycle-list');
+  wrap.innerHTML = '';
+  (d.cycle_calendar || []).forEach(c => {
+    wrap.appendChild(
+      el('div', {class:'cycle-row' + (c.is_current ? ' current' : '')},
+        el('div', {class:'cycle-week'}, c.week_label),
+        el('div', {class:'cycle-theme'}, c.theme),
+        el('div', {class:'cycle-dates'}, c.dates)
+      )
+    );
+  });
+}
+
+function renderLinks(d) {
+  const wrap = $('links-list');
+  wrap.innerHTML = '';
+  (d.quick_links || []).forEach(l => {
+    wrap.appendChild(el('a', {href:l.url, target:'_blank'}, l.label));
+  });
+}
+
+fetch(DATA_URL)
+  .then(r => r.json())
+  .then(d => {
+    renderHero(d);
+    renderMasterSkills(d);
+    renderGames(d);
+    renderSRS(d);
+    renderBreakdown(d);
+    renderSynthesis(d);
+    renderGallery(d);
+    renderOpenings(d);
+    renderZones(d);
+    renderCycle(d);
+    renderLinks(d);
+    var meta = d._meta || {};
+    $('footer-generated').textContent =
+      'Generated ' + (meta.generated_at ? meta.generated_at.split('T')[0] : '?')
+      + ' · v' + (meta.version || '?');
+  })
+  .catch(function(e) {
+    document.body.innerHTML = '<div style="padding:40px;text-align:center;color:#b94a3a;">Failed to load data.json: ' + e + '</div>';
+  });
 </script>
+
 </body>
 </html>
