@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated_at": "2026-05-18T19:34:21.414336+00:00",
+    "generated_at": "2026-05-18T21:15:03.124675+00:00",
     "generator": "chess_dashboard_data.py",
     "version": "2.0"
   },
@@ -792,6 +792,44 @@
     "folder": "tactics"
   },
   "saba_quote": "Saba played for the love of it. Carry that.",
+  "key_concepts": [
+    {
+      "icon": "\ud83c\udfaf",
+      "title": "CCA every move",
+      "body": "Checks \u00b7 Captures \u00b7 Attacks \u2014 for BOTH sides, before ANY move.",
+      "atom": "knowledge/chess/frameworks/cca-framework.md"
+    },
+    {
+      "icon": "\ud83d\udcad",
+      "title": "4-step thought process",
+      "body": "Threats \u2192 Ideas \u2192 Plans \u2192 Safety. Every move.",
+      "atom": "knowledge/chess/principles/the-10-rules-tldr.md"
+    },
+    {
+      "icon": "\u265f",
+      "title": "Opening order",
+      "body": "Center \u2192 Develop (knights before bishops) \u2192 Castle by move 7\u201310.",
+      "atom": "knowledge/chess/principles/three-principles-of-the-opening.md"
+    },
+    {
+      "icon": "\ud83d\udc51",
+      "title": "Queen stays home",
+      "body": "Never bring the queen out early. Develop minor pieces first or lose tempo.",
+      "atom": "knowledge/chess/principles/common-mistakes-10.md"
+    },
+    {
+      "icon": "\ud83d\udd01",
+      "title": "Trade with a reason",
+      "body": "If you can't say in one sentence why this trade improves your position, keep the tension.",
+      "atom": "knowledge/chess/frameworks/trading-decision-matrix.md"
+    },
+    {
+      "icon": "\ud83c\udfc1",
+      "title": "Never resign",
+      "body": "Below master level. Make them prove the win \u2014 stalemates and missed mates happen.",
+      "atom": "knowledge/chess/principles/never-resign-below-master.md"
+    }
+  ],
   "master_skills": {
     "framework": {
       "recognition": "See the geometry \u2014 patterns, threats, motifs",
