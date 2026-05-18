@@ -1,17 +1,17 @@
 {
   "_meta": {
-    "generated_at": "2026-05-17T15:18:02.843885+00:00",
+    "generated_at": "2026-05-18T04:30:49.734828+00:00",
     "generator": "chess_dashboard_data.py",
     "version": "1.0"
   },
   "goal": {
     "target_rapid": 1500,
-    "current_rapid": 896,
+    "current_rapid": 944,
     "current_blitz": 653,
     "current_chesscom_puzzle": 1732,
     "current_lichess_puzzle": null,
     "baseline_rapid": 937,
-    "progress_pct": 0,
+    "progress_pct": 1,
     "program_start": "2026-05-04",
     "program_end": "2026-12-31",
     "days_elapsed": 13,
@@ -34,7 +34,7 @@
     },
     {
       "date": "2026-05-17",
-      "chesscom_rapid": 896,
+      "chesscom_rapid": 944,
       "chesscom_blitz": 653,
       "chesscom_puzzle": 1732,
       "lichess_puzzle": null
@@ -106,7 +106,17 @@
     }
   ],
   "recent_games": [],
-  "lichess_puzzles_today": null,
+  "lichess_puzzles_today": {
+    "wins": 8,
+    "losses": 5,
+    "draws": 0,
+    "total": 13,
+    "rating_before": 1254,
+    "rating_after": 1226,
+    "rating_delta": -28,
+    "window_hours": 24,
+    "contributing_day_entries": 1
+  },
   "pattern_gallery": [
     {
       "fen": "q3k3/2N5/8/8/8/8/8/6K1 b - - 0 1",
@@ -124,6 +134,51 @@
       "label": "Pawn Fork \u2014 d2-d4 attacks rook AND bishop",
       "explanation": "White plays d4! The pawn now attacks Black's rook on c5 AND Black's bishop on e5 simultaneously. Black can only save one. Pawn forks are the cheapest possible attacker.",
       "key_lesson": "Before every pawn move, ask: does this pawn attack two enemy pieces on the diagonal squares ahead? Pawns capture diagonally \u2014 a single pawn push can win material.",
+      "theme": "Forks"
+    },
+    {
+      "fen": "r1bqkb1r/pppp1ppp/2n2n2/4p1N1/2B1P3/8/PPPP1PPP/RNBQK2R b KQkq - 5 4",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Two Knights / Fried Liver setup \u2014 Ng5 threatens fork",
+      "explanation": "After 1.e4 e5 2.Nf3 Nc6 3.Bc4 Nf6 4.Ng5, White's knight on g5 attacks f7 \u2014 a square defended only by Black's king. Next move Nxf7 attacks the queen on d8 AND the rook on h8 (a family fork). Black must respond immediately (...d5 is the main line).",
+      "key_lesson": "The f7/f2 square is the fork incubator in EVERY king-pawn opening. Any time an enemy knight reaches g5/g4 with a bishop eyeing f7/f2, calculate the Nxf7 fork before doing anything else.",
+      "theme": "Forks"
+    },
+    {
+      "fen": "2r1k3/8/8/8/4N3/8/8/4K3 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Find Nd6+ \u2014 family fork of king and rook",
+      "explanation": "White plays Nd6+! The knight jumps to d6 attacking the Black king on e8 AND the rook on c8 at the same time. Black must move the king out of check, then White plays Nxc8 winning the rook.",
+      "key_lesson": "Knights on the 6th rank are forking machines. Squares c6/d6/e6/f6 are the classic outpost fork squares \u2014 when a knight lands there with check, scan for what other piece it also attacks.",
+      "theme": "Forks"
+    },
+    {
+      "fen": "2k5/8/2Q4r/8/8/8/8/4K3 b - - 0 1",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Queen fork \u2014 c-file check + 6th rank attack",
+      "explanation": "White's queen on c6 checks the Black king on c8 (c-file) AND simultaneously attacks the rook on h6 (6th rank). The queen operates on two lines at once. Black must move the king, then White plays Qxh6 winning the rook.",
+      "key_lesson": "The queen is the only piece that can fork along ANY two intersecting lines (file + rank, rank + diagonal, two diagonals). Whenever your queen reaches a square with check, look down every line it controls for a second target.",
+      "theme": "Forks"
+    },
+    {
+      "fen": "3q3k/8/7N/8/8/8/8/4K3 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Find Nxf7 \u2014 royal-fork variant K + Q",
+      "explanation": "White plays Nf7+! The knight on h6 jumps to f7, attacking the Black king on h8 AND the Black queen on d8. Black must move the king (only legal move), and White captures the queen with Nxd8.",
+      "key_lesson": "The knight is the king's worst nightmare \u2014 it can attack 8 squares at once from a single perch, with no possibility of blocking. When the enemy king is cornered, every knight move within 2 squares is a fork candidate.",
+      "theme": "Forks"
+    },
+    {
+      "fen": "4k3/8/3n1b2/8/4P3/8/8/4K3 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Find e5 \u2014 pawn forks knight and bishop",
+      "explanation": "White plays e5! The pawn lurches forward attacking the Black knight on d6 AND the Black bishop on f6 at once (diagonal pawn captures). Black can only save one piece \u2014 the other is lost for the cost of a single pawn.",
+      "key_lesson": "Pawn forks are the highest-leverage tactics in chess: 1 point of material attacking 6 points (N+B). Before every pawn push, ask: does this pawn arrive on a square diagonally attacking two enemy pieces?",
       "theme": "Forks"
     },
     {
@@ -145,6 +200,51 @@
       "theme": "Pins"
     },
     {
+      "fen": "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Ruy Lopez \u2014 Bb5 pin on the c6 knight",
+      "explanation": "After 1.e4 e5 2.Nf3 Nc6 3.Bb5, White's bishop pins the knight on c6 to the king on e8 along the b5-e8 diagonal. The knight cannot legally move \u2014 doing so exposes the king to check (absolute pin geometry, though the bishop pin is technically relative because ...a6/...b5 can unwind it).",
+      "key_lesson": "The Ruy Lopez pin is the most-played pin in chess history. Black's main defenses: ...a6 (challenge the bishop), ...Nf6 (develop and prepare ...d6), ...Nge7 (avoid the pin entirely). The pin's purpose is to weaken Black's grip on e5.",
+      "theme": "Pins"
+    },
+    {
+      "fen": "rnbqkb1r/ppp1pppp/5n2/3p2B1/3P4/2N5/PPP1PPPP/R2QKBNR b KQkq - 4 3",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Queen's Gambit \u2014 Bg5 pin on the f6 knight",
+      "explanation": "After 1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.Bg5, White's bishop pins the knight on f6 to the queen on d8. Moving the knight loses the queen. This is the central pin of every classical Queen's Gambit Declined.",
+      "key_lesson": "Bg5 pinning Nf6 to the queen is identical geometry to Bg4 pinning Nf3 to the queen \u2014 both sides use it. Defenses include ...Be7 (block and prepare to break), ...h6 (kick the bishop), or accepting the pin and playing around it.",
+      "theme": "Pins"
+    },
+    {
+      "fen": "5k2/5n2/8/8/8/8/8/5R1K b - - 0 1",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Absolute pin \u2014 knight frozen on the f-file",
+      "explanation": "Black's knight on f7 is pinned to the king on f8 by White's rook on f1. The knight CANNOT legally move \u2014 any move exposes the king to check from the rook. White will simply pile up attackers on f7 to win the knight.",
+      "key_lesson": "Absolute pins (to the king) make the pinned piece worth zero \u2014 it can defend, but it cannot capture or move. Pile attackers on the pinned piece (with pawns or minor pieces) until you have more attackers than defenders, then win the material.",
+      "theme": "Pins"
+    },
+    {
+      "fen": "3r2k1/5ppp/8/8/3q4/8/3R1PPP/3R2K1 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Find Rxd4 \u2014 pinned queen wins material",
+      "explanation": "White plays Rxd4! Black's queen on d4 is pinned to the rook on d8 by White's doubled rooks on the d-file. After Rxd4, if Black recaptures with Rxd4, White plays Rxd4 again \u2014 net: White wins queen for rook (a clear material gain of 4 points).",
+      "key_lesson": "Doubled rooks on an open file create deadly pins. When you see a major piece on an open file with another piece of its color behind it, you have a pin to exploit \u2014 capture the front piece, the back one cannot resist.",
+      "theme": "Pins"
+    },
+    {
+      "fen": "4q1k1/8/2n5/1B6/8/8/8/4K3 b - - 0 1",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Bishop pin on diagonal \u2014 knight pinned to queen",
+      "explanation": "White's bishop on b5 pins the Black knight on c6 to the queen on e8 along the b5-e8 diagonal. The knight is functionally frozen (relative pin \u2014 moving it costs the queen for a bishop). Black must lose tempo defending or unpinning.",
+      "key_lesson": "Diagonal pins from a bishop are everywhere. Scan every enemy long-diagonal piece for what sits behind your pieces along that diagonal. The cure: block the diagonal with a pawn, or move the back piece off the line.",
+      "theme": "Pins"
+    },
+    {
       "fen": "8/8/8/8/8/3k4/8/B2K3q w - - 0 1",
       "side_to_move": "White",
       "kind": "puzzle",
@@ -160,6 +260,51 @@
       "label": "Rook Skewer \u2014 endgame win",
       "explanation": "White plays Rh1+ \u2014 wait, the rook is already on h1. White's rook attacks Black's king on d1. Black king must move, exposing Black's rook on a1 to capture.",
       "key_lesson": "Rook skewers along ranks and files dominate endgames. King exposed on the back rank = vulnerability. Always look for skewer geometry in simplified positions.",
+      "theme": "Skewers"
+    },
+    {
+      "fen": "8/8/6q1/5k2/4B3/4K3/8/8 b - - 0 1",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Bishop skewer \u2014 king in front, queen behind",
+      "explanation": "White's bishop on e4 (defended by the king on e3) checks Black's king on f5. The Black queen on g6 sits behind the king on the same diagonal e4-f5-g6. Black must move the king \u2014 then Bxg6 wins the queen.",
+      "key_lesson": "Skewer geometry = attacker + higher-value piece (king/queen) + lower-value piece, all on one line. The king MUST move (legal obligation), exposing the piece behind. Look for skewers any time you see two enemy pieces aligned with king closer.",
+      "theme": "Skewers"
+    },
+    {
+      "fen": "4k2q/8/8/8/8/8/8/R3K3 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Find Ra8+ \u2014 rook skewer on the 8th rank",
+      "explanation": "White plays Ra8+! The rook reaches the 8th rank with check on the king at e8. Black must move the king (or block with Qb8 \u2014 but then Rxb8+ still wins the queen). After the king moves to e7 or similar, Rxh8 wins the queen.",
+      "key_lesson": "Rook skewers along ranks dominate exposed-king endgames. When the enemy king and a heavy piece sit on the same rank/file with empty squares between, look for ways to deliver check on that line.",
+      "theme": "Skewers"
+    },
+    {
+      "fen": "7q/8/8/4k3/8/8/8/B3K3 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Find Bd4+ \u2014 bishop skewer on the long diagonal",
+      "explanation": "White plays Bd4+! The bishop slides to d4 attacking the Black king on e5. Behind the king on the same a1-h8 diagonal sits the queen on h8. Black must move the king, then Bxh8 wins the queen.",
+      "key_lesson": "The a1-h8 and h1-a8 long diagonals are skewer highways. Any time enemy king + queen sit on the same long diagonal, calculate whether your bishop can land on a square checking the king with the queen behind.",
+      "theme": "Skewers"
+    },
+    {
+      "fen": "1r6/8/8/4k3/8/8/8/4K2Q w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Find Qh2+ \u2014 queen diagonal skewer",
+      "explanation": "White plays Qh2+! The queen slides to h2 attacking the king on e5 along the h2-e5 diagonal. Behind the king on the same diagonal sits the Black rook on b8. Black king must move, then Qxb8 wins the rook.",
+      "key_lesson": "The queen can skewer on ANY of the 8 directions a queen moves. Before any queen move, ask: is this move (or any queen move) putting two enemy pieces on one of my queen's lines with the king closer?",
+      "theme": "Skewers"
+    },
+    {
+      "fen": "8/7r/8/8/7k/R7/8/4K3 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Find Rh3+ \u2014 rook skewer on the h-file",
+      "explanation": "White plays Rh3+! The rook slides from a3 to h3, checking the Black king on h4 along the h-file. Behind the king on the same file sits the Black rook on h7. Black king must move sideways, then Rxh7 wins the rook even-trade-plus-tempo.",
+      "key_lesson": "Rook skewers along files are common in middlegames where one side has exposed their king. Watch your rook's lines \u2014 every rook move is a candidate skewer if two enemy pieces line up with the king closer.",
       "theme": "Skewers"
     },
     {
@@ -181,6 +326,51 @@
       "theme": "Discovered Attacks"
     },
     {
+      "fen": "7q/4k3/8/8/7N/8/8/4K2R w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Find Nf5+ \u2014 discovered attack on the queen",
+      "explanation": "White plays Nf5+! The knight on h4 jumps to f5 delivering check to the king on e7 \u2014 AND the moving knight uncovers the rook on h1's attack on the queen on h8 (the h-file opens). Black must address the check; after the king moves, Rxh8 wins the queen.",
+      "key_lesson": "Discovered attacks deliver TWO threats from ONE move \u2014 the moving piece's attack PLUS the unmasked attack from the piece behind it. When the moving piece also gives check, the discovery is forced \u2014 the opponent cannot ignore it.",
+      "theme": "Discovered Attacks"
+    },
+    {
+      "fen": "7k/8/8/8/3N4/8/8/B3K3 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "setup",
+      "label": "Discovered-check battery \u2014 bishop behind knight on a1-h8",
+      "explanation": "White's bishop on a1 and knight on d4 form a discovered-check battery on the a1-h8 long diagonal aimed at the Black king on h8. If the knight moves ANYWHERE, the bishop delivers check. Combined with a useful knight move (a fork, a capture, a threat), this is devastating.",
+      "key_lesson": "Build discovered-check batteries deliberately. The moving piece is essentially free to grab whatever it wants because the check from behind FORCES the opponent to address the king. Always scan for batteries on the long diagonals when your king is exposed.",
+      "theme": "Discovered Attacks"
+    },
+    {
+      "fen": "r2qk3/ppp5/3b4/3Q4/8/8/PPP5/R3K3 b Qq - 0 1",
+      "side_to_move": "Black",
+      "kind": "puzzle",
+      "label": "Find a bishop move \u2014 discovered attack on the queen",
+      "explanation": "Black's bishop on d6 blocks the Black queen on d8 from attacking the White queen on d5 down the d-file. ANY bishop move (e.g. ...Bb4+ checking and unmasking, or ...Bf4 attacking) reveals the queen attack. Best is ...Bb4+ \u2014 check AND discovered attack on the queen \u2014 winning the queen.",
+      "key_lesson": "Stack your pieces on a line (Q behind B, R behind N) to create discovery potential. The moving piece becomes 'free' \u2014 opponent has no time to deal with both threats.",
+      "theme": "Discovered Attacks"
+    },
+    {
+      "fen": "3q3k/8/8/3B4/8/3R4/8/4K3 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "setup",
+      "label": "Battery setup \u2014 rook behind bishop on d-file",
+      "explanation": "White's rook on d3, bishop on d5, and Black queen on d8 are all on the d-file. The bishop currently blocks the rook's attack on the queen. If the bishop moves anywhere with tempo (a check, a fork, a threat), the rook's attack on the queen is revealed and the queen is lost.",
+      "key_lesson": "A piece in front of a heavier piece of the same color is a LATENT discovered attack. Always look for moves where the front piece relocates with a threat \u2014 the back piece does the real damage for free.",
+      "theme": "Discovered Attacks"
+    },
+    {
+      "fen": "4k3/8/7q/8/8/4B3/8/4R1K1 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Find Bxh6+ \u2014 discovered check captures the queen",
+      "explanation": "White plays Bxh6+! The bishop on e3 slides to h6 capturing the queen, AND simultaneously uncovers a discovered check on the king on e8 from the rook on e1. Black must respond to check \u2014 White has captured the queen for free.",
+      "key_lesson": "Discovered check + capture = the most devastating combination in chess. The opponent CANNOT recapture because they must address the check first. This is why discovered checks are sometimes called 'the windmill's older brother.'",
+      "theme": "Discovered Attacks"
+    },
+    {
       "fen": "6k1/5ppp/8/8/8/8/8/4R1K1 w - - 0 1",
       "side_to_move": "White",
       "kind": "puzzle",
@@ -196,6 +386,51 @@
       "label": "Back-Rank with defender \u2014 sacrifice to remove",
       "explanation": "Black's rook on a8 defends the 8th rank. White plays Re8+! Rxe8 (forced \u2014 king has no moves), but White has set up the position for a follow-up battery in real games. Setup demonstrates removing the defender via trade.",
       "key_lesson": "When the back rank has ONE defender, look for ways to remove it (capture, deflect, pin). Removing the defender = back rank becomes mateable.",
+      "theme": "Back-Rank Mates"
+    },
+    {
+      "fen": "6k1/5ppp/8/8/8/8/8/R3R1K1 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Find Re8# \u2014 doubled-rook back-rank mate",
+      "explanation": "White plays Re8#. The rook delivers check on the 8th rank; the Black king on g8 is trapped by its own pawns on f7/g7/h7 with no escape squares (f8 and h8 are also covered by the rook on the 8th rank). The second white rook on a1 is just insurance.",
+      "key_lesson": "After both sides castle without making luft, the back rank is the #1 mate threat in the game. ANY enemy major piece reaching your back rank can be mate. Push h3/h6 early if you sense back-rank danger.",
+      "theme": "Back-Rank Mates"
+    },
+    {
+      "fen": "6k1/5ppp/8/8/8/8/8/4Q1K1 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Find Qe8# \u2014 queen back-rank mate",
+      "explanation": "White plays Qe8#. The queen delivers check on the 8th rank with no possibility of capture (Black king on g8 cannot reach e8). The king has no escape \u2014 f7/g7/h7 are blocked by its own pawns, f8/h8 are covered by the queen along the 8th rank.",
+      "key_lesson": "The queen mates on the back rank just like a rook does \u2014 and from MORE squares because of its diagonal reach. When you see an unprotected back rank with a queen anywhere near it, you have a candidate mate.",
+      "theme": "Back-Rank Mates"
+    },
+    {
+      "fen": "3r2k1/5ppp/8/8/8/4Q3/5PPP/4R1K1 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Find Re8+ Rxe8 Qxe8# \u2014 sacrifice + mate",
+      "explanation": "White plays Re8+! Black must capture Rxe8 (forced \u2014 only the rook defends the back rank, and no piece can interpose or block). Then Qxe8# \u2014 the queen recaptures and delivers mate on the back rank. Black king has no escape (pawns block f7/g7/h7, queen covers f8/h8).",
+      "key_lesson": "When a single piece defends the back rank, REMOVE IT by force \u2014 sacrifice, deflect, overload, or trade. The classic pattern: rook sac to draw the defender, then queen mate. Memorize this sequence.",
+      "theme": "Back-Rank Mates"
+    },
+    {
+      "fen": "6k1/5pp1/7p/8/8/8/8/4R1K1 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "setup",
+      "label": "Luft defense \u2014 h6 saves the king",
+      "explanation": "Black has pushed h7-h6 making luft (an escape square for the king on h7). White plays Re8+, but unlike the standard back-rank mate, the Black king simply runs to h7 \u2014 no mate, equal game. The single pawn move on move 1-15 prevented a future disaster.",
+      "key_lesson": "Push h6 (or h3 as White) the moment your king is castled and major pieces are still on the board \u2014 it costs one tempo and saves the game. The pawn move is called LUFT (German for 'air'). Make it a habit before move 20.",
+      "theme": "Back-Rank Mates"
+    },
+    {
+      "fen": "r5k1/5ppp/8/8/8/8/8/R5K1 b - - 0 1",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Mutual back-rank vulnerability \u2014 whoever moves first wins",
+      "explanation": "Both kings have no luft (no escape squares on the 7th rank \u2014 pawns block them all). Both sides have a rook on the back rank. Whoever delivers check first wins \u2014 here Black plays Ra1+ and there's no defense (White king on g1 has no escape, no piece to block).",
+      "key_lesson": "In symmetric endgames with both back ranks weak, TEMPO is everything. The side to move wins. Either deliver the back-rank check first OR make luft first \u2014 but not both, choose.",
       "theme": "Back-Rank Mates"
     },
     {
@@ -217,6 +452,51 @@
       "theme": "K+Q & K+R Mates"
     },
     {
+      "fen": "4k3/8/3Q4/8/8/8/8/4K3 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "setup",
+      "label": "K+Q technique start \u2014 box and march",
+      "explanation": "White has K+Q vs lone Black king. The queen on d6 already restricts the Black king to the 8th rank (king cannot cross the 6th-rank barrier). The technique now: bring the White king up, maintain the box, then deliver mate on the edge with king support. Do NOT give early checks \u2014 they waste time and risk stalemate.",
+      "key_lesson": "K+Q vs K mating recipe: (1) Use the queen to restrict enemy king to a smaller area (knight-distance away from enemy king works perfectly). (2) March your king up to support. (3) Mate on the edge with one decisive check, defended by your king.",
+      "theme": "K+Q & K+R Mates"
+    },
+    {
+      "fen": "5K1k/8/6Q1/8/8/8/8/8 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Find Qg7# \u2014 K+Q corner mate",
+      "explanation": "White plays Qg7#! The queen moves to g7 attacking the Black king on h8 (diagonal g7-h8). The Black king cannot capture the queen \u2014 it's defended by the White king on f8. The king has no other moves (h7 and g8 are also covered by the queen, and h8 itself is attacked).",
+      "key_lesson": "The cleanest K+Q mate: enemy king in the corner, your queen one square diagonal away (the 'queen kiss'), your king defending. Memorize this geometric end-state \u2014 every K+Q endgame should aim for it.",
+      "theme": "K+Q & K+R Mates"
+    },
+    {
+      "fen": "1k6/8/1K6/8/8/8/8/7R w - - 0 1",
+      "side_to_move": "White",
+      "kind": "puzzle",
+      "label": "Find Rh8# \u2014 K+R edge mate via opposition",
+      "explanation": "White plays Rh8#! The rook reaches the 8th rank delivering check to the king on b8. White's king on b6 takes opposition with the Black king, controlling all escape squares (a7, b7, c7 all attacked by the White king; a8 and c8 covered by the rook on h8). Mate.",
+      "key_lesson": "K+R vs K mating recipe: rook cuts the enemy king off on a rank/file, your king takes DIRECT OPPOSITION on the file the enemy king is trapped on (2 squares away, kings on same file), then rook check on the 8th rank = mate.",
+      "theme": "K+Q & K+R Mates"
+    },
+    {
+      "fen": "8/8/8/3k4/8/3K4/8/R7 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "setup",
+      "label": "K+R technique \u2014 opposition + waiting move",
+      "explanation": "White K on d3 has direct opposition with Black K on d5. The rook on a1 is ready to deliver check along the 5th rank or to slide horizontally as a waiting move. Plays like Ra5+! drive the king back rank by rank. This is the BOX-AND-LADDER technique mid-execution.",
+      "key_lesson": "When you have K+R vs K, use the rook to CUT OFF a rank/file the enemy king cannot cross. Your king takes opposition. When the enemy king zigzags, the rook waits (slide along the cut file) until king is forced into opposition again. Then the rook check drops a rank \u2014 repeat until mate.",
+      "theme": "K+Q & K+R Mates"
+    },
+    {
+      "fen": "7k/8/5KQ1/8/8/8/8/8 b - - 0 1",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "STALEMATE TRAP \u2014 the cardinal K+Q sin",
+      "explanation": "White's queen on g6 and king on f6 have left the Black king on h8 with no legal moves AND no check. RESULT: stalemate \u2014 instant draw despite White's overwhelming material advantage. This is the most common K+Q vs K disaster.",
+      "key_lesson": "In K+Q endgames, ALWAYS leave the enemy king at least one move (or deliver check). NEVER put your queen on a square that takes away the king's only square without checking. The safe technique: keep queen a knight-move away from the king while marching your own king up.",
+      "theme": "K+Q & K+R Mates"
+    },
+    {
       "fen": "8/8/8/3k4/8/3K4/3P4/8 w - - 0 1",
       "side_to_move": "White",
       "kind": "setup",
@@ -235,6 +515,51 @@
       "theme": "Opposition & K+Pawn"
     },
     {
+      "fen": "4k3/8/8/8/8/8/8/4K3 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "setup",
+      "label": "Distant opposition \u2014 kings 6 squares apart",
+      "explanation": "Two lone kings on the e-file, 6 squares apart. White to move. The side NOT to move has the opposition \u2014 here Black has the opposition because White must yield first. In a real K+P endgame, this kind of parity calculation determines who promotes.",
+      "key_lesson": "Opposition rule: when kings face each other on the same file/rank/diagonal with an EVEN number of empty squares between them, the side NOT to move has the opposition. Count carefully \u2014 direct (1 square), distant (3, 5, 7 squares).",
+      "theme": "Opposition & K+Pawn"
+    },
+    {
+      "fen": "8/8/8/4k3/8/8/P7/4K3 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "setup",
+      "label": "Rule of the Square \u2014 Black king can catch the pawn",
+      "explanation": "White pawn on a2 needs to promote on a8 (6 squares). Black king on e5 is INSIDE the square (the 6x6 area from a2-a8-f8-f3 \u2014 verify: e5 is inside since max(|e-a|, |5-8|) = 4 \u2264 6 moves available). Black catches the pawn \u2014 draw.",
+      "key_lesson": "Rule of the Square: draw an imaginary square from the pawn to its promotion rank. If the defending king is inside that square (or can step in on its move), the king catches the pawn. This calculation takes 2 seconds and decides countless endgames.",
+      "theme": "Opposition & K+Pawn"
+    },
+    {
+      "fen": "8/8/3K4/8/3P4/3k4/8/8 w - - 0 1",
+      "side_to_move": "White",
+      "kind": "setup",
+      "label": "Key squares occupied \u2014 White wins regardless of opposition",
+      "explanation": "White's king on d6 occupies a KEY SQUARE for the d-pawn (the squares c6/d6/e6 are the key squares for a d-pawn before it reaches the 5th rank). When the attacking king reaches a key square, the position is winning REGARDLESS of opposition \u2014 the pawn promotes by force.",
+      "key_lesson": "Key squares > opposition. For pawns on the 2nd-5th rank: key squares are the 3 squares two ranks ahead of the pawn. For 6th-rank pawns: key squares are the 3 squares directly ahead. If your king occupies a key square, the pawn wins.",
+      "theme": "Opposition & K+Pawn"
+    },
+    {
+      "fen": "8/8/8/8/k7/P7/K7/8 b - - 0 1",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Rook-pawn draw \u2014 the corner is a haven",
+      "explanation": "A rook pawn (a-pawn or h-pawn) often cannot win even with the king escorting it. Here Black plays Kxa3 (capturing the pawn) \u2014 draw. Even without that, Black can shuffle Ka4-Kb4 and White's king cannot make progress without abandoning the pawn.",
+      "key_lesson": "Rook pawns are SPECIAL \u2014 the defending king can shoulder against the wall and force stalemate or king-trade. If you're ahead with a rook pawn and the enemy king reaches the corner, it's a draw. Convert before this happens, or avoid rook-pawn endings.",
+      "theme": "Opposition & K+Pawn"
+    },
+    {
+      "fen": "8/8/8/3k4/8/3P4/3K4/8 b - - 0 1",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "K+P endgame \u2014 who has the opposition?",
+      "explanation": "White K on d2 with pawn on d3, Black K on d5. Black to move. Kings face each other 3 squares apart on the d-file (2 empty squares between). Black must move \u2014 yielding the opposition to White. White advances Kd3? No \u2014 Kd2 to e3 sideways, gaining ground. The pawn ending is winning for White only with correct opposition play.",
+      "key_lesson": "In K+P endgames, the king MUST lead the pawn (not push the pawn first). Get the king in front of the pawn with opposition. If you push the pawn too early, you lose the opposition battle and the game draws.",
+      "theme": "Opposition & K+Pawn"
+    },
+    {
       "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2",
       "side_to_move": "Black",
       "kind": "setup",
@@ -250,6 +575,51 @@
       "label": "Reti / KID setup \u2014 flexible center principle",
       "explanation": "After 1.d4 Nf6 2.Nf3, both sides have developed knights toward the center without committing the e/c pawns. Modern flexible opening showing 'develop first, commit later' philosophy.",
       "key_lesson": "Opening principles are flexible. You don't have to push BOTH central pawns immediately \u2014 sometimes 'control' the center via pieces (hypermodern). The principle is intent, not literal pawn placement.",
+      "theme": "Opening Principles"
+    },
+    {
+      "fen": "rnbqkbnr/pppppppp/8/8/8/2N5/PPPPPPPP/R1BQKBNR b KQkq - 1 1",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Knights before bishops \u2014 1.Nc3 in action",
+      "explanation": "After 1.Nc3, White has developed a knight first. The principle 'knights before bishops' exists because knights have clear best squares (c3/f3/c6/f6) while bishop development depends on pawn structure decisions you haven't made yet. Develop the obvious pieces first.",
+      "key_lesson": "Knights belong on c3/f3 (or c6/f6) in 99% of openings \u2014 develop them without thinking. Bishops require a pawn move first to clear their diagonal, and their best square varies by opening. Knights first = no commitment errors.",
+      "theme": "Opening Principles"
+    },
+    {
+      "fen": "r1bq1rk1/pppp1ppp/2n2n2/2b1p3/2B1P3/3P1N2/PPP2PPP/RNBQ1RK1 w - - 4 6",
+      "side_to_move": "White",
+      "kind": "setup",
+      "label": "Italian Game \u2014 both sides castled, all principles met",
+      "explanation": "A textbook Italian Game position: both sides have controlled the center (e4/e5), developed knights to f3/f6 and c3 will follow, developed bishops to c4/c5, and castled kingside. Every opening principle has been satisfied by move 6 \u2014 this is what good opening play looks like.",
+      "key_lesson": "By move 8-10, you should have: pawns in the center, both knights developed, at least one bishop developed, and your king castled. If you check off all 4 by move 10, you've followed the principles correctly \u2014 you're now ready to make a middlegame plan.",
+      "theme": "Opening Principles"
+    },
+    {
+      "fen": "rnb1kbnr/ppp1pppp/8/3q4/8/2N5/PPPP1PPP/R1BQKBNR b KQkq - 2 3",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Don't move pieces twice \u2014 Scandinavian queen kicked",
+      "explanation": "After 1.e4 d5 2.exd5 Qxd5 3.Nc3, Black has used 2 of 3 opening moves on the queen and now must move it a THIRD time (attacked by the knight on c3). White develops with tempo while Black wastes moves shuffling the queen. This is the cost of early queen play.",
+      "key_lesson": "DON'T bring your queen out before your minor pieces. The queen is so valuable that opponents can develop their minor pieces WITH TEMPO by attacking her. Every queen move that gets attacked = a wasted move + a free development move for your opponent.",
+      "theme": "Opening Principles"
+    },
+    {
+      "fen": "rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq c3 0 2",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Center control \u2014 Queen's Gambit (1.d4 d5 2.c4)",
+      "explanation": "After 1.d4 d5 2.c4, White challenges Black's central pawn with the famous Queen's Gambit. The c4 pawn is offered to undermine Black's d5 stronghold and seize central control. This is THE classical fight for the center in d-pawn openings.",
+      "key_lesson": "The center is the most valuable real estate on the board. Pieces in the center control more squares (a knight on e5 attacks 8 squares; on a1 it attacks 2). Fight for the center on every move 1 of the opening \u2014 push d4/e4 (or d5/e5) and back the pawns with pieces.",
+      "theme": "Opening Principles"
+    },
+    {
+      "fen": "rnbqkbnr/pppp1ppp/8/4p3/4P1Q1/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2",
+      "side_to_move": "Black",
+      "kind": "setup",
+      "label": "Wayward queen \u2014 2.Qg4? violates every principle",
+      "explanation": "After 1.e4 e5 2.Qg4?, White has developed the queen ON MOVE TWO before any minor piece. Black gets a free attack with 2...Nc6 (developing AND attacking the queen). White will waste 2-3 moves shuffling the queen while Black develops freely \u2014 Black has a near-winning position by move 8.",
+      "key_lesson": "Punishing early queen sorties is automatic: respond by developing pieces that ATTACK the queen. Every tempo your opponent loses moving the queen is a free move for you. This is why 'develop knights before queen' is sacred.",
       "theme": "Opening Principles"
     }
   ],
