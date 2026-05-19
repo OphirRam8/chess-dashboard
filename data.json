@@ -1,17 +1,17 @@
 {
   "_meta": {
-    "generated_at": "2026-05-18T21:15:03.124675+00:00",
+    "generated_at": "2026-05-19T04:30:50.633045+00:00",
     "generator": "chess_dashboard_data.py",
     "version": "2.0"
   },
   "goal": {
     "target_rapid": 1500,
-    "current_rapid": 944,
+    "current_rapid": 923,
     "current_blitz": 653,
     "current_chesscom_puzzle": 1732,
     "current_lichess_puzzle": null,
     "baseline_rapid": 937,
-    "progress_pct": 1,
+    "progress_pct": 0,
     "program_start": "2026-05-04",
     "program_end": "2026-12-31",
     "days_elapsed": 14,
@@ -41,7 +41,7 @@
     },
     {
       "date": "2026-05-18",
-      "chesscom_rapid": 944,
+      "chesscom_rapid": 923,
       "chesscom_blitz": 653,
       "chesscom_puzzle": 1732,
       "lichess_puzzle": null
@@ -113,7 +113,17 @@
     }
   ],
   "recent_games": [],
-  "lichess_puzzles_today": null,
+  "lichess_puzzles_today": {
+    "wins": 0,
+    "losses": 0,
+    "draws": 0,
+    "total": 0,
+    "rating_before": null,
+    "rating_after": null,
+    "rating_delta": 0,
+    "window_hours": 24,
+    "contributing_day_entries": 0
+  },
   "pattern_gallery": [
     {
       "fen": "q3k3/2N5/8/8/8/8/8/6K1 b - - 0 1",
