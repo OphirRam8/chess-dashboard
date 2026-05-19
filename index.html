@@ -118,6 +118,69 @@ header { padding:18px 0 12px; border-bottom:1px solid rgba(58,36,25,0.10); margi
 }
 
 .masterskills-section { margin-bottom:16px; }
+
+/* Activity strip — "what you measure expands" */
+.activity-card {
+  background:var(--paper);
+  border:1px solid rgba(58,36,25,0.10);
+  border-top:4px solid var(--accent);
+  border-radius:14px;
+  padding:14px 16px 16px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+.activity-header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px; }
+.activity-title { font-family:Georgia, serif; font-size:16px; font-weight:600; color:var(--brown); }
+.activity-tag { font-size:10px; color:var(--brown-muted); text-transform:uppercase; letter-spacing:0.08em; }
+.activity-today-row {
+  display:grid; grid-template-columns:1fr 1fr; gap:10px;
+  margin-bottom:14px;
+}
+.activity-tile {
+  background:rgba(106,138,74,0.07); border-radius:10px; padding:10px 12px;
+  text-align:center;
+}
+.activity-tile-num {
+  font-family:Georgia, serif; font-size:28px; font-weight:700; line-height:1;
+  color:var(--accent-deep); letter-spacing:-0.01em;
+}
+.activity-tile-label {
+  font-size:11px; color:var(--brown-muted); text-transform:uppercase;
+  letter-spacing:0.08em; margin-top:4px;
+}
+.activity-row {
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:13px; color:var(--brown-soft); padding:6px 0;
+  border-bottom:1px dashed rgba(58,36,25,0.06);
+}
+.activity-row:last-of-type { border-bottom:none; }
+.activity-row-label { font-weight:600; color:var(--brown); }
+.activity-row-val { font-variant-numeric:tabular-nums; }
+.activity-bar-wrap { margin-top:4px; }
+.activity-bar-track {
+  height:5px; background:rgba(58,36,25,0.08); border-radius:3px; overflow:hidden;
+}
+.activity-bar-fill {
+  height:100%; background:linear-gradient(90deg, var(--accent), var(--gold));
+  border-radius:3px; transition:width 0.4s ease;
+}
+.activity-bar-fill.over { background:linear-gradient(90deg, var(--gold), var(--warm)); }
+.activity-streaks {
+  display:flex; gap:14px; margin-top:12px;
+  padding-top:10px; border-top:1px solid rgba(58,36,25,0.08);
+}
+.activity-streak {
+  flex:1; text-align:center;
+}
+.activity-streak-num {
+  font-family:Georgia, serif; font-size:22px; font-weight:700;
+  color:var(--warm);
+}
+.activity-streak-label {
+  font-size:10px; color:var(--brown-muted); text-transform:uppercase;
+  letter-spacing:0.08em; margin-top:2px;
+}
+.activity-streak-num.cold { color:var(--brown-muted); }
 .masterskills-title { font-family:Georgia, serif; font-size:18px; font-weight:600; margin-bottom:4px; padding-left:4px; }
 .masterskills-tagline { font-size:11px; color:var(--brown-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px; padding-left:4px; }
 .skill-cards { display:grid; grid-template-columns:1fr; gap:10px; }
@@ -272,6 +335,47 @@ footer { margin-top:24px; font-size:11px; color:var(--brown-muted); text-align:c
   <div class="saba" id="saba">—</div>
 </div>
 
+<div class="activity-card" id="activity-card">
+  <div class="activity-header">
+    <div class="activity-title">📈 Activity — what you measure expands</div>
+    <div class="activity-tag" id="activity-streak-mini">— streak</div>
+  </div>
+  <div class="activity-today-row">
+    <div class="activity-tile">
+      <div class="activity-tile-num" id="activity-today-games">—</div>
+      <div class="activity-tile-label">Games today</div>
+    </div>
+    <div class="activity-tile">
+      <div class="activity-tile-num" id="activity-today-puzzles">—</div>
+      <div class="activity-tile-label">Puzzles today</div>
+    </div>
+  </div>
+  <div class="activity-row">
+    <span class="activity-row-label">Games this week</span>
+    <span class="activity-row-val" id="activity-week-games">—</span>
+  </div>
+  <div class="activity-bar-wrap">
+    <div class="activity-bar-track"><div class="activity-bar-fill" id="activity-games-bar" style="width:0%"></div></div>
+  </div>
+  <div class="activity-row" style="margin-top:8px;">
+    <span class="activity-row-label">Puzzles this week</span>
+    <span class="activity-row-val" id="activity-week-puzzles">—</span>
+  </div>
+  <div class="activity-bar-wrap">
+    <div class="activity-bar-track"><div class="activity-bar-fill" id="activity-puzzles-bar" style="width:0%"></div></div>
+  </div>
+  <div class="activity-streaks">
+    <div class="activity-streak">
+      <div class="activity-streak-num" id="activity-current-streak">—</div>
+      <div class="activity-streak-label">Current streak (days)</div>
+    </div>
+    <div class="activity-streak">
+      <div class="activity-streak-num" id="activity-best-streak">—</div>
+      <div class="activity-streak-label">Best streak</div>
+    </div>
+  </div>
+</div>
+
 <div class="key-concepts-card" id="key-concepts">
   <div class="key-concepts-header">
     <div class="key-concepts-title">⭐ Key concepts — always</div>
@@ -375,6 +479,34 @@ function renderHero(d) {
     $('hero-concept').style.display = 'none';
   }
   $('saba').textContent = d.saba_quote || '';
+}
+
+function renderActivity(d) {
+  var a = d.activity || {};
+  if (!a.today) { $('activity-card').style.display = 'none'; return; }
+  var today = a.today || {};
+  var week = a.this_week || {};
+  var streaks = a.streaks || {};
+
+  $('activity-today-games').textContent = today.games != null ? today.games : 0;
+  $('activity-today-puzzles').textContent = today.puzzles != null ? today.puzzles : 0;
+
+  $('activity-week-games').textContent = (week.games || 0) + ' / ' + (week.target_games || '?') + '  (' + (week.games_target_pct || 0) + '%)';
+  $('activity-week-puzzles').textContent = (week.puzzles || 0) + ' / ' + (week.target_puzzles || '?') + '  (' + (week.puzzles_target_pct || 0) + '%)';
+
+  var gBar = $('activity-games-bar');
+  var pBar = $('activity-puzzles-bar');
+  gBar.style.width = Math.min(100, week.games_target_pct || 0) + '%';
+  if ((week.games_target_pct || 0) >= 100) gBar.classList.add('over');
+  pBar.style.width = Math.min(100, week.puzzles_target_pct || 0) + '%';
+  if ((week.puzzles_target_pct || 0) >= 100) pBar.classList.add('over');
+
+  var cs = streaks.current || 0;
+  var bs = streaks.best || 0;
+  $('activity-current-streak').textContent = cs;
+  if (cs === 0) $('activity-current-streak').classList.add('cold');
+  $('activity-best-streak').textContent = bs;
+  $('activity-streak-mini').textContent = (cs > 0 ? '🔥 ' + cs + '-day streak' : 'No active streak');
 }
 
 function renderKeyConcepts(d) {
@@ -653,6 +785,7 @@ fetch(DATA_URL)
   .then(r => r.json())
   .then(d => {
     renderHero(d);
+    renderActivity(d);
     renderKeyConcepts(d);
     renderMasterSkills(d);
     renderGames(d);
