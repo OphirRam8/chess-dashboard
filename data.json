@@ -1,12 +1,12 @@
 {
   "_meta": {
-    "generated_at": "2026-05-19T17:26:46.838477+00:00",
+    "generated_at": "2026-05-20T04:31:01.914583+00:00",
     "generator": "chess_dashboard_data.py",
     "version": "2.0"
   },
   "goal": {
     "target_rapid": 1500,
-    "current_rapid": 923,
+    "current_rapid": 908,
     "current_blitz": 653,
     "current_chesscom_puzzle": 1732,
     "current_lichess_puzzle": null,
@@ -48,7 +48,7 @@
     },
     {
       "date": "2026-05-19",
-      "chesscom_rapid": 923,
+      "chesscom_rapid": 908,
       "chesscom_blitz": 653,
       "chesscom_puzzle": 1732,
       "lichess_puzzle": null
@@ -119,8 +119,32 @@
       "is_current": false
     }
   ],
-  "recent_games": [],
-  "lichess_puzzles_today": null,
+  "recent_games": [
+    {
+      "opponent": "paam66",
+      "opp_rating": 1011,
+      "source": "chess.com",
+      "result": "Loss",
+      "color": "Black",
+      "time_control": null,
+      "mistakes": null,
+      "avg_loss": null,
+      "worst": null,
+      "url": "https://www.chess.com/game/live/168959995430",
+      "already_logged_to_notion": true
+    }
+  ],
+  "lichess_puzzles_today": {
+    "wins": 0,
+    "losses": 0,
+    "draws": 0,
+    "total": 0,
+    "rating_before": null,
+    "rating_after": null,
+    "rating_delta": 0,
+    "window_hours": 24,
+    "contributing_day_entries": 0
+  },
   "pattern_gallery": [
     {
       "fen": "q3k3/2N5/8/8/8/8/8/6K1 b - - 0 1",
@@ -792,11 +816,12 @@
     }
   ],
   "today_concept": {
-    "term": "Pin",
-    "one_liner": "Tactical motif where a piece can't move because doing so would expose a more valuable piece behind it. Absolute pin (against the king) is illegal to break; relative pin is just costly.",
-    "manual_section": "knowledge/chess/tactics/pin.md",
-    "atom_slug": "pin",
-    "folder": "tactics"
+    "term": "Back-Rank Mate",
+    "one_liner": "A castled king is trapped on the 1st/8th rank by its own pawns; a rook or queen swings down for mate. One of the most common middlegame mating patterns. Defense \u2014 make a luft for your king.",
+    "manual_section": "knowledge/chess/endgames/back-rank-mate.md",
+    "atom_slug": "back-rank-mate",
+    "folder": "endgames",
+    "tied_to_weakness": "defender accounting"
   },
   "saba_quote": "Pattern recognition is a form of memory. Honor what you've already learned.",
   "key_concepts": [
@@ -846,10 +871,16 @@
     "creation_unlocks_at": 1200,
     "creation_active": false,
     "week_data": {
-      "week_skill_counts": {},
-      "week_pattern_counts": {},
-      "month_pattern_counts": {},
-      "total_patterns_logged": 0
+      "week_skill_counts": {
+        "Recognition gap": 1
+      },
+      "week_pattern_counts": {
+        "Opening trouble": 1
+      },
+      "month_pattern_counts": {
+        "Opening trouble": 1
+      },
+      "total_patterns_logged": 1
     }
   },
   "srs": {
@@ -870,26 +901,26 @@
   },
   "activity": {
     "today": {
-      "games": 0,
+      "games": 1,
       "puzzles": 0,
       "lichess_puzzles": 0,
       "chesscom_puzzles": 0
     },
     "this_week": {
-      "games": 0,
+      "games": 1,
       "puzzles": 0,
       "target_games": 25,
       "target_puzzles": 70,
-      "games_target_pct": 0,
+      "games_target_pct": 4,
       "puzzles_target_pct": 0
     },
     "this_month": {
-      "games": 0,
+      "games": 1,
       "puzzles": 0
     },
     "streaks": {
-      "current": 0,
-      "best": 0
+      "current": 1,
+      "best": 1
     },
     "targets": {
       "games_per_week": 25,
