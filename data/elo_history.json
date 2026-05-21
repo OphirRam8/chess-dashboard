@@ -33,5 +33,12 @@
     "chesscom_blitz": 653,
     "chesscom_puzzle": 1732,
     "lichess_puzzle": null
+  },
+  {
+    "date": "2026-05-20",
+    "chesscom_rapid": 887,
+    "chesscom_blitz": 653,
+    "chesscom_puzzle": 1732,
+    "lichess_puzzle": null
   }
 ]

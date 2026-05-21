@@ -1,12 +1,12 @@
 {
   "_meta": {
-    "generated_at": "2026-05-20T04:31:01.914583+00:00",
+    "generated_at": "2026-05-21T04:30:12.927966+00:00",
     "generator": "chess_dashboard_data.py",
     "version": "2.0"
   },
   "goal": {
     "target_rapid": 1500,
-    "current_rapid": 908,
+    "current_rapid": 887,
     "current_blitz": 653,
     "current_chesscom_puzzle": 1732,
     "current_lichess_puzzle": null,
@@ -14,8 +14,8 @@
     "progress_pct": 0,
     "program_start": "2026-05-04",
     "program_end": "2026-12-31",
-    "days_elapsed": 15,
-    "days_remaining": 226
+    "days_elapsed": 16,
+    "days_remaining": 225
   },
   "elo_history": [
     {
@@ -49,6 +49,13 @@
     {
       "date": "2026-05-19",
       "chesscom_rapid": 908,
+      "chesscom_blitz": 653,
+      "chesscom_puzzle": 1732,
+      "lichess_puzzle": null
+    },
+    {
+      "date": "2026-05-20",
+      "chesscom_rapid": 887,
       "chesscom_blitz": 653,
       "chesscom_puzzle": 1732,
       "lichess_puzzle": null
@@ -121,29 +128,29 @@
   ],
   "recent_games": [
     {
-      "opponent": "paam66",
-      "opp_rating": 1011,
+      "opponent": "eddyfrias",
+      "opp_rating": 879,
       "source": "chess.com",
       "result": "Loss",
-      "color": "Black",
+      "color": "White",
       "time_control": null,
       "mistakes": null,
       "avg_loss": null,
       "worst": null,
-      "url": "https://www.chess.com/game/live/168959995430",
+      "url": "https://www.chess.com/game/live/169006547320",
       "already_logged_to_notion": true
     }
   ],
   "lichess_puzzles_today": {
-    "wins": 0,
-    "losses": 0,
+    "wins": 17,
+    "losses": 4,
     "draws": 0,
-    "total": 0,
-    "rating_before": null,
-    "rating_after": null,
-    "rating_delta": 0,
+    "total": 21,
+    "rating_before": 1226,
+    "rating_after": 1232,
+    "rating_delta": 6,
     "window_hours": 24,
-    "contributing_day_entries": 0
+    "contributing_day_entries": 2
   },
   "pattern_gallery": [
     {
@@ -823,7 +830,7 @@
     "folder": "endgames",
     "tied_to_weakness": "defender accounting"
   },
-  "saba_quote": "Pattern recognition is a form of memory. Honor what you've already learned.",
+  "saba_quote": "Don't be righteous \u2014 be smart.",
   "key_concepts": [
     {
       "icon": "\ud83c\udfaf",
@@ -872,26 +879,36 @@
     "creation_active": false,
     "week_data": {
       "week_skill_counts": {
+        "Utilization gap": 2,
         "Recognition gap": 1
       },
       "week_pattern_counts": {
+        "Missed tactic": 2,
         "Opening trouble": 1
       },
       "month_pattern_counts": {
+        "Missed tactic": 2,
         "Opening trouble": 1
       },
-      "total_patterns_logged": 1
+      "total_patterns_logged": 3
     }
   },
   "srs": {
     "total_concepts": 63,
     "status_counts": {
-      "New": 62,
-      "Learning": 1,
+      "New": 61,
+      "Learning": 2,
       "Reviewing": 0,
       "Mastered": 0
     },
-    "due_today": [],
+    "due_today": [
+      {
+        "term": "Pin",
+        "folder": "tactics",
+        "atom_path": "knowledge/chess/tactics/pin.md",
+        "next_review": "2026-05-20"
+      }
+    ],
     "progress_pct": 0
   },
   "weekly_synthesis": {
@@ -907,26 +924,26 @@
       "chesscom_puzzles": 0
     },
     "this_week": {
-      "games": 1,
+      "games": 2,
       "puzzles": 0,
       "target_games": 25,
       "target_puzzles": 70,
-      "games_target_pct": 4,
+      "games_target_pct": 8,
       "puzzles_target_pct": 0
     },
     "this_month": {
-      "games": 1,
+      "games": 2,
       "puzzles": 0
     },
     "streaks": {
-      "current": 1,
-      "best": 1
+      "current": 2,
+      "best": 2
     },
     "targets": {
       "games_per_week": 25,
       "puzzles_per_day": 10,
       "puzzles_per_week": 70
     },
-    "log_days_tracked": 1
+    "log_days_tracked": 2
   }
 }
