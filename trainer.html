@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#F4F2EB">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Blunder Trainer">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
 <title>♟ Blunder Trainer — Ophir</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
 <style>
@@ -404,6 +409,7 @@ async function boot(){
   }catch(e){
     adoptLegacy(JSON.parse(document.getElementById('drill-data').textContent));
   }
+  await syncRemote();
   renderDashboard();
 }
 const THEME_ICONS = {
@@ -424,22 +430,75 @@ let S = Object.assign({
 if(!S.srs) S.srs = {};
 
 function todayStr(){ return new Date().toISOString().slice(0,10); }
-function addDays(n){ const d = new Date(); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
+function addDaysTo(dateStr, n){ const d = new Date(dateStr + "T12:00:00"); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
+function addDays(n){ return addDaysTo(todayStr(), n); }
 
 /* Spaced repetition: miss → due tomorrow; solve → interval triples (3, 9, 27 days). */
-function srsUpdate(key, correct){
+function srsUpdate(key, correct, baseDate){
   const cur = S.srs[key] || {interval: 0, seen: 0};
   const interval = correct ? Math.min((cur.interval || 1) * 3, 60) : 1;
-  S.srs[key] = {due: addDays(interval), interval, seen: cur.seen + 1};
+  S.srs[key] = {due: addDaysTo(baseDate || todayStr(), interval), interval, seen: cur.seen + 1};
+}
+
+/* The attempt log is the source of truth — sessions and SRS schedules are
+   recomputed from it, which makes merging progress across devices safe. */
+function recomputeDerived(){
+  S.sessions = []; S.srs = {};
+  const sorted = [...S.attempts].sort((a,b)=>(a.ts||0)-(b.ts||0));
+  for(const a of sorted){
+    if(!a.firstTry) continue;
+    let cur = S.sessions[S.sessions.length-1];
+    if(!cur || cur.date !== a.date){ cur = {date: a.date, correct:0, total:0}; S.sessions.push(cur); }
+    cur.total++; if(a.correct) cur.correct++;
+    if(a.key) srsUpdate(a.key, a.correct, a.date);
+  }
 }
 
 function recordAttempt(key, theme, correct, firstTry){
-  S.attempts.push({key, theme, correct, firstTry, date: todayStr()});
+  S.attempts.push({key, theme, correct, firstTry, date: todayStr(), ts: Date.now()});
   let cur = S.sessions[S.sessions.length-1];
   if(!cur || cur.date !== todayStr()){ cur = {date: todayStr(), correct:0, total:0}; S.sessions.push(cur); }
   if(firstTry){ cur.total++; if(correct) cur.correct++; srsUpdate(key, correct); }
   store.save(S);
+  schedulePush();
 }
+
+/* ---------- remote sync (Cloudflare Pages Function + KV behind Access).
+   On plain static hosting the endpoint 404s and we stay localStorage-only. ---------- */
+const PROGRESS_API = "api/progress";
+let remoteOK = false;
+function attemptId(a){ return (a.ts||0) + "|" + (a.key||a.idx||"") + "|" + (a.date||""); }
+async function syncRemote(){
+  try{
+    const r = await fetch(PROGRESS_API, {cache:"no-store"});
+    if(!r.ok) throw new Error("no api");
+    const remote = await r.json();
+    remoteOK = true;
+    const map = new Map();
+    for(const list of [remote.attempts||[], S.attempts]){
+      for(const a of list){ if(a && typeof a === "object") map.set(attemptId(a), a); }
+    }
+    S.attempts = [...map.values()].sort((a,b)=>(a.ts||0)-(b.ts||0));
+    recomputeDerived();
+    store.save(S);
+    fetch(PROGRESS_API, {method:"PUT", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({attempts: S.attempts})}).catch(()=>{});
+  }catch(e){ remoteOK = false; }
+}
+let pushTimer = null;
+function schedulePush(){
+  if(!remoteOK) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(()=>{
+    fetch(PROGRESS_API, {method:"PUT", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({attempts: S.attempts})}).catch(()=>{});
+  }, 2500);
+}
+window.addEventListener("pagehide", ()=>{
+  if(remoteOK && navigator.sendBeacon){
+    navigator.sendBeacon(PROGRESS_API, new Blob([JSON.stringify({attempts: S.attempts})], {type:"application/json"}));
+  }
+});
 function overallAccuracy(){
   const f = S.attempts.filter(a=>a.firstTry);
   if(!f.length) return null;

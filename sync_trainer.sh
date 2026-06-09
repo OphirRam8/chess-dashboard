@@ -10,6 +10,10 @@ if ! git diff --quiet data/trainer-drills.json 2>/dev/null || [ -n "$(git status
   git add data/trainer-drills.json data/trainer-cache.json
   git commit -m "trainer sync $(date +%Y-%m-%d)" >> /tmp/trainer-sync.log 2>&1
   git push origin main >> /tmp/trainer-sync.log 2>&1
+  # redeploy Cloudflare Pages so the live trainer picks up the new drills
+  if [ -x ./deploy_pages.sh ] && grep -qv KV_NAMESPACE_ID_PLACEHOLDER wrangler.toml 2>/dev/null; then
+    ./deploy_pages.sh >> /tmp/trainer-sync.log 2>&1 || echo "$(date): pages deploy FAILED" >> /tmp/trainer-sync.log
+  fi
   echo "$(date): pushed new drill bank" >> /tmp/trainer-sync.log
 else
   echo "$(date): no new games" >> /tmp/trainer-sync.log

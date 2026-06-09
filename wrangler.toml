@@ -1,0 +1,9 @@
+# Cloudflare Pages config for the Blunder Trainer.
+# The KV namespace id gets filled in after `wrangler kv namespace create PROGRESS`.
+name = "chess-trainer"
+compatibility_date = "2026-06-01"
+pages_build_output_dir = "dist"
+
+[[kv_namespaces]]
+binding = "PROGRESS"
+id = "KV_NAMESPACE_ID_PLACEHOLDER"
