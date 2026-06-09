@@ -3,108 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0E141B">
 <title>♟ Blunder Trainer — Ophir</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
 <style>
   :root{
-    --bg:#13141A; --card:#1C1F2B; --gold:#D4A843; --coral:#E87C3E;
-    --text:#E8E8F0; --muted:#6B7280; --light-sq:#F0D9B5; --dark-sq:#B58863;
-    --green:#7BA05B;
+    /* Researched palette:
+       - board = chess.com tournament green (train on the colors you play on → pattern transfer; the green/buff scheme is the OTB eye-strain standard)
+       - backdrop = calm blue-charcoal dark mode (focus/immersion, low cognitive load)
+       - green = success & primary action · orange = streaks/rewards only (loss-aversion accent) · soft red = errors, briefly · blue = hints/info */
+    --bg:#0E141B; --card:#18202B; --border:#243042;
+    --green:#81B64C; --green-bright:#A3D160;
+    --gold:#F5A623; --red:#E0573F; --blue:#54A9E0;
+    --text:#ECEFF4; --muted:#8B95A5;
+    --light-sq:#EEEED2; --dark-sq:#769656;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
+  html{-webkit-text-size-adjust:100%;}
   body{
     background:var(--bg); color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     min-height:100vh; padding-bottom:40px;
+    -webkit-tap-highlight-color:transparent;
   }
   header{padding:20px 16px 4px; max-width:960px; margin:0 auto;}
   header h1{font-size:1.35rem; letter-spacing:.3px;}
   header p{color:var(--muted); font-size:.85rem; margin-top:2px;}
   nav{
     display:flex; gap:4px; max-width:960px; margin:14px auto 0; padding:0 16px;
-    border-bottom:1px solid #2A2E3D; overflow-x:auto;
+    border-bottom:1px solid var(--border); overflow-x:auto;
   }
   nav button{
     background:none; border:none; color:var(--muted); font-size:.92rem; font-weight:600;
     padding:10px 14px; cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap;
     transition:color .15s;
   }
-  nav button.active{color:var(--gold); border-bottom-color:var(--gold);}
+  nav button .ico{display:none;}
+  nav button.active{color:var(--green-bright); border-bottom-color:var(--green);}
   nav button:hover{color:var(--text);}
   main{max-width:960px; margin:0 auto; padding:18px 16px;}
-  .card{background:var(--card); border-radius:12px; padding:18px; border:1px solid #262A3A;}
+  .card{background:var(--card); border-radius:14px; padding:18px; border:1px solid var(--border);}
   .grid{display:grid; gap:14px;}
   .stat-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
-  .stat .num{font-size:1.7rem; font-weight:700; color:var(--gold);}
+  .stat .num{font-size:1.7rem; font-weight:700; color:var(--green-bright);}
+  .stat .num.flame{color:var(--gold);}
   .stat .lbl{color:var(--muted); font-size:.78rem; margin-top:3px; text-transform:uppercase; letter-spacing:.6px;}
   .badge{
     display:inline-block; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-    font-size:.78rem; padding:3px 9px; border-radius:6px; background:#2A2E3D; color:var(--gold);
+    font-size:.78rem; padding:3px 9px; border-radius:6px; background:#223041; color:var(--blue);
   }
-  .badge.coral{color:var(--coral);}
+  .badge.coral{color:#F08A76; background:#332220;}
+  .badge.gold{color:var(--gold); background:#332A18;}
   .btn{
-    display:inline-block; background:var(--gold); color:#13141A; border:none; border-radius:8px;
-    font-weight:700; font-size:.95rem; padding:12px 22px; cursor:pointer; transition:transform .1s, opacity .15s;
+    display:inline-block; background:var(--green); color:#0E1A06; border:none; border-radius:10px;
+    font-weight:800; font-size:.95rem; padding:13px 22px; cursor:pointer;
+    transition:transform .1s, opacity .15s; box-shadow:0 3px 0 #5C8A33;
   }
-  .btn:hover{opacity:.9; transform:translateY(-1px);}
-  .btn.ghost{background:#2A2E3D; color:var(--text);}
-  .btn.coral{background:var(--coral); color:#13141A;}
+  .btn:hover{opacity:.92; transform:translateY(-1px);}
+  .btn:active{transform:translateY(1px); box-shadow:0 1px 0 #5C8A33;}
+  .btn.ghost{background:#243042; color:var(--text); box-shadow:0 3px 0 #18202B;}
+  .btn.coral{background:var(--gold); color:#221603; box-shadow:0 3px 0 #B97D14;}
   .btn:disabled{opacity:.4; cursor:default;}
   h2{font-size:1.05rem; margin-bottom:12px;}
   /* ---------- board ---------- */
   #board-wrap{display:flex; flex-direction:column; align-items:center;}
   #board{
     display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr);
-    width:min(92vw,460px); height:min(92vw,460px); border-radius:8px; overflow:hidden;
-    box-shadow:0 10px 34px rgba(0,0,0,.55), 0 0 0 1px rgba(212,168,67,.18);
-    user-select:none; -webkit-user-select:none;
+    width:min(94vw,460px); height:min(94vw,460px); border-radius:6px; overflow:hidden;
+    box-shadow:0 10px 34px rgba(0,0,0,.5), 0 0 0 1px rgba(129,182,76,.25);
+    user-select:none; -webkit-user-select:none; touch-action:manipulation;
   }
   .sq{
     display:flex; align-items:center; justify-content:center; position:relative;
     cursor:pointer; transition:background .12s;
   }
-  .sq.light{background:linear-gradient(135deg, #F4DFBE 0%, var(--light-sq) 55%, #E5C99E 100%);}
-  .sq.dark{background:linear-gradient(135deg, #BF946D 0%, var(--dark-sq) 55%, #A87B54 100%);}
+  .sq.light{background:var(--light-sq);}
+  .sq.dark{background:var(--dark-sq);}
   .sq .pc{
-    width:90%; height:90%; pointer-events:none;
-    filter:drop-shadow(0 2px 2px rgba(0,0,0,.35));
+    width:92%; height:92%; pointer-events:none;
+    filter:drop-shadow(0 2px 2px rgba(0,0,0,.3));
   }
   .pc.pop{animation:pop .28s cubic-bezier(.2,1.4,.5,1);}
   @keyframes pop{from{transform:scale(.55); opacity:.3;} to{transform:scale(1); opacity:1;}}
   .sq .coord{
     position:absolute; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-    font-size:clamp(8px,calc(min(92vw,460px)/42),12px); font-weight:700;
-    pointer-events:none; line-height:1; opacity:.85;
+    font-size:clamp(8px,calc(min(94vw,460px)/42),12px); font-weight:700;
+    pointer-events:none; line-height:1; opacity:.9;
   }
   .sq .coord.file{bottom:3px; right:4px;}
   .sq .coord.rank{top:3px; left:4px;}
-  .sq.light .coord{color:#A2754D;}
-  .sq.dark .coord{color:#F0D9B5;}
-  .sq.sel{box-shadow:inset 0 0 0 3px var(--gold);}
-  .sq.sel.light{background:linear-gradient(135deg,#EDD6A2,#E0C285);}
-  .sq.sel.dark{background:linear-gradient(135deg,#C9A360,#B89050);}
-  .sq.lastmove{box-shadow:inset 0 0 0 3px rgba(212,168,67,.55);}
-  .sq.best-dest{box-shadow:inset 0 0 0 3px var(--gold), inset 0 0 20px rgba(212,168,67,.45);}
-  .sq.mymove{box-shadow:inset 0 0 0 3px rgba(232,124,62,.8), inset 0 0 18px rgba(232,124,62,.35);}
+  .sq.light .coord{color:#769656;}
+  .sq.dark .coord{color:#EEEED2;}
+  /* chess.com-style yellow selection/last-move tints — familiar = zero relearning */
+  .sq.sel.light, .sq.lastmove.light{background:#F6F669;}
+  .sq.sel.dark, .sq.lastmove.dark{background:#BACA2B;}
+  .sq.best-dest{box-shadow:inset 0 0 0 3px var(--green-bright), inset 0 0 20px rgba(129,182,76,.5);}
+  .sq.mymove{box-shadow:inset 0 0 0 3px rgba(224,87,63,.85), inset 0 0 18px rgba(224,87,63,.35);}
   .sq .dot{
     position:absolute; width:30%; height:30%; border-radius:50%;
-    background:radial-gradient(circle, rgba(28,31,43,.52), rgba(28,31,43,.36));
+    background:radial-gradient(circle, rgba(14,20,27,.45), rgba(14,20,27,.32));
     pointer-events:none;
   }
-  .sq.cap-target .dot{width:92%; height:92%; background:none; border:3.5px solid rgba(28,31,43,.45); border-radius:50%;}
-  .board-meta{display:flex; justify-content:flex-end; width:min(92vw,460px);
+  .sq.cap-target .dot{width:92%; height:92%; background:none; border:3.5px solid rgba(14,20,27,.4); border-radius:50%;}
+  .board-meta{display:flex; justify-content:flex-end; width:min(94vw,460px);
     color:var(--muted); font-size:.7rem; font-family:ui-monospace,monospace; padding:4px 4px 0;}
   /* ---------- drill ---------- */
   .drill-ctx{margin-bottom:12px;}
   .drill-ctx .opening{color:var(--muted); font-size:.82rem;}
   .drill-ctx .task{font-size:1rem; margin-top:6px; line-height:1.45;}
-  .drill-ctx .task strong{color:var(--coral);}
+  .drill-ctx .task strong{color:#F08A76;}
+  .tries{display:inline-flex; gap:5px; vertical-align:middle; margin-left:8px;}
+  .tries .pip{width:9px; height:9px; border-radius:50%; background:#243042; display:inline-block;}
+  .tries .pip.used{background:var(--red);}
   .feedback{
-    margin-top:14px; padding:14px 16px; border-radius:10px; font-size:1.02rem; line-height:1.55;
+    margin-top:14px; padding:14px 16px; border-radius:12px; font-size:1.02rem; line-height:1.55;
     animation:fadein .25s ease;
   }
-  .feedback.good{background:rgba(212,168,67,.12); border:1px solid rgba(212,168,67,.4);}
-  .feedback.bad{background:rgba(232,124,62,.10); border:1px solid rgba(232,124,62,.4);}
+  .feedback.good{background:rgba(129,182,76,.13); border:1px solid rgba(129,182,76,.45);}
+  .feedback.bad{background:rgba(224,87,63,.10); border:1px solid rgba(224,87,63,.4);}
+  .feedback.info{background:rgba(84,169,224,.10); border:1px solid rgba(84,169,224,.4);}
   .feedback .verdict{font-weight:700; margin-bottom:6px; font-size:1.05rem;}
   @keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
   .drill-foot{
@@ -117,17 +134,46 @@
   /* ---------- themes ---------- */
   .theme-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));}
   .theme-card{cursor:pointer; transition:transform .12s, border-color .15s;}
-  .theme-card:hover{transform:translateY(-2px); border-color:var(--gold);}
+  .theme-card:hover{transform:translateY(-2px); border-color:var(--green);}
   .theme-card .ico{font-size:1.6rem;}
   .theme-card h3{font-size:.95rem; margin:8px 0 4px;}
   .theme-card .meta{color:var(--muted); font-size:.8rem; line-height:1.5;}
-  .theme-card .acc{font-weight:700; color:var(--gold);}
+  .theme-card .acc{font-weight:700; color:var(--green-bright);}
   /* ---------- progress ---------- */
   svg text{fill:var(--muted); font-size:10px; font-family:ui-monospace,monospace;}
   .chart-card{overflow-x:auto;}
-  a{color:var(--gold);}
+  a{color:var(--blue);}
   .hidden{display:none !important;}
-  @media (max-width:640px){ .stat .num{font-size:1.35rem;} }
+  /* ---------- mobile: app-style bottom tab bar + thumb-sized targets ---------- */
+  @media (max-width:640px){
+    body{padding-bottom:calc(76px + env(safe-area-inset-bottom));}
+    header{padding:14px 14px 0;}
+    header h1{font-size:1.15rem;}
+    header p{font-size:.78rem;}
+    main{padding:12px 10px;}
+    .card{padding:13px; border-radius:12px;}
+    .stat-grid{grid-template-columns:repeat(2,1fr); gap:10px;}
+    .stat .num{font-size:1.3rem;}
+    nav{
+      position:fixed; bottom:0; left:0; right:0; z-index:50; margin:0;
+      background:var(--card); border-top:1px solid var(--border); border-bottom:none;
+      padding:6px 4px calc(6px + env(safe-area-inset-bottom)); gap:0;
+      justify-content:space-around; max-width:none;
+    }
+    nav button{
+      flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
+      font-size:.68rem; padding:6px 2px; border-bottom:none; border-radius:10px;
+    }
+    nav button .ico{display:block; font-size:1.25rem; line-height:1;}
+    nav button.active{color:var(--green-bright); background:rgba(129,182,76,.12);}
+    .btn{padding:14px 16px; font-size:.95rem; width:100%; text-align:center;}
+    .drill-actions .btn{flex:1; width:auto;}
+    #board{width:calc(100vw - 48px); height:calc(100vw - 48px); max-width:460px; max-height:460px;}
+    .board-meta{width:calc(100vw - 48px); max-width:460px;}
+    .feedback{font-size:.95rem; padding:12px 13px;}
+    .drill-foot{font-size:.75rem;}
+    .theme-grid{grid-template-columns:repeat(2,1fr); gap:10px;}
+  }
 </style>
 </head>
 <body>
@@ -278,10 +324,10 @@
   <p>Built from your real games — every drill is a position where you blundered. Find what Stockfish found.</p>
 </header>
 <nav>
-  <button data-tab="dashboard" class="active">Dashboard</button>
-  <button data-tab="drill">Drill Mode</button>
-  <button data-tab="themes">Themes</button>
-  <button data-tab="progress">Progress</button>
+  <button data-tab="dashboard" class="active"><span class="ico">🏠</span><span>Home</span></button>
+  <button data-tab="drill"><span class="ico">🎯</span><span>Drill</span></button>
+  <button data-tab="themes"><span class="ico">🧩</span><span>Themes</span></button>
+  <button data-tab="progress"><span class="ico">📈</span><span>Progress</span></button>
 </nav>
 <main>
   <section id="tab-dashboard"></section>
@@ -429,7 +475,8 @@ function buildQueue(filterTheme){
    Drill engine
    ============================================================ */
 let Q = [], qPos = 0, game = null, drill = null, drillIdx = -1;
-let selSq = null, solved = false, failed = false, hintUsed = false, triedOnce = false;
+let selSq = null, solved = false, failed = false, hintUsed = false, triedOnce = false, tries = 0;
+const MAX_TRIES = 3;
 let sessCorrect = 0, sessTotal = 0;
 
 function startDrills(filterTheme){
@@ -441,7 +488,7 @@ function loadDrill(){
   const item = Q[qPos];
   drill = item.d; drillIdx = item.i;
   game = new Chess(drill.fen);
-  selSq = null; solved = false; failed = false; hintUsed = false; triedOnce = false;
+  selSq = null; solved = false; failed = false; hintUsed = false; triedOnce = false; tries = 0;
   renderDrill();
 }
 function sqName(file, rank){ return "abcdefgh"[file] + (rank+1); }
@@ -551,9 +598,10 @@ function makeUserMove(from, to){
     solved = true;
     if(firstTry){ sessTotal++; sessCorrect++; }
     recordAttempt(drill.key, drill.theme, true, firstTry);
+    const tryNote = firstTry ? "" : " (try " + (tries+1) + ")";
     const verdict = isBest
-      ? "✅ " + drill.best + " — exactly right" + (hintUsed ? " (with a hint)" : "") + "."
-      : "✅ " + (mv ? mv.san : "") + " works too — also winning. Engine's top pick: " + drill.best + ".";
+      ? "✅ " + drill.best + " — exactly right" + tryNote + (hintUsed ? " (with a hint)" : "") + "."
+      : "✅ " + (mv ? mv.san : "") + " works too — also winning" + tryNote + ". Engine's top pick: " + drill.best + ".";
     renderDrill({lastFrom: from, lastTo: to, bestDest: to, animateTo: to}, {
       kind:"good",
       verdict,
@@ -563,20 +611,29 @@ function makeUserMove(from, to){
     const userMove = game.move({from, to, promotion:"q"});
     const userSan = userMove ? userMove.san : (from+"–"+to);
     game.undo();
+    tries++;
+    if(firstTry){ sessTotal++; recordAttempt(drill.key, drill.theme, false, true); }
+    if(tries < MAX_TRIES){
+      // tries left — keep the board live, don't reveal
+      renderDrill({lastFrom: from, lastTo: to}, {
+        kind:"bad",
+        verdict:"❌ " + userSan + " — not it. Try " + (tries+1) + " of " + MAX_TRIES + ".",
+        body: tries === MAX_TRIES-1 ? "Last try — use the hint if you need it." : "Look again. What does your opponent threaten, and what's undefended?"
+      });
+      return;
+    }
     failed = true;
-    if(firstTry){ sessTotal++; }
-    recordAttempt(drill.key, drill.theme, false, firstTry);
-    // animate the correct move onto the board after a beat
+    // out of tries — animate the correct move onto the board after a beat
     renderDrill({lastFrom: from, lastTo: to}, {
       kind:"bad",
-      verdict:"❌ You played " + userSan + " — not the engine move.",
+      verdict:"❌ " + userSan + " — out of tries.",
       body:"Watch the right idea…"
     });
     setTimeout(()=>{
       game.move({from: bestFrom, to: bestTo, promotion:"q"});
       renderDrill({lastFrom: bestFrom, lastTo: bestTo, bestDest: bestTo, animateTo: bestTo}, {
         kind:"bad",
-        verdict:"❌ " + userSan + " — the move was " + drill.best + ".",
+        verdict:"❌ The move was " + drill.best + ".",
         body: drill.explanation
       });
     }, 850);
@@ -590,7 +647,7 @@ function showHint(){
 }
 function retryDrill(){
   game = new Chess(drill.fen);
-  selSq = null; solved = false; failed = false;
+  selSq = null; solved = false; failed = false; tries = 0;
   renderDrill();
 }
 function nextDrill(){
@@ -610,8 +667,8 @@ function renderDrill(extraHl, feedback){
       <div class="drill-ctx">
         <div class="opening">${esc(drill.opening)} · ${esc(drill.date)} · you were <strong style="color:var(--text)">${drill.color}</strong>
           ${drill.link ? ` · <a href="${extHref(drill.link)}" target="_blank" rel="noopener">game ↗</a>` : ""}</div>
-        <div class="task">You played: <strong class="mono">${esc(drill.played)}</strong>. Find the best move.</div>
-        <div id="hint-line" style="margin-top:6px; font-size:.9rem; color:var(--gold);"></div>
+        <div class="task">You played: <strong class="mono">${esc(drill.played)}</strong>. Find the best move.<span class="tries">${Array.from({length: MAX_TRIES}, (_,i)=>`<span class="pip ${i<tries?"used":""}"></span>`).join("")}</span></div>
+        <div id="hint-line" style="margin-top:6px; font-size:.9rem; color:var(--blue);"></div>
       </div>
       <div id="board-wrap">
         <div id="board"></div>
@@ -678,7 +735,7 @@ function renderDashboard(){
       <div class="card stat"><div class="num">${ANALYSIS.gamesAnalyzed}</div><div class="lbl">Games analyzed</div></div>
       <div class="card stat"><div class="num">${ANALYSIS.totalBlunders}</div><div class="lbl">Blunders → drills</div></div>
       <div class="card stat"><div class="num">${acc===null?"—":acc+"%"}</div><div class="lbl">Drill accuracy</div></div>
-      <div class="card stat"><div class="num">${streak()}🔥</div><div class="lbl">Day streak</div></div>
+      <div class="card stat"><div class="num flame">${streak()}🔥</div><div class="lbl">Day streak</div></div>
     </div>
     <div class="card" style="margin-top:14px;">
       <h2>Where your games are leaking</h2>
@@ -689,7 +746,7 @@ function renderDashboard(){
       </p>
       <p style="color:var(--muted); margin-top:10px; font-size:.9rem; line-height:1.6;">
         Every position came from a real game you played, analyzed with Stockfish at depth ${14}.
-        ${dueCount ? `<strong style="color:var(--coral)">${dueCount} review${dueCount>1?"s":""} due today</strong> — misses come back until you own them.` : ""}
+        ${dueCount ? `<strong style="color:var(--gold)">${dueCount} review${dueCount>1?"s":""} due today</strong> — misses come back until you own them.` : ""}
         ${newCount ? ` ${newCount} positions you haven't drilled yet.` : ""}
       </p>
       <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
@@ -742,8 +799,8 @@ function renderProgress(){
     line = `<svg viewBox="0 0 ${W} ${H}" style="width:100%; max-width:${W}px;">
       ${[0,50,100].map(v=>{const y=H-P-(v/100)*(H-2*P);
         return `<line x1="${P}" y1="${y}" x2="${W-P}" y2="${y}" stroke="#2A2E3D"/><text x="4" y="${y+3}">${v}%</text>`;}).join("")}
-      <path d="${path}" fill="none" stroke="#D4A843" stroke-width="2.5"/>
-      ${pts.map((p,i)=>`<circle cx="${p.x}" cy="${p.y}" r="4" fill="#D4A843"/>
+      <path d="${path}" fill="none" stroke="#81B64C" stroke-width="2.5"/>
+      ${pts.map((p,i)=>`<circle cx="${p.x}" cy="${p.y}" r="4" fill="#81B64C"/>
         <text x="${p.x-8}" y="${p.y-9}">${p.acc}%</text>
         <text x="${p.x-6}" y="${H-8}">s${i+1}</text>`).join("")}
     </svg>`;
@@ -760,7 +817,7 @@ function renderProgress(){
       ${tkeys.map((t,i)=>{
         const y=i*(BH+10)+5, w=(byTheme[t]/max)*(W-P-50);
         return `<text x="0" y="${y+BH/2+4}">${t.length>16?t.slice(0,15)+"…":t}</text>
-          <rect x="${P}" y="${y}" width="${Math.max(w,2)}" height="${BH}" rx="5" fill="#E87C3E" opacity=".85"/>
+          <rect x="${P}" y="${y}" width="${Math.max(w,2)}" height="${BH}" rx="5" fill="#F5A623" opacity=".85"/>
           <text x="${P+w+8}" y="${y+BH/2+4}" style="fill:#E8E8F0;">${byTheme[t]}</text>`;
       }).join("")}
     </svg>`;
@@ -774,13 +831,13 @@ function renderProgress(){
   Object.keys(wkTheme).forEach(t=>{ const a=100*wkTheme[t].c/wkTheme[t].t; if(wkTheme[t].t>=2 && a<weakAcc){weakAcc=a; weakest=t;} });
   el.innerHTML = `
     <div class="grid stat-grid">
-      <div class="card stat"><div class="num">${streak()}🔥</div><div class="lbl">Day streak</div></div>
+      <div class="card stat"><div class="num flame">${streak()}🔥</div><div class="lbl">Day streak</div></div>
       <div class="card stat"><div class="num">${S.attempts.filter(a=>a.firstTry).length}</div><div class="lbl">Drills attempted</div></div>
       <div class="card stat"><div class="num">${overallAccuracy()===null?"—":overallAccuracy()+"%"}</div><div class="lbl">Overall accuracy</div></div>
     </div>
     <div class="card chart-card" style="margin-top:14px;"><h2>Session accuracy over time</h2>${line}</div>
     <div class="card chart-card" style="margin-top:14px;"><h2>Drills completed by theme</h2>${bars}</div>
-    ${weakest ? `<div class="card" style="margin-top:14px; border-color:rgba(232,124,62,.5);">
+    ${weakest ? `<div class="card" style="margin-top:14px; border-color:rgba(224,87,63,.5);">
       <h2>⚠ Weakest theme this week: ${THEME_ICONS[weakest]||""} ${esc(weakest)} (${Math.round(weakAcc)}%)</h2>
       <button class="btn coral" style="margin-top:8px;" onclick="startDrills('${weakest.replace(/'/g,"\\'")}')">Drill ${esc(weakest)} now</button>
     </div>` : ""}`;
