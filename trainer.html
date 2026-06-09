@@ -3,20 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0E141B">
+<meta name="theme-color" content="#F4F2EB">
 <title>♟ Blunder Trainer — Ophir</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
 <style>
   :root{
     /* Researched palette:
        - board = chess.com tournament green (train on the colors you play on → pattern transfer; the green/buff scheme is the OTB eye-strain standard)
-       - backdrop = calm blue-charcoal dark mode (focus/immersion, low cognitive load)
+       - light "paper" backdrop by default (Ophir's preference), dark theme via the header toggle
        - green = success & primary action · orange = streaks/rewards only (loss-aversion accent) · soft red = errors, briefly · blue = hints/info */
+    --bg:#F4F2EB; --card:#FFFFFF; --border:#E3E0D5;
+    --green:#81B64C; --green-deep:#5C8A33; --num:#5C8A33;
+    --gold:#D98E04; --red:#CC4B33; --blue:#2E7CB8;
+    --text:#26292E; --muted:#737A85;
+    --chip-bg:#E9F0F7; --chip-coral-bg:#F9E7E2; --chip-gold-bg:#F7EDD6;
+    --ghost-bg:#ECE9DF; --ghost-shadow:#D5D2C7;
+    --card-shadow:0 1px 3px rgba(40,40,30,.07);
+    --light-sq:#EEEED2; --dark-sq:#769656;
+  }
+  html[data-theme="dark"]{
     --bg:#0E141B; --card:#18202B; --border:#243042;
-    --green:#81B64C; --green-bright:#A3D160;
+    --green:#81B64C; --green-deep:#5C8A33; --num:#A3D160;
     --gold:#F5A623; --red:#E0573F; --blue:#54A9E0;
     --text:#ECEFF4; --muted:#8B95A5;
-    --light-sq:#EEEED2; --dark-sq:#769656;
+    --chip-bg:#223041; --chip-coral-bg:#332220; --chip-gold-bg:#332A18;
+    --ghost-bg:#243042; --ghost-shadow:#101720;
+    --card-shadow:none;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{-webkit-text-size-adjust:100%;}
@@ -26,8 +38,14 @@
     min-height:100vh; padding-bottom:40px;
     -webkit-tap-highlight-color:transparent;
   }
-  header{padding:20px 16px 4px; max-width:960px; margin:0 auto;}
+  header{padding:20px 16px 4px; max-width:960px; margin:0 auto;
+    display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
   header h1{font-size:1.35rem; letter-spacing:.3px;}
+  .theme-toggle{
+    background:var(--card); border:1px solid var(--border); border-radius:50%;
+    width:38px; height:38px; font-size:1.05rem; cursor:pointer; flex-shrink:0;
+    box-shadow:var(--card-shadow);
+  }
   header p{color:var(--muted); font-size:.85rem; margin-top:2px;}
   nav{
     display:flex; gap:4px; max-width:960px; margin:14px auto 0; padding:0 16px;
@@ -39,30 +57,31 @@
     transition:color .15s;
   }
   nav button .ico{display:none;}
-  nav button.active{color:var(--green-bright); border-bottom-color:var(--green);}
+  nav button.active{color:var(--num); border-bottom-color:var(--green);}
   nav button:hover{color:var(--text);}
   main{max-width:960px; margin:0 auto; padding:18px 16px;}
-  .card{background:var(--card); border-radius:14px; padding:18px; border:1px solid var(--border);}
+  .card{background:var(--card); border-radius:14px; padding:18px; border:1px solid var(--border); box-shadow:var(--card-shadow);}
   .grid{display:grid; gap:14px;}
   .stat-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
-  .stat .num{font-size:1.7rem; font-weight:700; color:var(--green-bright);}
+  .stat .num{font-size:1.7rem; font-weight:700; color:var(--num);}
   .stat .num.flame{color:var(--gold);}
   .stat .lbl{color:var(--muted); font-size:.78rem; margin-top:3px; text-transform:uppercase; letter-spacing:.6px;}
   .badge{
     display:inline-block; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-    font-size:.78rem; padding:3px 9px; border-radius:6px; background:#223041; color:var(--blue);
+    font-size:.78rem; padding:3px 9px; border-radius:6px; background:var(--chip-bg); color:var(--blue);
   }
-  .badge.coral{color:#F08A76; background:#332220;}
-  .badge.gold{color:var(--gold); background:#332A18;}
+  .badge.coral{color:var(--red); background:var(--chip-coral-bg);}
+  .badge.gold{color:var(--gold); background:var(--chip-gold-bg);}
   .btn{
-    display:inline-block; background:var(--green); color:#0E1A06; border:none; border-radius:10px;
+    display:inline-block; background:var(--green); color:#FFFFFF; border:none; border-radius:10px;
     font-weight:800; font-size:.95rem; padding:13px 22px; cursor:pointer;
-    transition:transform .1s, opacity .15s; box-shadow:0 3px 0 #5C8A33;
+    transition:transform .1s, opacity .15s; box-shadow:0 3px 0 var(--green-deep);
+    text-shadow:0 1px 1px rgba(0,0,0,.18);
   }
   .btn:hover{opacity:.92; transform:translateY(-1px);}
-  .btn:active{transform:translateY(1px); box-shadow:0 1px 0 #5C8A33;}
-  .btn.ghost{background:#243042; color:var(--text); box-shadow:0 3px 0 #18202B;}
-  .btn.coral{background:var(--gold); color:#221603; box-shadow:0 3px 0 #B97D14;}
+  .btn:active{transform:translateY(1px); box-shadow:0 1px 0 var(--green-deep);}
+  .btn.ghost{background:var(--ghost-bg); color:var(--text); box-shadow:0 3px 0 var(--ghost-shadow); text-shadow:none;}
+  .btn.coral{background:var(--gold); color:#FFFFFF; box-shadow:0 3px 0 #A8731A;}
   .btn:disabled{opacity:.4; cursor:default;}
   h2{font-size:1.05rem; margin-bottom:12px;}
   /* ---------- board ---------- */
@@ -97,7 +116,7 @@
   /* chess.com-style yellow selection/last-move tints — familiar = zero relearning */
   .sq.sel.light, .sq.lastmove.light{background:#F6F669;}
   .sq.sel.dark, .sq.lastmove.dark{background:#BACA2B;}
-  .sq.best-dest{box-shadow:inset 0 0 0 3px var(--green-bright), inset 0 0 20px rgba(129,182,76,.5);}
+  .sq.best-dest{box-shadow:inset 0 0 0 3px var(--green), inset 0 0 20px rgba(129,182,76,.5);}
   .sq.mymove{box-shadow:inset 0 0 0 3px rgba(224,87,63,.85), inset 0 0 18px rgba(224,87,63,.35);}
   .sq .dot{
     position:absolute; width:30%; height:30%; border-radius:50%;
@@ -113,7 +132,7 @@
   .drill-ctx .task{font-size:1rem; margin-top:6px; line-height:1.45;}
   .drill-ctx .task strong{color:#F08A76;}
   .tries{display:inline-flex; gap:5px; vertical-align:middle; margin-left:8px;}
-  .tries .pip{width:9px; height:9px; border-radius:50%; background:#243042; display:inline-block;}
+  .tries .pip{width:9px; height:9px; border-radius:50%; background:var(--ghost-bg); border:1px solid var(--border); display:inline-block;}
   .tries .pip.used{background:var(--red);}
   .feedback{
     margin-top:14px; padding:14px 16px; border-radius:12px; font-size:1.02rem; line-height:1.55;
@@ -138,9 +157,10 @@
   .theme-card .ico{font-size:1.6rem;}
   .theme-card h3{font-size:.95rem; margin:8px 0 4px;}
   .theme-card .meta{color:var(--muted); font-size:.8rem; line-height:1.5;}
-  .theme-card .acc{font-weight:700; color:var(--green-bright);}
+  .theme-card .acc{font-weight:700; color:var(--num);}
   /* ---------- progress ---------- */
   svg text{fill:var(--muted); font-size:10px; font-family:ui-monospace,monospace;}
+  svg line{stroke:var(--border);}
   .chart-card{overflow-x:auto;}
   a{color:var(--blue);}
   .hidden{display:none !important;}
@@ -165,7 +185,7 @@
       font-size:.68rem; padding:6px 2px; border-bottom:none; border-radius:10px;
     }
     nav button .ico{display:block; font-size:1.25rem; line-height:1;}
-    nav button.active{color:var(--green-bright); background:rgba(129,182,76,.12);}
+    nav button.active{color:var(--num); background:rgba(129,182,76,.14);}
     .btn{padding:14px 16px; font-size:.95rem; width:100%; text-align:center;}
     .drill-actions .btn{flex:1; width:auto;}
     #board{width:calc(100vw - 48px); height:calc(100vw - 48px); max-width:460px; max-height:460px;}
@@ -320,8 +340,11 @@
       style="fill:#ffffff; stroke:none;" />
   </g></symbol><symbol id="pc-bp" viewBox="0 0 45 45"><path d="m 22.5,9 c -2.21,0 -4,1.79 -4,4 0,0.89 0.29,1.71 0.78,2.38 C 17.33,16.5 16,18.59 16,21 c 0,2.03 0.94,3.84 2.41,5.03 C 15.41,27.09 11,31.58 11,39.5 H 34 C 34,31.58 29.59,27.09 26.59,26.03 28.06,24.84 29,23.03 29,21 29,18.59 27.67,16.5 25.72,15.38 26.21,14.71 26.5,13.89 26.5,13 c 0,-2.21 -1.79,-4 -4,-4 z" style="opacity:1; fill:#000000; fill-opacity:1; fill-rule:nonzero; stroke:#000000; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:miter; stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;"/></symbol></svg>
 <header>
-  <h1>♟ Blunder Trainer</h1>
-  <p>Built from your real games — every drill is a position where you blundered. Find what Stockfish found.</p>
+  <div>
+    <h1>♟ Blunder Trainer</h1>
+    <p>Built from your real games — every drill is a position where you blundered. Find what Stockfish found.</p>
+  </div>
+  <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Light/dark mode">🌙</button>
 </header>
 <nav>
   <button data-tab="dashboard" class="active"><span class="ico">🏠</span><span>Home</span></button>
@@ -438,6 +461,20 @@ function streak(){
   }
   return n;
 }
+
+/* ---------- theme: light default, sun/moon toggle, persisted ---------- */
+function applyTheme(t){
+  document.documentElement.dataset.theme = t;
+  localStorage.setItem("blunderTrainerTheme", t);
+  const m = document.querySelector('meta[name="theme-color"]');
+  if(m) m.content = t === "dark" ? "#0E141B" : "#F4F2EB";
+  const b = document.getElementById("theme-toggle");
+  if(b) b.textContent = t === "dark" ? "☀️" : "🌙";
+}
+function toggleTheme(){
+  applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+}
+applyTheme(localStorage.getItem("blunderTrainerTheme") || "light");
 
 /* ---------- iOS external-link escape (open chess.com in real Safari) ---------- */
 const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
