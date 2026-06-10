@@ -160,6 +160,11 @@
   .levy{margin-top:11px; padding:10px 13px; border-left:3px solid var(--blue);
     background:rgba(46,124,184,.08); border-radius:0 8px 8px 0; font-size:.92rem; line-height:1.55;}
   .levy-t{font-weight:700; color:var(--blue); margin-bottom:3px;}
+  .think{margin-top:10px; font-size:.93rem; line-height:1.6;}
+  .think-t{font-weight:700; margin-bottom:5px;}
+  .think ol{margin:0 0 0 20px; padding:0;}
+  .think li{margin-bottom:3px;}
+  .think-sig{margin-top:8px; font-weight:600; color:var(--gold);}
   @keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
   .drill-foot{
     display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:14px;
@@ -462,6 +467,57 @@ const LEVY = {
     text: "Scan every check — even the ugly ones — and pick the one that leaves the FEWEST replies. And watch the back rank: a castled king without luft is one rook slide from disaster."
   }
 };
+
+/* Thought-process ladders shown between tries — practice the scan, not the answer. */
+const THINK = {
+  "Hung Piece": [
+    "Their last move changed the board — what did it STOP defending?",
+    "List every capture you have. For each one: count attackers vs defenders.",
+    "Now flip it: what of yours could THEY take next move?",
+    "Free material first, plans second."
+  ],
+  "Calculation Error": [
+    "Pick 2–3 candidate moves, starting with the most forcing.",
+    "For your top candidate, find THEIR most forcing reply — their checks, their captures.",
+    "Play the line in your head until the position goes quiet, then judge it.",
+    "If a line gets murky, prefer the move that keeps all your pieces defended."
+  ],
+  "Missed Tactic": [
+    "Checks: list every one, even the ugly ones. Which leaves them the fewest replies?",
+    "Captures: list every one. Is any piece attacked more times than it's defended?",
+    "Attacks: can you hit their queen or a rook while improving your piece?",
+    "The answer here is forcing — it's in one of those three lists."
+  ],
+  "Fork": [
+    "Find their big pieces — king, queen, rooks. Which two stand a knight's move apart, or on one line?",
+    "Which of your pieces can reach the square that attacks both at once?",
+    "Check the landing square before you jump: is it defended?"
+  ],
+  "Opening Mistake": [
+    "Center: does your move fight for the center?",
+    "Development: does it bring a NEW piece toward the action?",
+    "King: are you castled? Should that come first?",
+    "Before grabbing anything: what lines does the grab open against YOU?"
+  ],
+  "Endgame": [
+    "Count the pawn races first — who queens sooner if everyone just runs?",
+    "Activate your king: where does it need to stand three moves from now?",
+    "Rooks belong behind passed pawns — yours AND theirs.",
+    "Before any capture: does it free their king or their pawns?"
+  ],
+  "Mate Pattern": [
+    "List every check you have. For each: how many legal replies do they have?",
+    "Start calculating from the check with the FEWEST replies.",
+    "Map the king's escape squares — which ones do your pieces already cover?"
+  ]
+};
+function answerSignal(){
+  const b = drill.best;
+  if(b.includes("#")) return "the answer delivers checkmate";
+  if(b.includes("+")) return "the answer is a check";
+  if(b.includes("x")) return "the answer is a capture";
+  return "the answer is a quiet move — it saves or improves a piece";
+}
 
 /* ---------- persistent state (localStorage so streaks/progress survive reloads) ---------- */
 const store = {
@@ -797,11 +853,13 @@ function makeUserMove(from, to){
     tries++;
     if(firstTry){ sessTotal++; recordAttempt(drill.key, drill.theme, false, true); }
     if(tries < MAX_TRIES){
-      // tries left — keep the board live, don't reveal
+      // tries left — keep the board live, coach the thought process instead of revealing
       renderDrill({lastFrom: from, lastTo: to}, {
         kind:"bad",
         verdict:"❌ " + userSan + " — not it. Try " + (tries+1) + " of " + MAX_TRIES + ".",
-        body: tries === MAX_TRIES-1 ? "Last try — use the hint if you need it." : "Look again. What does your opponent threaten, and what's undefended?"
+        body:"",
+        process: true,
+        signal: tries === MAX_TRIES-1
       });
       return;
     }
@@ -881,7 +939,12 @@ function renderDrill(extraHl, feedback){
     const punish = drill.punishLine && drill.punishLine.length ? drill.played + " → " + drill.punishLine.join(" ") : null;
     const levy = LEVY[drill.theme];
     fz.innerHTML = `<div class="feedback ${feedback.kind}">
-      <div class="verdict">${feedback.verdict}</div><div>${esc(feedback.body)}</div>
+      <div class="verdict">${feedback.verdict}</div>${feedback.body ? `<div>${esc(feedback.body)}</div>` : ""}
+      ${feedback.process ? `<div class="think">
+        <div class="think-t">🧠 Think it through — ${esc(drill.theme)}</div>
+        <ol>${(THINK[drill.theme]||THINK["Calculation Error"]).map(st=>`<li>${esc(st)}</li>`).join("")}</ol>
+        ${feedback.signal ? `<div class="think-sig">🔎 Last try, one signal: ${esc(answerSignal())}.</div>` : ""}
+      </div>` : ""}
       ${feedback.deep && drill.evalBefore !== undefined ? `<div class="engine-line mono">📉 This blunder: ${esc(fmtEval(drill.evalBefore))} → ${esc(fmtEval(drill.evalBefore - drill.swing))} for you</div>` : ""}
       ${feedback.deep && engLine ? `<div class="engine-line mono">♟ The line: ${esc(engLine)}</div>` : ""}
       ${feedback.deep && feedback.kind === "bad" && punish ? `<div class="engine-line mono">⚠ Your move ran into: ${esc(punish)}</div>` : ""}
