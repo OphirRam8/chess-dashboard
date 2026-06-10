@@ -136,6 +136,15 @@
   .drill-ctx .opening{color:var(--muted); font-size:.82rem;}
   .drill-ctx .task{font-size:1rem; margin-top:6px; line-height:1.45;}
   .drill-ctx .task strong{color:#F08A76;}
+  .situation{margin-top:8px; display:flex; gap:7px; flex-wrap:wrap;}
+  .sit-chip{
+    font-size:.8rem; padding:4px 10px; border-radius:14px;
+    background:var(--chip-bg); color:var(--text); font-weight:600;
+  }
+  .sit-chip.sit-good{background:rgba(129,182,76,.16); color:var(--green-deep);}
+  html[data-theme="dark"] .sit-chip.sit-good{color:var(--num);}
+  .sit-chip.sit-even{background:var(--ghost-bg);}
+  .sit-chip.sit-bad{background:rgba(224,87,63,.13); color:var(--red);}
   .tries{display:inline-flex; gap:5px; vertical-align:middle; margin-left:8px;}
   .tries .pip{width:9px; height:9px; border-radius:50%; background:var(--ghost-bg); border:1px solid var(--border); display:inline-block;}
   .tries .pip.used{background:var(--red);}
@@ -719,6 +728,46 @@ function showMyMove(){
   }, 1500);
 }
 
+
+/* ---------- situation strip: material + eval, from Ophir's perspective ---------- */
+const PVAL = {q:9, r:5, b:3, n:3, p:1};
+const PWORD = {q:"queen", r:"rook", b:"bishop", n:"knight", p:"pawn"};
+function materialSummary(fen, myColor){
+  const counts = {w:{}, b:{}};
+  for(const ch of fen.split(" ")[0]){
+    const lo = ch.toLowerCase();
+    if(PVAL[lo]){
+      const side = ch === lo ? "b" : "w";
+      counts[side][lo] = (counts[side][lo]||0) + 1;
+    }
+  }
+  const me = myColor === "White" ? "w" : "b", opp = me === "w" ? "b" : "w";
+  let pts = 0; const mine = [], theirs = [];
+  for(const t of ["q","r","b","n","p"]){
+    const d = (counts[me][t]||0) - (counts[opp][t]||0);
+    pts += d * PVAL[t];
+    if(d > 0) mine.push((d > 1 ? d + " " : "a ") + PWORD[t] + (d > 1 ? "s" : ""));
+    if(d < 0) theirs.push((-d > 1 ? (-d) + " " : "a ") + PWORD[t] + (-d > 1 ? "s" : ""));
+  }
+  let phrase;
+  if(!mine.length && !theirs.length) phrase = "even material";
+  else if(mine.length && !theirs.length) phrase = "up " + mine.join(" and ");
+  else if(!mine.length && theirs.length) phrase = "down " + theirs.join(" and ");
+  else phrase = "up " + mine.join(" and ") + " for " + theirs.join(" and ");
+  return {pts, phrase};
+}
+function evalPhrase(ev){
+  if(ev === undefined || ev === null) return null;
+  if(ev >= 9) return {word:"completely winning", cls:"sit-good"};
+  if(ev >= 1.5) return {word:"you're clearly better", cls:"sit-good"};
+  if(ev >= 0.5) return {word:"you're slightly better", cls:"sit-good"};
+  if(ev > -0.5) return {word:"about equal", cls:"sit-even"};
+  if(ev > -1.5) return {word:"you're slightly worse", cls:"sit-bad"};
+  if(ev > -9) return {word:"you're clearly worse", cls:"sit-bad"};
+  return {word:"you're losing", cls:"sit-bad"};
+}
+function fmtEval(ev){ return (ev > 0 ? "+" : "") + (Math.round(ev*10)/10); }
+
 function makeUserMove(from, to){
   const bestFrom = drill.bestUci.slice(0,2), bestTo = drill.bestUci.slice(2,4);
   const isBest = (from===bestFrom && to===bestTo);
@@ -803,6 +852,12 @@ function renderDrill(extraHl, feedback){
         <div class="opening">${esc(drill.opening)} · ${esc(drill.date)} · you were <strong style="color:var(--text)">${drill.color}</strong>
           ${drill.link ? ` · <a href="${extHref(drill.link)}" target="_blank" rel="noopener">game ↗</a>` : ""}</div>
         <div class="task">You played: <strong class="mono">${esc(drill.played)}</strong>. Find the best move.<span class="tries">${Array.from({length: MAX_TRIES}, (_,i)=>`<span class="pip ${i<tries?"used":""}"></span>`).join("")}</span></div>
+        <div class="situation">${(()=>{
+          const m = materialSummary(drill.fen, drill.color);
+          const e = evalPhrase(drill.evalBefore);
+          return `<span class="sit-chip">⚖️ ${esc(m.phrase)}${m.pts ? ` (${m.pts>0?"+":""}${m.pts})` : ""}</span>` +
+                 (e ? ` <span class="sit-chip ${e.cls}">📊 ${esc(e.word)} ${esc(fmtEval(drill.evalBefore))}</span>` : "");
+        })()}</div>
         <div id="hint-line" style="margin-top:6px; font-size:.9rem; color:var(--blue);"></div>
       </div>
       <div id="board-wrap">
@@ -827,6 +882,7 @@ function renderDrill(extraHl, feedback){
     const levy = LEVY[drill.theme];
     fz.innerHTML = `<div class="feedback ${feedback.kind}">
       <div class="verdict">${feedback.verdict}</div><div>${esc(feedback.body)}</div>
+      ${feedback.deep && drill.evalBefore !== undefined ? `<div class="engine-line mono">📉 This blunder: ${esc(fmtEval(drill.evalBefore))} → ${esc(fmtEval(drill.evalBefore - drill.swing))} for you</div>` : ""}
       ${feedback.deep && engLine ? `<div class="engine-line mono">♟ The line: ${esc(engLine)}</div>` : ""}
       ${feedback.deep && feedback.kind === "bad" && punish ? `<div class="engine-line mono">⚠ Your move ran into: ${esc(punish)}</div>` : ""}
       ${feedback.deep && levy ? `<div class="levy"><div class="levy-t">📘 Levy's lens — ${esc(levy.title)}</div>${esc(levy.text)}</div>` : ""}

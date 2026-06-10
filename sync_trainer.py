@@ -157,6 +157,18 @@ def classify_and_explain(board, best, played, swing, move_num, refut_san):
     return theme, " ".join(parts)
 
 
+def is_real_game(g):
+    """Only learn from real games vs humans — exclude chess.com Coach/bot games."""
+    pgn = g.get("pgn", "")
+    h = dict(re.findall(r'\[(\w+) "([^"]*)"\]', pgn))
+    if "coach" in h.get("Event", "").lower():
+        return False
+    opp = h.get("Black") if h.get("White", "").lower() == USERNAME else h.get("White")
+    if (opp or "").lower().startswith(("coach-", "bot", "ai_")):
+        return False
+    return True
+
+
 def analyze_game(engine, g):
     """Return (drills, meta) for one chess.com game json."""
     pgn = g.get("pgn")
@@ -217,6 +229,7 @@ def analyze_game(engine, g):
                     "best": board.san(best), "bestUci": best.uci(),
                     "accept": accept or [best.uci()], "acceptSan": accept_san,
                     "swing": swing, "moveNum": board.fullmove_number,
+                    "evalBefore": round(ev_before / 100, 1),
                     "theme": theme,
                     "difficulty": "Easy" if swing < 1.5 else ("Medium" if swing <= 3.0 else "Hard"),
                     "explanation": expl,
@@ -238,9 +251,17 @@ def main():
     games = fetch_games()
     by_id = {}
     for g in games:
+        if not is_real_game(g):
+            continue
         m = re.search(r"/(\d+)$", g.get("url", ""))
         if m:
             by_id[m.group(1)] = g
+    # purge any previously-cached games that fail the real-game filter
+    stale = [gid for gid in cache["games"] if gid not in by_id]
+    for gid in stale:
+        del cache["games"][gid]
+    if stale:
+        print(f"purged {len(stale)} non-qualifying cached games: {stale}")
     new_ids = [gid for gid in by_id if gid not in cache["games"]]
     print(f"games total: {len(by_id)}, cached: {len(by_id) - len(new_ids)}, new: {len(new_ids)}")
 
