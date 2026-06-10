@@ -147,6 +147,10 @@
   .feedback.bad{background:rgba(224,87,63,.10); border:1px solid rgba(224,87,63,.4);}
   .feedback.info{background:rgba(84,169,224,.10); border:1px solid rgba(84,169,224,.4);}
   .feedback .verdict{font-weight:700; margin-bottom:6px; font-size:1.05rem;}
+  .engine-line{margin-top:9px; font-size:.84rem; color:var(--muted); line-height:1.5; word-break:break-word;}
+  .levy{margin-top:11px; padding:10px 13px; border-left:3px solid var(--blue);
+    background:rgba(46,124,184,.08); border-radius:0 8px 8px 0; font-size:.92rem; line-height:1.55;}
+  .levy-t{font-weight:700; color:var(--blue); margin-bottom:3px;}
   @keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
   .drill-foot{
     display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:14px;
@@ -415,6 +419,39 @@ async function boot(){
 const THEME_ICONS = {
   "Hung Piece":"🫳","Calculation Error":"🧮","Opening Mistake":"📖",
   "Endgame":"🏁","Missed Tactic":"⚡","Fork":"🍴","Mate Pattern":"🏰","Pin":"📌","Skewer":"🔗"
+};
+
+/* Coaching layer from Levy Rozman's "How to Win at Chess" (Ophir's vault:
+   knowledge/chess/ — 56 atoms). One transferable habit per blunder theme. */
+const LEVY = {
+  "Hung Piece": {
+    title: "CCA — Checks, Captures, Attacks",
+    text: "Before every move, scan all checks, captures and attacks — for BOTH sides. A hung piece is a missed Capture: either free material they left you, or a capture you allowed. Run the scan both ways, every single move."
+  },
+  "Calculation Error": {
+    title: "Forcing moves make calculation possible",
+    text: "Non-forcing moves give your opponent ~30 replies — nobody can calculate that. Start from checks and captures, and before committing ask: what is THEIR most forcing reply to my move?"
+  },
+  "Missed Tactic": {
+    title: "You only find what you scan for",
+    text: "Strong players search the forcing-move tree first — most players never even see the forcing moves available to them. Checks first (most forcing), then captures, then attacks."
+  },
+  "Fork": {
+    title: "One attacker, two targets",
+    text: "Knights are the fork monsters — a centralized knight sees 8 squares. Check every knight hop for double attacks, and notice when your own king, queen or rooks stand a knight's move apart."
+  },
+  "Opening Mistake": {
+    title: "Center, Develop, Castle",
+    text: "Levy's three opening principles: fight for the center, develop your minor pieces, castle. A move in the first ten that does none of these needs a concrete tactical justification."
+  },
+  "Endgame": {
+    title: "The king is a fighting piece",
+    text: "In the endgame, activate your king. Opposition and king activity decide pawn endings — count the tempi before you commit to a plan."
+  },
+  "Mate Pattern": {
+    title: "Checks are the most forcing moves",
+    text: "Scan every check — even the ugly ones — and pick the one that leaves the FEWEST replies. And watch the back rank: a castled king without luft is one rook slide from disaster."
+  }
 };
 
 /* ---------- persistent state (localStorage so streaks/progress survive reloads) ---------- */
@@ -701,7 +738,8 @@ function makeUserMove(from, to){
     renderDrill({lastFrom: from, lastTo: to, bestDest: to, animateTo: to}, {
       kind:"good",
       verdict,
-      body: drill.explanation
+      body: drill.explanation,
+      deep: true
     });
   } else {
     const userMove = game.move({from, to, promotion:"q"});
@@ -730,7 +768,8 @@ function makeUserMove(from, to){
       renderDrill({lastFrom: bestFrom, lastTo: bestTo, bestDest: bestTo, animateTo: bestTo}, {
         kind:"bad",
         verdict:"❌ The move was " + drill.best + ".",
-        body: drill.explanation
+        body: drill.explanation,
+        deep: true
       });
     }, 850);
   }
@@ -783,8 +822,15 @@ function renderDrill(extraHl, feedback){
   renderBoard(extraHl||{});
   const fz = document.getElementById("feedback-zone");
   if(feedback){
+    const engLine = drill.bestLine && drill.bestLine.length ? drill.bestLine.join(" ") : null;
+    const punish = drill.punishLine && drill.punishLine.length ? drill.played + " → " + drill.punishLine.join(" ") : null;
+    const levy = LEVY[drill.theme];
     fz.innerHTML = `<div class="feedback ${feedback.kind}">
-      <div class="verdict">${feedback.verdict}</div><div>${esc(feedback.body)}</div></div>`;
+      <div class="verdict">${feedback.verdict}</div><div>${esc(feedback.body)}</div>
+      ${feedback.deep && engLine ? `<div class="engine-line mono">♟ The line: ${esc(engLine)}</div>` : ""}
+      ${feedback.deep && feedback.kind === "bad" && punish ? `<div class="engine-line mono">⚠ Your move ran into: ${esc(punish)}</div>` : ""}
+      ${feedback.deep && levy ? `<div class="levy"><div class="levy-t">📘 Levy's lens — ${esc(levy.title)}</div>${esc(levy.text)}</div>` : ""}
+    </div>`;
   }
   const act = document.getElementById("drill-actions");
   if(solved){

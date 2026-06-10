@@ -79,6 +79,14 @@ def cp_of(score, color):
     return score.pov(color).score(mate_score=2000)
 
 
+def san_line(board, moves, limit):
+    out, b = [], board.copy()
+    for mv in moves[:limit]:
+        out.append(b.san(mv))
+        b.push(mv)
+    return out
+
+
 def classify_and_explain(board, best, played, swing, move_num, refut_san):
     """Theme + plain-English explanation for one drill position."""
     me = board.turn
@@ -180,14 +188,17 @@ def analyze_game(engine, g):
             best_info = infos[0]
             best = best_info["pv"][0]
             ev_before = cp_of(best_info["score"], me)
+            best_line = san_line(board, best_info.get("pv", []), 6)
             after = board.copy(); after.push(move)
             if after.is_game_over():
                 ev_after = 2000 if after.is_checkmate() else 0
                 refut_san = None
+                punish_line = []
             else:
                 info2 = engine.analyse(after, limit)
                 ev_after = cp_of(info2["score"], me)
                 refut_san = after.san(info2["pv"][0]) if info2.get("pv") else None
+                punish_line = san_line(after, info2.get("pv", []), 4)
             drop = ev_before - ev_after
             if drop >= BLUNDER_CP and move != best and ev_before > LOST_CUTOFF_CP:
                 accept, accept_san = [], {}
@@ -209,6 +220,7 @@ def analyze_game(engine, g):
                     "theme": theme,
                     "difficulty": "Easy" if swing < 1.5 else ("Medium" if swing <= 3.0 else "Hard"),
                     "explanation": expl,
+                    "bestLine": best_line, "punishLine": punish_line,
                     "hintPiece": PIECE_NAMES[board.piece_at(best.from_square).piece_type].capitalize(),
                 })
         board.push(move)
