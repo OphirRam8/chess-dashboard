@@ -710,12 +710,13 @@ function toast(msg){
 
 /* ---------- remote sync (Cloudflare Pages Function + KV behind Access).
    On plain static hosting the endpoint 404s and we stay localStorage-only. ---------- */
-const PROGRESS_API = "api/progress";
+const PROGRESS_API = "https://chess-trainer-ms8.pages.dev/api/progress";
+const PROGRESS_KEY = "I0oZUTic0I2n4zd_1M5XiIfM50j50Ct1";
 let remoteOK = false;
 function attemptId(a){ return (a.ts||0) + "|" + (a.key||a.idx||"") + "|" + (a.date||""); }
 async function syncRemote(){
   try{
-    const r = await fetch(PROGRESS_API, {cache:"no-store"});
+    const r = await fetch(PROGRESS_API, {cache:"no-store", headers:{"X-Progress-Key": PROGRESS_KEY}});
     if(!r.ok) throw new Error("no api");
     const remote = await r.json();
     remoteOK = true;
@@ -726,7 +727,7 @@ async function syncRemote(){
     S.attempts = [...map.values()].sort((a,b)=>(a.ts||0)-(b.ts||0));
     recomputeDerived();
     store.save(S);
-    fetch(PROGRESS_API, {method:"PUT", headers:{"Content-Type":"application/json"},
+    fetch(PROGRESS_API, {method:"PUT", headers:{"Content-Type":"application/json", "X-Progress-Key": PROGRESS_KEY},
       body: JSON.stringify({attempts: S.attempts})}).catch(()=>{});
   }catch(e){ remoteOK = false; }
 }
@@ -735,13 +736,13 @@ function schedulePush(){
   if(!remoteOK) return;
   clearTimeout(pushTimer);
   pushTimer = setTimeout(()=>{
-    fetch(PROGRESS_API, {method:"PUT", headers:{"Content-Type":"application/json"},
+    fetch(PROGRESS_API, {method:"PUT", headers:{"Content-Type":"application/json", "X-Progress-Key": PROGRESS_KEY},
       body: JSON.stringify({attempts: S.attempts})}).catch(()=>{});
   }, 2500);
 }
 window.addEventListener("pagehide", ()=>{
   if(remoteOK && navigator.sendBeacon){
-    navigator.sendBeacon(PROGRESS_API, new Blob([JSON.stringify({attempts: S.attempts})], {type:"application/json"}));
+    navigator.sendBeacon(PROGRESS_API + "?k=" + PROGRESS_KEY, new Blob([JSON.stringify({attempts: S.attempts})], {type:"application/json"}));
   }
 });
 function overallAccuracy(){

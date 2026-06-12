@@ -9,6 +9,21 @@
  */
 const KEY = "ophir";
 const MAX_BYTES = 2_000_000; // ~2MB guard; years of drills fit well under this
+const SECRET = "I0oZUTic0I2n4zd_1M5XiIfM50j50Ct1";
+const ALLOWED_ORIGINS = [
+  "https://chess-trainer-ms8.pages.dev",
+  "https://ophirram8.github.io",
+];
+
+function corsHeaders(request) {
+  const origin = request.headers.get("Origin") || "";
+  const allow = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allow,
+    "Access-Control-Allow-Methods": "GET, PUT, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, X-Progress-Key",
+  };
+}
 
 function attemptId(a) {
   return (a.ts || 0) + "|" + (a.key || a.idx || "") + "|" + (a.date || "");
@@ -26,7 +41,18 @@ function mergeAttempts(a, b) {
 
 export async function onRequest({ request, env }) {
   const kv = env.PROGRESS;
-  const headers = { "Content-Type": "application/json", "Cache-Control": "no-store" };
+  const headers = { "Content-Type": "application/json", "Cache-Control": "no-store", ...corsHeaders(request) };
+
+  if (request.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: corsHeaders(request) });
+  }
+
+  // interim shared-key gate until Cloudflare Access is configured
+  const url = new URL(request.url);
+  const provided = request.headers.get("X-Progress-Key") || url.searchParams.get("k") || "";
+  if (provided !== SECRET) {
+    return new Response('{"error":"unauthorized"}', { status: 403, headers });
+  }
 
   if (request.method === "GET") {
     const stored = await kv.get(KEY, "json");
