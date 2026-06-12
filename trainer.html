@@ -165,6 +165,31 @@
   .think ol{margin:0 0 0 20px; padding:0;}
   .think li{margin-bottom:3px;}
   .think-sig{margin-top:8px; font-weight:600; color:var(--gold);}
+  /* gamification */
+  .rank-card{display:flex; align-items:center; justify-content:space-between; gap:14px;}
+  .rank-left{display:flex; align-items:center; gap:14px; flex:1; min-width:0;}
+  .rank-ico{font-size:2.2rem; line-height:1;}
+  .rank-name{font-weight:800; font-size:1.05rem;}
+  .rank-xp{color:var(--muted); font-size:.78rem; margin:2px 0 6px;}
+  .rank-bar{height:8px; background:var(--ghost-bg); border-radius:5px; overflow:hidden; max-width:340px;}
+  .rank-fill{height:100%; background:linear-gradient(90deg, var(--green), var(--gold)); border-radius:5px; transition:width .5s;}
+  .ring-wrap{position:relative; width:64px; height:64px; flex-shrink:0;}
+  .ring{width:64px; height:64px;}
+  .ring circle{transition:stroke-dashoffset .6s;}
+  .ring-label{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:.85rem; font-family:ui-monospace,monospace;}
+  .xp-chip{display:inline-block; background:var(--chip-gold-bg); color:var(--gold); border-radius:10px;
+    padding:1px 9px; font-size:.85rem; font-weight:800; margin-left:6px; animation:pop .3s cubic-bezier(.2,1.4,.5,1);}
+  .burst{position:fixed; top:55%; font-size:1.6rem; z-index:100; pointer-events:none;
+    animation:burstfly 1.4s ease-out forwards;}
+  @keyframes burstfly{
+    from{transform:translate(0,0) rotate(0); opacity:1;}
+    to{transform:translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity:0;}
+  }
+  .toast{position:fixed; left:50%; bottom:90px; transform:translateX(-50%) translateY(20px); z-index:101;
+    background:var(--card); color:var(--text); border:1px solid var(--gold); border-radius:12px;
+    padding:12px 20px; font-weight:700; box-shadow:0 8px 30px rgba(0,0,0,.25); opacity:0; transition:all .35s;}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
   @keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
   .drill-foot{
     display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:14px;
@@ -367,7 +392,10 @@
     <h1>♟ Blunder Trainer</h1>
     <p>Built from your real games — every drill is a position where you blundered. Find what Stockfish found.</p>
   </div>
-  <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Light/dark mode">🌙</button>
+  <div style="display:flex; gap:8px; flex-shrink:0;">
+    <button class="theme-toggle" id="sound-toggle" onclick="toggleSound()" title="Sound on/off">🔊</button>
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Light/dark mode">🌙</button>
+  </div>
 </header>
 <nav>
   <button data-tab="dashboard" class="active"><span class="ico">🏠</span><span>Home</span></button>
@@ -519,6 +547,84 @@ function answerSignal(){
   return "the answer is a quiet move — it saves or improves a piece";
 }
 
+/* ============================================================
+   Gamification: XP, ranks, combo, daily goal, sound
+   ============================================================ */
+const XP_BASE = {Easy: 10, Medium: 20, Hard: 30};
+const RANKS = [
+  {name:"Pawn",          icon:"♙", xp:0},
+  {name:"Squire",        icon:"🛡", xp:100},
+  {name:"Knight",        icon:"♘", xp:250},
+  {name:"Bishop",        icon:"♗", xp:450},
+  {name:"Rook",          icon:"♖", xp:700},
+  {name:"Queen's Guard", icon:"♕", xp:1000},
+  {name:"Blunder Slayer",icon:"⚔️", xp:1400},
+  {name:"Master",        icon:"🏅", xp:1900},
+  {name:"Grandmaster",   icon:"👑", xp:2600}
+];
+const DAILY_GOAL = 5;
+let combo = 0;
+
+function totalXP(){ return S.attempts.reduce((t,a)=>t+(a.xp||0), 0); }
+function rankFor(xp){
+  let r = RANKS[0];
+  for(const rk of RANKS){ if(xp >= rk.xp) r = rk; }
+  return r;
+}
+function nextRank(xp){
+  for(const rk of RANKS){ if(xp < rk.xp) return rk; }
+  return null;
+}
+function comboMult(c){ return c >= 5 ? 2 : (c >= 3 ? 1.5 : 1); }
+function todayDrillCount(){
+  return S.attempts.filter(a=>a.firstTry && a.date === todayStr()).length;
+}
+
+/* ---------- sound: tiny WebAudio synth, no assets ---------- */
+let audioCtx = null;
+function sndOn(){ return localStorage.getItem("blunderTrainerSound") !== "off"; }
+function toggleSound(){
+  localStorage.setItem("blunderTrainerSound", sndOn() ? "off" : "on");
+  const b = document.getElementById("sound-toggle");
+  if(b) b.textContent = sndOn() ? "🔊" : "🔇";
+}
+function beep(freq, dur, delay, type, gain){
+  if(!sndOn()) return;
+  try{
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const t0 = audioCtx.currentTime + (delay||0);
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = type || "sine"; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(gain || 0.12, t0 + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(t0); o.stop(t0 + dur + 0.05);
+  }catch(e){}
+}
+function sndCorrect(){ beep(660,.12,0); beep(880,.18,.10); }
+function sndComboUp(c){ beep(660,.09,0); beep(830,.09,.08); beep(990,.16,.16, "sine", .14); }
+function sndWrong(){ beep(190,.18,0,"triangle",.10); }
+function sndRankUp(){ beep(523,.14,0); beep(659,.14,.12); beep(784,.14,.24); beep(1046,.3,.36,"sine",.16); }
+function sndGoal(){ beep(784,.12,0); beep(1046,.25,.11,"sine",.15); }
+
+/* ---------- celebration burst ---------- */
+function burst(emoji){
+  const n = 14;
+  for(let i=0;i<n;i++){
+    const sp = document.createElement("span");
+    sp.className = "burst";
+    sp.textContent = emoji;
+    sp.style.left = (45 + Math.random()*10) + "%";
+    sp.style.setProperty("--dx", (Math.random()*240-120) + "px");
+    sp.style.setProperty("--dy", (-80 - Math.random()*240) + "px");
+    sp.style.setProperty("--rot", (Math.random()*360) + "deg");
+    sp.style.animationDelay = (Math.random()*0.15) + "s";
+    document.body.appendChild(sp);
+    setTimeout(()=>sp.remove(), 1600);
+  }
+}
+
 /* ---------- persistent state (localStorage so streaks/progress survive reloads) ---------- */
 const store = {
   load(){ try{ return JSON.parse(localStorage.getItem("blunderTrainer")||"{}"); }catch(e){ return {}; } },
@@ -557,12 +663,49 @@ function recomputeDerived(){
 }
 
 function recordAttempt(key, theme, correct, firstTry){
-  S.attempts.push({key, theme, correct, firstTry, date: todayStr(), ts: Date.now()});
+  // --- gamification: combo + XP (computed before pushing the attempt) ---
+  const beforeXP = totalXP();
+  const beforeRank = rankFor(beforeXP);
+  const beforeToday = todayDrillCount();
+  let xp = 0;
+  if(correct){
+    const base = XP_BASE[drill && drill.difficulty] || 15;
+    if(firstTry){
+      const prevCombo = combo;
+      combo++;
+      xp = Math.round(base * comboMult(combo));
+      if(comboMult(combo) > comboMult(prevCombo)) sndComboUp(combo); else sndCorrect();
+    } else {
+      xp = Math.round(base / 2);
+      sndCorrect();
+    }
+  } else if(firstTry){
+    combo = 0;
+    sndWrong();
+  }
+  lastXPGain = xp;
+  S.attempts.push({key, theme, correct, firstTry, date: todayStr(), ts: Date.now(), xp});
   let cur = S.sessions[S.sessions.length-1];
   if(!cur || cur.date !== todayStr()){ cur = {date: todayStr(), correct:0, total:0}; S.sessions.push(cur); }
   if(firstTry){ cur.total++; if(correct) cur.correct++; srsUpdate(key, correct); }
   store.save(S);
   schedulePush();
+  // --- celebrations ---
+  const afterRank = rankFor(totalXP());
+  if(afterRank !== beforeRank){
+    setTimeout(()=>{ sndRankUp(); burst(afterRank.icon); toast(afterRank.icon + " RANK UP — you are now " + afterRank.name + "!"); }, 500);
+  }
+  if(firstTry && beforeToday < DAILY_GOAL && todayDrillCount() >= DAILY_GOAL){
+    setTimeout(()=>{ sndGoal(); burst("🎯"); toast("🎯 Daily goal complete — " + DAILY_GOAL + " drills!"); }, afterRank!==beforeRank ? 1600 : 600);
+  }
+}
+let lastXPGain = 0;
+function toast(msg){
+  const t = document.createElement("div");
+  t.className = "toast"; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.classList.add("show"), 30);
+  setTimeout(()=>{ t.classList.remove("show"); setTimeout(()=>t.remove(), 400); }, 3200);
 }
 
 /* ---------- remote sync (Cloudflare Pages Function + KV behind Access).
@@ -636,6 +779,10 @@ function toggleTheme(){
   applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
 }
 applyTheme(localStorage.getItem("blunderTrainerTheme") || "light");
+document.addEventListener("DOMContentLoaded", ()=>{
+  const b = document.getElementById("sound-toggle");
+  if(b) b.textContent = sndOn() ? "🔊" : "🔇";
+});
 
 /* ---------- iOS external-link escape (open chess.com in real Safari) ---------- */
 const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -837,9 +984,10 @@ function makeUserMove(from, to){
     if(firstTry){ sessTotal++; sessCorrect++; }
     recordAttempt(drill.key, drill.theme, true, firstTry);
     const tryNote = firstTry ? "" : " (try " + (tries+1) + ")";
-    const verdict = isBest
+    const xpNote = lastXPGain > 0 ? ` <span class="xp-chip">+${lastXPGain} XP${combo >= 3 && firstTry ? " · 🔥x" + comboMult(combo) : ""}</span>` : "";
+    const verdict = (isBest
       ? "✅ " + drill.best + " — exactly right" + tryNote + (hintUsed ? " (with a hint)" : "") + "."
-      : "✅ " + (mv ? mv.san : "") + " works too — also winning" + tryNote + ". Engine's top pick: " + drill.best + ".";
+      : "✅ " + (mv ? mv.san : "") + " works too — also winning" + tryNote + ". Engine's top pick: " + drill.best + ".") + xpNote;
     renderDrill({lastFrom: from, lastTo: to, bestDest: to, animateTo: to}, {
       kind:"good",
       verdict,
@@ -852,6 +1000,7 @@ function makeUserMove(from, to){
     game.undo();
     tries++;
     if(firstTry){ sessTotal++; recordAttempt(drill.key, drill.theme, false, true); }
+    else sndWrong();
     if(tries < MAX_TRIES){
       // tries left — keep the board live, coach the thought process instead of revealing
       renderDrill({lastFrom: from, lastTo: to}, {
@@ -928,6 +1077,7 @@ function renderDrill(extraHl, feedback){
         <span class="badge">${THEME_ICONS[drill.theme]||"♟"} ${esc(drill.theme)}</span>
         <span class="badge ${drill.difficulty==="Hard"?"coral":""}">${drill.difficulty}</span>
         <span class="badge coral">−${drill.swing} eval swing</span>
+        ${combo >= 2 ? `<span class="badge gold">🔥 combo x${combo}${comboMult(combo)>1 ? ` (${comboMult(combo)}× XP)` : ""}</span>` : ""}
         <span class="spacer"></span>
         <span>Drill ${qPos+1} of ${Q.length} · Session accuracy: ${sessAcc===null?"—":sessAcc+"%"}</span>
       </div>
@@ -992,7 +1142,34 @@ function renderDashboard(){
   const dueCount = DRILLS.filter(d => S.srs[d.key] && S.srs[d.key].due <= today).length;
   const newCount = DRILLS.filter(d => !S.srs[d.key]).length;
   document.getElementById("tab-dashboard").innerHTML = `
-    <div class="grid stat-grid">
+    ${(()=>{
+      const xp = totalXP();
+      const rank = rankFor(xp), nxt = nextRank(xp);
+      const pct = nxt ? Math.round(100*(xp - rank.xp)/(nxt.xp - rank.xp)) : 100;
+      const today = todayDrillCount();
+      const ringPct = Math.min(1, today / DAILY_GOAL);
+      const C = 2 * Math.PI * 26;
+      return `<div class="card rank-card">
+        <div class="rank-left">
+          <div class="rank-ico">${rank.icon}</div>
+          <div>
+            <div class="rank-name">${esc(rank.name)}</div>
+            <div class="rank-xp mono">${xp} XP${nxt ? ` · ${nxt.xp - xp} to ${esc(nxt.name)}` : " · max rank"}</div>
+            <div class="rank-bar"><div class="rank-fill" style="width:${pct}%"></div></div>
+          </div>
+        </div>
+        <div class="ring-wrap" title="Daily goal">
+          <svg viewBox="0 0 64 64" class="ring">
+            <circle cx="32" cy="32" r="26" fill="none" stroke="var(--ghost-bg)" stroke-width="7"/>
+            <circle cx="32" cy="32" r="26" fill="none" stroke="${ringPct>=1 ? "var(--gold)" : "var(--green)"}" stroke-width="7"
+              stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-ringPct)}"
+              transform="rotate(-90 32 32)"/>
+          </svg>
+          <div class="ring-label">${ringPct>=1 ? "🎯" : `${today}/${DAILY_GOAL}`}</div>
+        </div>
+      </div>`;
+    })()}
+    <div class="grid stat-grid" style="margin-top:14px;">
       <div class="card stat"><div class="num">${ANALYSIS.gamesAnalyzed}</div><div class="lbl">Games analyzed</div></div>
       <div class="card stat"><div class="num">${ANALYSIS.totalBlunders}</div><div class="lbl">Blunders → drills</div></div>
       <div class="card stat"><div class="num">${acc===null?"—":acc+"%"}</div><div class="lbl">Drill accuracy</div></div>
