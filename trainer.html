@@ -790,15 +790,19 @@ const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 function extHref(url){ return IS_IOS ? url.replace(/^https:\/\//,"x-safari-https://") : url; }
 
 /* ---------- drill ordering ----------
-   1. due reviews first (spaced repetition — misses come back soonest)
-   2. then unseen positions, weakest theme first, shuffled within theme
-   3. then everything else, by next due date */
+   Ophir's rule (2026-06-28): show the freshest blunders first and make sure
+   every position gets drilled. So the queue is:
+   1. NEVER-DRILLED positions first — newest game first, then biggest eval
+      swing (so last night's mistakes rise to the very top)
+   2. then reviews that are DUE today (spaced repetition — most overdue first)
+   3. then everything else, by next due date
+   This guarantees you always start on the most up-to-date material and work
+   through all of it before older reviews. */
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 function buildQueue(filterTheme){
   let pool = DRILLS.map((d,i)=>({d,i}));
   if(filterTheme) pool = pool.filter(x=>x.d.theme===filterTheme);
   const today = todayStr();
-  const rank = t => { const r = ANALYSIS.themeOrder.indexOf(t); return r<0 ? 99 : r; };
   const due = [], unseen = [], later = [];
   pool.forEach(x=>{
     const s = S.srs[x.d.key];
@@ -806,15 +810,19 @@ function buildQueue(filterTheme){
     else if(s.due <= today) due.push(x);
     else later.push(x);
   });
-  shuffle(due);
-  const groups = {};
-  unseen.forEach(x=>{ (groups[x.d.theme] = groups[x.d.theme]||[]).push(x); });
-  let unseenOrdered = [];
-  Object.keys(groups).sort((a,b)=>rank(a)-rank(b)).forEach(t=>{
-    unseenOrdered = unseenOrdered.concat(shuffle(groups[t]));
-  });
+  // newest game first; tie-break on the biggest blunder
+  const byRecency = (a,b)=> (a.d.date !== b.d.date) ? (a.d.date < b.d.date ? 1 : -1) : ((b.d.swing||0) - (a.d.swing||0));
+  unseen.sort(byRecency);
+  due.sort((a,b)=> (S.srs[a.d.key].due < S.srs[b.d.key].due ? -1 : 1));
   later.sort((a,b)=> (S.srs[a.d.key].due < S.srs[b.d.key].due ? -1 : 1));
-  return due.concat(unseenOrdered, later);
+  return unseen.concat(due, later);
+}
+/* live coverage across the whole drill bank (for the "am I getting them all?" line) */
+function coverageStats(){
+  const today = todayStr();
+  let done=0, dueN=0, neu=0;
+  DRILLS.forEach(d=>{ const s=S.srs[d.key]; if(!s){neu++;} else {done++; if(s.due<=today) dueN++;} });
+  return {total:DRILLS.length, done, neu, dueN};
 }
 
 /* ============================================================
@@ -1054,6 +1062,8 @@ function nextDrill(){
 function renderDrill(extraHl, feedback){
   const el = document.getElementById("tab-drill");
   const sessAcc = sessTotal ? Math.round(100*sessCorrect/sessTotal) : null;
+  const seenCount = (S.srs[drill.key]||{}).seen || 0;
+  const cov = coverageStats();
   el.innerHTML = `
     <div class="card">
       <div class="drill-ctx">
@@ -1075,12 +1085,13 @@ function renderDrill(extraHl, feedback){
       <div id="feedback-zone"></div>
       <div class="drill-actions" id="drill-actions"></div>
       <div class="drill-foot">
+        <span class="badge ${seenCount?"":"gold"}">${seenCount ? `✓ drilled ${seenCount}×` : "🆕 new"}</span>
         <span class="badge">${THEME_ICONS[drill.theme]||"♟"} ${esc(drill.theme)}</span>
         <span class="badge ${drill.difficulty==="Hard"?"coral":""}">${drill.difficulty}</span>
         <span class="badge coral">−${drill.swing} eval swing</span>
         ${combo >= 2 ? `<span class="badge gold">🔥 combo x${combo}${comboMult(combo)>1 ? ` (${comboMult(combo)}× XP)` : ""}</span>` : ""}
         <span class="spacer"></span>
-        <span>Drill ${qPos+1} of ${Q.length} · Session accuracy: ${sessAcc===null?"—":sessAcc+"%"}</span>
+        <span>Drill ${qPos+1} of ${Q.length} · ✅ ${cov.done}/${cov.total} drilled${cov.neu?` · 🆕 ${cov.neu} new left`:""} · Session ${sessAcc===null?"—":sessAcc+"%"}</span>
       </div>
     </div>`;
   renderBoard(extraHl||{});
@@ -1189,7 +1200,7 @@ function renderDashboard(){
         ${newCount ? ` ${newCount} positions you haven't drilled yet.` : ""}
       </p>
       <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btn" onclick="startDrills()">Start Today's Drill${dueCount ? ` (${dueCount} due)` : ""}</button>
+        <button class="btn" onclick="startDrills()">Start Drilling${newCount ? ` (${newCount} new first)` : (dueCount ? ` (${dueCount} due)` : "")}</button>
         <button class="btn ghost" onclick="switchTab('themes')">Review All Themes</button>
       </div>
       ${ANALYSIS.generated ? `<p style="color:var(--muted); font-size:.75rem; margin-top:14px;" class="mono">drill bank updated ${esc(ANALYSIS.generated)} · syncs automatically as you play</p>` : ""}
