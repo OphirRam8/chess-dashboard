@@ -13,7 +13,7 @@ from collections import Counter, defaultdict
 
 import chess, chess.pgn, chess.engine
 
-USERNAME = "ophirram"
+USERNAME = "ophirgambit"
 START_MONTH = "2026/05"          # ignore games before this archive month
 STOCKFISH = "/opt/homebrew/bin/stockfish"
 DEPTH = 14
@@ -45,7 +45,11 @@ def fetch_games():
     months = [m for m in months if m.split("/games/")[1] >= START_MONTH]
     games = []
     for m in months:
-        games += fetch_json(m).get("games", [])
+        try:
+            games += fetch_json(m).get("games", [])
+        except Exception as e:  # skip a month that 404s / is empty / is mid-propagation
+            print(f"  skip {m}: {e}")
+            continue
     return games
 
 
