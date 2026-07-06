@@ -5,24 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="theme-color" content="#3a2419" />
+<meta name="theme-color" content="#0E1122" />
 <title>♟ Chess — Ophir</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♟</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 <style>
 :root {
-  --cream:#f5ecd9;
-  --cream-deep:#ebdcb8;
-  --brown:#3a2419;
-  --brown-soft:#5b3d2d;
-  --brown-muted:#8a6b54;
-  --accent:#6a8a4a;
-  --accent-deep:#4a6a3a;
-  --warm:#c97a3a;
-  --danger:#b94a3a;
-  --gold:#c9a04a;
-  --paper:#fffaee;
-  --shadow:0 2px 8px rgba(58,36,25,0.08);
-  --shadow-md:0 4px 14px rgba(58,36,25,0.12);
+  --cream:#0E1122;
+  --cream-deep:#242A48;
+  --brown:#EEF1FF;
+  --brown-soft:#BCC3E4;
+  --brown-muted:#7E87B0;
+  --accent:#8B5CF6;
+  --accent-deep:#A78BFA;
+  --warm:#FF8A2A;
+  --danger:#FF4D6D;
+  --gold:#FFC53D;
+  --win:#34D399;
+  --paper:#171B31;
+  --shadow:0 2px 10px rgba(0,0,0,0.35);
+  --shadow-md:0 6px 18px rgba(0,0,0,0.45);
 }
 * { box-sizing:border-box; margin:0; padding:0; }
 html, body {
@@ -36,14 +40,14 @@ body { max-width:760px; margin:0 auto; padding:0 16px 80px; }
 a { color:var(--accent-deep); text-decoration:none; }
 a:active { opacity:0.7; }
 
-header { padding:18px 0 12px; border-bottom:1px solid rgba(58,36,25,0.10); margin-bottom:18px; }
+header { padding:18px 0 12px; border-bottom:1px solid rgba(148,158,220,0.10); margin-bottom:18px; }
 .headline { display:flex; align-items:center; gap:10px; }
 .logo { font-size:32px; }
 .headline h1 { font-family:Georgia, "Times New Roman", serif; font-size:22px; font-weight:700; letter-spacing:-0.01em; }
 .subhead { font-size:12px; color:var(--brown-muted); margin-top:2px; letter-spacing:0.05em; text-transform:uppercase; }
 
 .card {
-  background:var(--paper); border:1px solid rgba(58,36,25,0.08);
+  background:var(--paper); border:1px solid rgba(148,158,220,0.08);
   border-radius:14px; padding:18px; margin-bottom:14px;
   box-shadow:var(--shadow);
 }
@@ -80,7 +84,7 @@ header { padding:18px 0 12px; border-bottom:1px solid rgba(58,36,25,0.10); margi
 /* Key Concepts — always-on reference card */
 .key-concepts-card {
   background:var(--paper);
-  border:1px solid rgba(58,36,25,0.10);
+  border:1px solid rgba(148,158,220,0.10);
   border-top:4px solid var(--gold);
   border-radius:14px;
   padding:16px 18px;
@@ -103,7 +107,7 @@ header { padding:18px 0 12px; border-bottom:1px solid rgba(58,36,25,0.10); margi
 .key-concept-row {
   display:grid; grid-template-columns:24px 1fr; gap:10px;
   padding:8px 0;
-  border-bottom:1px solid rgba(58,36,25,0.05);
+  border-bottom:1px solid rgba(148,158,220,0.05);
   align-items:start;
 }
 .key-concept-row:last-child { border-bottom:none; }
@@ -122,7 +126,7 @@ header { padding:18px 0 12px; border-bottom:1px solid rgba(58,36,25,0.10); margi
 /* Activity strip — "what you measure expands" */
 .activity-card {
   background:var(--paper);
-  border:1px solid rgba(58,36,25,0.10);
+  border:1px solid rgba(148,158,220,0.10);
   border-top:4px solid var(--accent);
   border-radius:14px;
   padding:14px 16px 16px;
@@ -151,14 +155,14 @@ header { padding:18px 0 12px; border-bottom:1px solid rgba(58,36,25,0.10); margi
 .activity-row {
   display:flex; justify-content:space-between; align-items:center;
   font-size:13px; color:var(--brown-soft); padding:6px 0;
-  border-bottom:1px dashed rgba(58,36,25,0.06);
+  border-bottom:1px dashed rgba(148,158,220,0.06);
 }
 .activity-row:last-of-type { border-bottom:none; }
 .activity-row-label { font-weight:600; color:var(--brown); }
 .activity-row-val { font-variant-numeric:tabular-nums; }
 .activity-bar-wrap { margin-top:4px; }
 .activity-bar-track {
-  height:5px; background:rgba(58,36,25,0.08); border-radius:3px; overflow:hidden;
+  height:5px; background:rgba(148,158,220,0.08); border-radius:3px; overflow:hidden;
 }
 .activity-bar-fill {
   height:100%; background:linear-gradient(90deg, var(--accent), var(--gold));
@@ -167,7 +171,7 @@ header { padding:18px 0 12px; border-bottom:1px solid rgba(58,36,25,0.10); margi
 .activity-bar-fill.over { background:linear-gradient(90deg, var(--gold), var(--warm)); }
 .activity-streaks {
   display:flex; gap:14px; margin-top:12px;
-  padding-top:10px; border-top:1px solid rgba(58,36,25,0.08);
+  padding-top:10px; border-top:1px solid rgba(148,158,220,0.08);
 }
 .activity-streak {
   flex:1; text-align:center;
@@ -185,7 +189,7 @@ header { padding:18px 0 12px; border-bottom:1px solid rgba(58,36,25,0.10); margi
 .masterskills-tagline { font-size:11px; color:var(--brown-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px; padding-left:4px; }
 .skill-cards { display:grid; grid-template-columns:1fr; gap:10px; }
 @media (min-width:640px) { .skill-cards { grid-template-columns:repeat(3, 1fr); } }
-.skill-card { background:var(--paper); border:1px solid rgba(58,36,25,0.08); border-left:4px solid var(--accent); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow); }
+.skill-card { background:var(--paper); border:1px solid rgba(148,158,220,0.08); border-left:4px solid var(--accent); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow); }
 .skill-card.recognition { border-left-color:#4a7ab3; }
 .skill-card.utilization { border-left-color:var(--warm); }
 .skill-card.creation { border-left-color:#8a5fb3; }
@@ -199,7 +203,7 @@ header { padding:18px 0 12px; border-bottom:1px solid rgba(58,36,25,0.10); margi
 .skill-stat-label { font-size:11px; color:var(--brown-muted); }
 .skill-card.creation .skill-stat-label.locked-msg { color:var(--warm); font-style:italic; }
 
-.game-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid rgba(58,36,25,0.06); font-size:13px; }
+.game-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid rgba(148,158,220,0.06); font-size:13px; }
 .game-row:last-child { border-bottom:none; }
 .game-result { font-size:18px; flex:0 0 24px; text-align:center; }
 .game-result.win { color:var(--accent-deep); }
@@ -249,7 +253,7 @@ header { padding:18px 0 12px; border-bottom:1px solid rgba(58,36,25,0.10); margi
 .carousel::-webkit-scrollbar { height:4px; }
 .carousel::-webkit-scrollbar-track { background:transparent; }
 .carousel::-webkit-scrollbar-thumb { background:var(--cream-deep); border-radius:2px; }
-.pattern-card { flex:0 0 240px; scroll-snap-align:start; background:var(--paper); border:1px solid rgba(58,36,25,0.08); border-radius:12px; overflow:hidden; box-shadow:var(--shadow); }
+.pattern-card { flex:0 0 240px; scroll-snap-align:start; background:var(--paper); border:1px solid rgba(148,158,220,0.08); border-radius:12px; overflow:hidden; box-shadow:var(--shadow); }
 .pattern-card img { width:100%; height:240px; display:block; background:var(--cream-deep); }
 .pattern-card-body { padding:10px 12px; }
 .pattern-label { font-size:13px; font-weight:600; color:var(--brown); margin-bottom:4px; line-height:1.3; }
@@ -261,16 +265,16 @@ header { padding:18px 0 12px; border-bottom:1px solid rgba(58,36,25,0.10); margi
 .pattern-card-foot { padding:6px 12px 10px; font-size:11px; }
 .pattern-card-foot a { color:var(--brown-muted); }
 
-.opening-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid rgba(58,36,25,0.06); font-size:13px; }
+.opening-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid rgba(148,158,220,0.06); font-size:13px; }
 .opening-row:last-child { border-bottom:none; }
-.opening-color { width:14px; height:14px; border-radius:50%; border:1px solid rgba(58,36,25,0.18); flex:0 0 auto; }
+.opening-color { width:14px; height:14px; border-radius:50%; border:1px solid rgba(148,158,220,0.18); flex:0 0 auto; }
 .opening-color.white { background:#fffaee; }
 .opening-color.black { background:#2a1a12; }
 .opening-color.both { background:linear-gradient(135deg, #fffaee 50%, #2a1a12 50%); }
 .opening-name { flex:1; font-weight:600; }
 .opening-meta { font-size:11px; color:var(--brown-muted); font-family:Menlo, Monaco, monospace; }
 
-.cycle-row { display:grid; grid-template-columns:32px 1fr 90px; gap:8px; align-items:center; padding:8px 0; font-size:13px; border-bottom:1px solid rgba(58,36,25,0.06); }
+.cycle-row { display:grid; grid-template-columns:32px 1fr 90px; gap:8px; align-items:center; padding:8px 0; font-size:13px; border-bottom:1px solid rgba(148,158,220,0.06); }
 .cycle-row:last-child { border-bottom:none; }
 .cycle-row.current { background:rgba(106,138,74,0.10); border-radius:8px; padding:8px; margin:2px -8px; border-bottom-color:transparent; }
 .cycle-week { font-weight:600; color:var(--brown-muted); }
@@ -291,6 +295,88 @@ header { padding:18px 0 12px; border-bottom:1px solid rgba(58,36,25,0.10); margi
 .links a { display:block; padding:10px 12px; background:var(--cream-deep); border-radius:8px; font-size:13px; color:var(--brown-soft); }
 
 footer { margin-top:24px; font-size:11px; color:var(--brown-muted); text-align:center; line-height:1.5; }
+
+/* ═══ NIGHT ARENA reskin overrides ═══ */
+.hero {
+  background:linear-gradient(140deg, #4C1D95 0%, #7C3AED 40%, #C026D3 75%, #E11D48 100%);
+  color:#FFF5E8;
+  box-shadow:0 10px 30px -8px rgba(124,58,237,0.55);
+}
+.headline h1 { font-family:'Anton', sans-serif; font-weight:400; font-size:24px; letter-spacing:0.03em; }
+.hero-elo { font-family:'Anton', sans-serif; font-weight:400; font-size:56px; letter-spacing:0.01em; }
+.hero-goal-val { font-family:'Anton', sans-serif; font-weight:400; font-size:22px; }
+.hero-theme { font-family:'Anton', sans-serif; font-weight:400; letter-spacing:0.02em; }
+.activity-title, .key-concepts-title { font-family:'Anton', sans-serif; font-weight:400; letter-spacing:0.03em; }
+.activity-tile { background:rgba(139,92,246,0.12); }
+.activity-tile-num, .activity-streak-num { font-family:'Anton', sans-serif; font-weight:400; color:var(--gold); }
+.game-result.win { color:var(--win); }
+.hero-progress-fill { background:linear-gradient(90deg, #FFC53D, #FF8A2A, #FF4D6D); }
+
+/* ═══ Road to 1500 panel ═══ */
+.road-card {
+  background:var(--paper); border:1px solid rgba(148,158,220,0.12);
+  border-top:4px solid var(--gold); border-radius:16px;
+  padding:16px 16px 18px; margin-bottom:14px; box-shadow:var(--shadow-md);
+}
+.road-header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px; }
+.road-title { font-family:'Anton', sans-serif; font-size:18px; letter-spacing:0.03em; color:var(--brown); }
+.road-tag { font-size:10px; color:var(--brown-muted); text-transform:uppercase; letter-spacing:0.08em; }
+.ritual-pin {
+  background:linear-gradient(135deg, rgba(139,92,246,0.18), rgba(225,29,72,0.14));
+  border:1px solid rgba(167,139,250,0.35);
+  border-radius:12px; padding:11px 13px; margin-bottom:14px;
+}
+.ritual-pin-label { font-size:10px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent-deep); margin-bottom:4px; }
+.ritual-pin-line { font-size:12.5px; color:var(--brown-soft); line-height:1.55; }
+.ritual-pin-line b { color:var(--brown); }
+.nn-row {
+  display:flex; align-items:center; gap:11px; padding:9px 10px;
+  border-radius:10px; cursor:pointer; user-select:none; -webkit-user-select:none;
+}
+.nn-row:active { background:rgba(139,92,246,0.10); }
+.nn-check {
+  width:26px; height:26px; border-radius:8px; flex-shrink:0;
+  border:2px solid rgba(148,158,220,0.4);
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px; font-weight:900; color:transparent; transition:all .15s ease;
+}
+.nn-row.done .nn-check { background:linear-gradient(135deg,#8B5CF6,#C026D3); border-color:transparent; color:#fff; }
+.nn-label { font-size:13.5px; font-weight:600; color:var(--brown); flex:1; }
+.nn-row.done .nn-label { color:var(--brown-muted); text-decoration:line-through; text-decoration-color:rgba(139,92,246,0.5); }
+.nn-sub { font-size:11px; color:var(--brown-muted); font-weight:500; }
+.nn-footer { display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding:0 4px; }
+.nn-streak { font-size:13px; font-weight:800; color:var(--gold); }
+.nn-count { font-size:11px; color:var(--brown-muted); }
+.road-stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+.road-stat {
+  border-radius:12px; padding:12px; text-align:center;
+  background:rgba(148,158,220,0.07); border:1px solid rgba(148,158,220,0.10);
+}
+.road-stat-num { font-family:'Anton',sans-serif; font-size:30px; line-height:1; color:var(--brown); }
+.road-stat-num.good { color:var(--win); }
+.road-stat-num.bad { color:var(--danger); }
+.road-stat-label { font-size:10px; color:var(--brown-muted); text-transform:uppercase; letter-spacing:0.07em; margin-top:5px; line-height:1.4; }
+.gates { margin-top:14px; }
+.gate-row {
+  display:grid; grid-template-columns:64px 1fr auto; gap:10px; align-items:center;
+  padding:8px 4px; border-bottom:1px dashed rgba(148,158,220,0.10); font-size:13px;
+}
+.gate-row:last-child { border-bottom:none; }
+.gate-target { font-family:'Anton',sans-serif; font-size:20px; color:var(--gold); }
+.gate-when { color:var(--brown-soft); font-size:12px; }
+.gate-days { font-size:11px; color:var(--brown-muted); }
+.gate-status { font-size:11px; font-weight:800; padding:3px 9px; border-radius:999px; }
+.gate-status.ahead { background:rgba(52,211,153,0.15); color:var(--win); }
+.gate-status.push { background:rgba(255,197,61,0.15); color:var(--gold); }
+.gate-status.behind { background:rgba(255,77,109,0.15); color:var(--danger); }
+.gate-status.hit { background:linear-gradient(135deg,#8B5CF6,#C026D3); color:#fff; }
+.bpg-bars { display:flex; align-items:flex-end; gap:6px; height:56px; margin-top:8px; }
+.bpg-bar { flex:1; border-radius:5px 5px 2px 2px; background:linear-gradient(180deg,#FF4D6D,#C026D3); min-height:4px; position:relative; }
+.bpg-bar.latest { background:linear-gradient(180deg,#FFC53D,#FF8A2A); }
+.bpg-bar-val { position:absolute; top:-16px; left:0; right:0; text-align:center; font-size:10px; font-weight:800; color:var(--brown-soft); }
+.bpg-bar-week { position:absolute; bottom:-16px; left:0; right:0; text-align:center; font-size:9px; color:var(--brown-muted); }
+.bpg-wrap { padding-bottom:18px; }
+.bpg-note { font-size:10.5px; color:var(--brown-muted); margin-top:22px; }
 </style>
 </head>
 <body>
@@ -336,6 +422,43 @@ footer { margin-top:24px; font-size:11px; color:var(--brown-muted); text-align:c
     <div class="hero-concept-line" id="hero-concept-line">—</div>
   </div>
   <div class="saba" id="saba">—</div>
+</div>
+
+<!-- ═══ ROAD TO 1500 — the coach plan panel ═══ -->
+<div class="road-card" id="road-card">
+  <div class="road-header">
+    <div class="road-title">🛣️ ROAD TO 1500</div>
+    <div class="road-tag">Scoreboard = blunders, not ELO</div>
+  </div>
+
+  <div class="ritual-pin">
+    <div class="ritual-pin-label">⚡ The Ritual — every move, every game</div>
+    <div class="ritual-pin-line"><b>1.</b> What did his move change? · <b>2.</b> Checks → Captures → Attacks (both ways) · <b>3.</b> After my move, <b>what can he take?</b></div>
+  </div>
+
+  <div id="nn-list"></div>
+  <div class="nn-footer">
+    <div class="nn-streak" id="nn-streak">🔥 0-day streak</div>
+    <div class="nn-count" id="nn-count">0/5 today</div>
+  </div>
+
+  <div class="road-stats">
+    <div class="road-stat">
+      <div class="road-stat-num" id="stat-bpg">—</div>
+      <div class="road-stat-label">Blunders / game<br>this week</div>
+    </div>
+    <div class="road-stat">
+      <div class="road-stat-num" id="stat-blitzfree">—</div>
+      <div class="road-stat-label">🚫 Blitz-free<br>days</div>
+    </div>
+  </div>
+
+  <div class="bpg-wrap">
+    <div class="bpg-bars" id="bpg-bars"></div>
+    <div class="bpg-note" id="bpg-note">Blunders per game, weekly — from your Stockfish-analyzed games. Down and to the right wins.</div>
+  </div>
+
+  <div class="gates" id="gates"></div>
 </div>
 
 <div class="activity-card" id="activity-card">
@@ -784,10 +907,164 @@ function renderLinks(d) {
   });
 }
 
+/* ═══ ROAD TO 1500 ═══ */
+const NN_KEY = 'road1500-nn';
+const NN_ITEMS = [
+  { label: 'Rapid game 15|10 — Ritual every move', sub: 'stop after 2 losses' },
+  { label: '5-min review: find THE move, name it', sub: 'same day' },
+  { label: '5 Blunder Trainer drills', sub: 'the daily ring' },
+  { label: '5–10 slow puzzles to certainty', sub: 'full line first' },
+  { label: 'Book 15 min', sub: '3×/week counts' },
+];
+function nnData() { try { return JSON.parse(localStorage.getItem(NN_KEY)) || {}; } catch(e) { return {}; } }
+function nnSave(d) { try { localStorage.setItem(NN_KEY, JSON.stringify(d)); } catch(e) {} }
+function dayKey(dt) { dt = dt || new Date(); return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0'); }
+function nnDone(arr) { return (arr||[]).slice(0,4).filter(Boolean).length === 4; } // book optional
+function renderNN() {
+  const data = nnData();
+  const today = dayKey();
+  const arr = data[today] || [false,false,false,false,false];
+  const wrap = $('nn-list'); wrap.innerHTML = '';
+  NN_ITEMS.forEach((it, i) => {
+    const row = el('div', { class: 'nn-row' + (arr[i] ? ' done' : ''), onclick: () => {
+      const d2 = nnData(); const a2 = d2[today] || [false,false,false,false,false];
+      a2[i] = !a2[i]; d2[today] = a2; nnSave(d2); renderNN();
+    }},
+      el('div', { class: 'nn-check' }, '✓'),
+      el('div', { class: 'nn-label' }, it.label),
+      el('div', { class: 'nn-sub' }, it.sub)
+    );
+    wrap.appendChild(row);
+  });
+  $('nn-count').textContent = arr.filter(Boolean).length + '/5 today';
+  // streak: consecutive days (ending today or yesterday) with the 4 core NNs done
+  let streak = 0; const d0 = new Date();
+  if (!nnDone(data[dayKey(d0)])) d0.setDate(d0.getDate() - 1);
+  while (nnDone(data[dayKey(d0)])) { streak++; d0.setDate(d0.getDate() - 1); }
+  $('nn-streak').textContent = '🔥 ' + streak + '-day streak';
+}
+const GATES = [
+  { date: '2026-09-01', target: 950,  label: 'Sep 1' },
+  { date: '2026-10-15', target: 1100, label: 'Oct 15' },
+  { date: '2026-12-01', target: 1250, label: 'Dec 1' },
+  { date: '2026-12-31', target: 1500, label: 'Dec 31' },
+];
+const PLAN_START = { date: new Date('2026-07-06T00:00:00'), rating: 812 };
+function renderGates(currentRapid) {
+  const wrap = $('gates'); wrap.innerHTML = '';
+  wrap.appendChild(el('div', { class: 'road-tag', style: 'margin-bottom:6px;' }, '🏁 Checkpoint gates'));
+  const now = new Date();
+  GATES.forEach(g => {
+    const gd = new Date(g.date + 'T23:59:59');
+    const days = Math.max(0, Math.ceil((gd - now) / 86400000));
+    let cls = 'push', txt = '—';
+    if (currentRapid != null) {
+      if (currentRapid >= g.target) { cls = 'hit'; txt = '✓ HIT'; }
+      else {
+        // pace line from plan start to this gate
+        const total = (gd - PLAN_START.date) / 86400000;
+        const elapsed = Math.max(0, (now - PLAN_START.date) / 86400000);
+        const expected = PLAN_START.rating + (g.target - PLAN_START.rating) * Math.min(1, elapsed / total);
+        const delta = Math.round(currentRapid - expected);
+        if (delta >= 0) { cls = 'ahead'; txt = '▲ +' + delta + ' vs pace'; }
+        else if (delta >= -40) { cls = 'push'; txt = '● ' + delta + ' vs pace'; }
+        else { cls = 'behind'; txt = '▼ ' + delta + ' vs pace'; }
+      }
+    }
+    wrap.appendChild(el('div', { class: 'gate-row' },
+      el('div', { class: 'gate-target' }, String(g.target)),
+      el('div', {},
+        el('div', { class: 'gate-when' }, g.label),
+        el('div', { class: 'gate-days' }, days > 0 ? days + ' days left' : 'passed')
+      ),
+      el('div', { class: 'gate-status ' + cls }, txt)
+    ));
+  });
+}
+function isoWeekKey(d) {
+  const dt = new Date(d + 'T12:00:00');
+  const day = (dt.getDay() + 6) % 7; // Mon=0
+  dt.setDate(dt.getDate() - day);
+  return dayKey(dt);
+}
+function renderBlunderTrend() {
+  Promise.all([
+    fetch('./data/trainer-drills.json?ts=' + Date.now()).then(r => r.json()).catch(() => null),
+    fetch('https://api.chess.com/pub/player/ophirgambit/games/' + new Date().getFullYear() + '/' + String(new Date().getMonth()+1).padStart(2,'0')).then(r => r.json()).catch(() => null),
+    (function(){ const p = new Date(); p.setMonth(p.getMonth()-1); return fetch('https://api.chess.com/pub/player/ophirgambit/games/' + p.getFullYear() + '/' + String(p.getMonth()+1).padStart(2,'0')).then(r => r.json()).catch(() => null); })(),
+    (function(){ const p = new Date(); p.setMonth(p.getMonth()-2); return fetch('https://api.chess.com/pub/player/ophirgambit/games/' + p.getFullYear() + '/' + String(p.getMonth()+1).padStart(2,'0')).then(r => r.json()).catch(() => null); })(),
+  ]).then(([drills, m0, m1, m2]) => {
+    // games per week + last blitz date from archives
+    const games = [].concat((m2 && m2.games) || [], (m1 && m1.games) || [], (m0 && m0.games) || []);
+    const gamesByWeek = {}; let lastBlitz = null;
+    games.forEach(g => {
+      const d = new Date(g.end_time * 1000);
+      const wk = isoWeekKey(dayKey(d));
+      gamesByWeek[wk] = (gamesByWeek[wk] || 0) + 1;
+      if (g.time_class === 'blitz') { if (!lastBlitz || g.end_time > lastBlitz) lastBlitz = g.end_time; }
+    });
+    // blitz-free days
+    const bf = $('stat-blitzfree');
+    if (lastBlitz) {
+      const daysFree = Math.floor((Date.now()/1000 - lastBlitz) / 86400);
+      bf.textContent = String(daysFree);
+      bf.className = 'road-stat-num ' + (daysFree >= 2 ? 'good' : 'bad');
+    } else { bf.textContent = '60+'; bf.className = 'road-stat-num good'; }
+    // blunders per week from drills
+    if (!drills || !drills.drills) return;
+    const blByWeek = {};
+    drills.drills.forEach(x => { if (!x.date) return; const wk = isoWeekKey(x.date); blByWeek[wk] = (blByWeek[wk] || 0) + 1; });
+    // last 6 weeks
+    const weeks = []; const cur = new Date();
+    for (let i = 5; i >= 0; i--) { const w = new Date(cur); w.setDate(w.getDate() - 7*i); weeks.push(isoWeekKey(dayKey(w))); }
+    const bars = $('bpg-bars'); bars.innerHTML = '';
+    let latestBpg = null;
+    const vals = weeks.map(wk => {
+      const g = gamesByWeek[wk] || 0, b = blByWeek[wk] || 0;
+      return g > 0 ? +(b / g).toFixed(1) : (b > 0 ? b : null);
+    });
+    const maxV = Math.max.apply(null, vals.filter(v => v != null).concat([1]));
+    weeks.forEach((wk, i) => {
+      const v = vals[i];
+      const h = v == null ? 4 : Math.max(6, Math.round(v / maxV * 52));
+      const bar = el('div', { class: 'bpg-bar' + (i === weeks.length-1 ? ' latest' : ''), style: 'height:' + h + 'px;' },
+        el('div', { class: 'bpg-bar-val' }, v == null ? '' : String(v)),
+        el('div', { class: 'bpg-bar-week' }, wk.slice(5).replace('-', '/'))
+      );
+      bars.appendChild(bar);
+      if (i === weeks.length-1 && v != null) latestBpg = v;
+    });
+    const sb = $('stat-bpg');
+    if (latestBpg != null) { sb.textContent = latestBpg; sb.className = 'road-stat-num ' + (latestBpg <= 1.5 ? 'good' : 'bad'); }
+    else { sb.textContent = '0'; sb.className = 'road-stat-num good'; }
+  }).catch(() => {});
+}
+renderNN();
+renderBlunderTrend();
+
+// Live rating override — data.json's feeder cron is gone; chess.com is the truth.
+function applyLiveStats() {
+  fetch('https://api.chess.com/pub/player/ophirgambit/stats')
+    .then(r => r.json())
+    .then(s => {
+      const rapid = s && s.chess_rapid && s.chess_rapid.last && s.chess_rapid.last.rating;
+      if (!rapid) return;
+      $('hero-rapid').textContent = rapid;
+      const pct = Math.max(0, Math.min(100, Math.round((rapid - 400) / (1500 - 400) * 100)));
+      $('hero-progress').style.width = pct + '%';
+      $('hero-progress-pct').textContent = pct + '% of the climb (from 400 floor)';
+      const end = new Date('2026-12-31T23:59:59');
+      $('hero-days').textContent = Math.max(0, Math.ceil((end - new Date()) / 86400000)) + ' days left';
+      renderGates(rapid);
+    })
+    .catch(() => {});
+}
 fetch(DATA_URL)
   .then(r => r.json())
   .then(d => {
     renderHero(d);
+    renderGates(d.goal ? d.goal.current_rapid : null);
+    applyLiveStats();
     renderActivity(d);
     renderKeyConcepts(d);
     renderMasterSkills(d);
