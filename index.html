@@ -297,6 +297,18 @@ header { padding:18px 0 12px; border-bottom:1px solid rgba(96,130,190,0.10); mar
 footer { margin-top:24px; font-size:11px; color:var(--brown-muted); text-align:center; line-height:1.5; }
 
 /* ═══ BLUE SKY reskin overrides ═══ */
+.trainer-btn {
+  display:inline-flex; align-items:center; gap:7px;
+  text-decoration:none; font-weight:800; font-size:.88rem; letter-spacing:0.01em;
+  color:#fff !important;
+  background:linear-gradient(135deg, #2563EB 0%, #38BDF8 120%);
+  padding:10px 18px; border-radius:999px;
+  box-shadow:0 4px 14px -4px rgba(37,99,235,0.55), inset 0 1px 0 rgba(255,255,255,0.25);
+  border:1px solid rgba(255,255,255,0.35);
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.trainer-btn:active { transform:scale(0.96); box-shadow:0 2px 8px -3px rgba(37,99,235,0.5); }
+@media (hover:hover) { .trainer-btn:hover { transform:translateY(-1px); box-shadow:0 7px 18px -5px rgba(37,99,235,0.65), inset 0 1px 0 rgba(255,255,255,0.25); } }
 .hero {
   background:linear-gradient(140deg, #1E3A8A 0%, #1D4ED8 38%, #2E7CF6 70%, #38BDF8 100%);
   color:#F4F9FF;
@@ -396,7 +408,7 @@ footer { margin-top:24px; font-size:11px; color:var(--brown-muted); text-align:c
         <div class="subhead">Ophir → Rapid 1500 by EOY 2026</div>
       </div>
     </div>
-    <a href="trainer.html" style="text-decoration:none; font-weight:700; font-size:.9rem; background:#D4A843; color:#13141A; padding:9px 16px; border-radius:8px;">🎯 Blunder Trainer</a>
+    <a href="trainer.html" class="trainer-btn">🎯 <span>Blunder Trainer</span></a>
   </div>
 </header>
 
