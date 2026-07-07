@@ -162,10 +162,10 @@
   .coach-t{font-weight:800; font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; margin-bottom:4px; opacity:.8;}
   .line-controls{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 4px;}
   .lp-btn{font-size:.82rem; padding:7px 12px;}
-  .lp-bar{display:flex; align-items:center; gap:6px; margin-top:8px; padding:7px 10px; border-radius:10px; background:rgba(0,0,0,.06);}
-  .lp-ctl{border:none; background:rgba(0,0,0,.10); border-radius:7px; padding:5px 10px; cursor:pointer; font-size:.9rem;}
+  .lp-bar{display:flex; align-items:center; gap:8px; width:min(94vw,460px); margin:10px auto 2px; padding:8px 10px; border-radius:12px; background:var(--blue); color:#fff; box-shadow:0 4px 14px rgba(37,99,235,.35);}
+  .lp-ctl{border:none; background:rgba(255,255,255,.18); color:#fff; border-radius:9px; min-width:48px; min-height:44px; padding:8px 12px; cursor:pointer; font-size:1.1rem;}
   .lp-ctl:disabled{opacity:.35; cursor:default;}
-  .lp-caption{flex:1; text-align:center; font-size:.82rem; font-weight:600;}
+  .lp-caption{flex:1; text-align:center; font-size:.85rem; font-weight:600; color:#fff;}
   .lp-count{opacity:.55; font-weight:400; margin-left:4px;}
   .levy{margin-top:11px; padding:10px 13px; border-left:3px solid var(--blue);
     background:rgba(46,124,184,.08); border-radius:0 8px 8px 0; font-size:.92rem; line-height:1.55;}
@@ -248,6 +248,7 @@
     .drill-actions .btn{flex:1; width:auto;}
     #board{width:calc(100vw - 48px); height:calc(100vw - 48px); max-width:460px; max-height:460px;}
     .board-meta{width:calc(100vw - 48px); max-width:460px;}
+    .lp-bar{width:calc(100vw - 48px); max-width:460px;}
     .feedback{font-size:.95rem; padding:12px 13px;}
     .drill-foot{font-size:.75rem;}
     .theme-grid{grid-template-columns:repeat(2,1fr); gap:10px;}
@@ -1061,6 +1062,8 @@ function startLine(kind){
   if(!sans.length) return;
   LP = { kind, sans, idx: 0 };
   lpRender();
+  const bw = document.getElementById("board-wrap");
+  if(bw) bw.scrollIntoView({behavior:"smooth", block:"start"});
 }
 function lpApply(){
   // rebuild position from drill FEN with LP.idx moves applied; returns last move
@@ -1084,7 +1087,8 @@ function lpRender(){
   const el = document.getElementById("line-player");
   if(!el){ LP = null; return; }
   const i = LP.idx;
-  const cur = i === 0 ? "starting position" : `${LP.sans[i-1]} — ${lpWho(i-1)}`;
+  const mode = LP.kind === "best" ? "▶ best plan" : "⚠ punishment";
+  const cur = i === 0 ? mode : `${mode}: ${LP.sans[i-1]} — ${lpWho(i-1)}`;
   el.innerHTML = `<div class="lp-bar">
     <button class="lp-ctl" onclick="lpStep(-999)" title="Reset">⏮</button>
     <button class="lp-ctl" onclick="lpStep(-1)" ${i===0?"disabled":""}>◀</button>
@@ -1150,6 +1154,7 @@ function renderDrill(extraHl, feedback){
       <div id="board-wrap">
         <div id="board"></div>
         <div class="board-meta"><span>move ${drill.moveNum} · ${drill.color === "White" ? "White" : "Black"} to play</span></div>
+        <div id="line-player"></div>
       </div>
       <div id="feedback-zone"></div>
       <div class="drill-actions" id="drill-actions"></div>
@@ -1182,7 +1187,7 @@ function renderDrill(extraHl, feedback){
       ${feedback.deep ? `<div class="line-controls">
         ${engLine ? `<button class="btn ghost lp-btn" onclick="startLine('best')">▶ Watch the best plan</button>` : ""}
         ${punish ? `<button class="btn ghost lp-btn" onclick="startLine('punish')">⚠ Watch the punishment</button>` : ""}
-      </div><div id="line-player"></div>` : ""}
+      </div>` : ""}
       ${feedback.deep && levy ? `<div class="levy"><div class="levy-t">📘 Levy's lens — ${esc(levy.title)}</div>${esc(levy.text)}</div>` : ""}
     </div>`;
   }
