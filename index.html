@@ -942,7 +942,7 @@ function renderBlunderTrend() {
               el('div', {class:'game-opponent'}, (meWhite ? '⬜' : '⬛') + ' vs ' + opp.username + ' (' + opp.rating + ')'),
               el('div', {class:'game-info'},
                 g.time_class + ' · ' + when.toLocaleDateString('en-US',{month:'short',day:'numeric'}) +
-                ' · me: ' + me.rating + (bl ? ' · 💥 ' + bl + ' blunder' + (bl>1?'s':'') : ' · clean ✨')
+                ' · me: ' + me.rating + (bl ? ' · 💥 ' + bl + ' blunder' + (bl>1?'s':'') : '')
               )
             )
           ));
