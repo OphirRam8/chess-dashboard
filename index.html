@@ -431,15 +431,6 @@ footer { margin-top:24px; font-size:11px; color:var(--brown-muted); text-align:c
     <span id="hero-progress-pct">0%</span>
     <span id="hero-days">— days left</span>
   </div>
-  <div class="hero-divider"></div>
-  <div class="hero-theme-label">This week's theme</div>
-  <div class="hero-theme" id="hero-theme">—</div>
-  <div class="hero-theme-meta" id="hero-theme-meta">—</div>
-  <div class="hero-concept" id="hero-concept">
-    <div class="hero-concept-label">Today's concept (SRS)</div>
-    <div class="hero-concept-term" id="hero-concept-term">—</div>
-    <div class="hero-concept-line" id="hero-concept-line">—</div>
-  </div>
   <div class="saba" id="saba">—</div>
 </div>
 
@@ -480,47 +471,6 @@ footer { margin-top:24px; font-size:11px; color:var(--brown-muted); text-align:c
   <div class="gates" id="gates"></div>
 </div>
 
-<div class="activity-card" id="activity-card">
-  <div class="activity-header">
-    <div class="activity-title">📈 Activity — what you measure expands</div>
-    <div class="activity-tag" id="activity-streak-mini">— streak</div>
-  </div>
-  <div class="activity-today-row">
-    <div class="activity-tile">
-      <div class="activity-tile-num" id="activity-today-games">—</div>
-      <div class="activity-tile-label">Games today</div>
-    </div>
-    <div class="activity-tile">
-      <div class="activity-tile-num" id="activity-today-puzzles">—</div>
-      <div class="activity-tile-label">Puzzles today</div>
-    </div>
-  </div>
-  <div class="activity-row">
-    <span class="activity-row-label">Games this week</span>
-    <span class="activity-row-val" id="activity-week-games">—</span>
-  </div>
-  <div class="activity-bar-wrap">
-    <div class="activity-bar-track"><div class="activity-bar-fill" id="activity-games-bar" style="width:0%"></div></div>
-  </div>
-  <div class="activity-row" style="margin-top:8px;">
-    <span class="activity-row-label">Puzzles this week</span>
-    <span class="activity-row-val" id="activity-week-puzzles">—</span>
-  </div>
-  <div class="activity-bar-wrap">
-    <div class="activity-bar-track"><div class="activity-bar-fill" id="activity-puzzles-bar" style="width:0%"></div></div>
-  </div>
-  <div class="activity-streaks">
-    <div class="activity-streak">
-      <div class="activity-streak-num" id="activity-current-streak">—</div>
-      <div class="activity-streak-label">Current streak (days)</div>
-    </div>
-    <div class="activity-streak">
-      <div class="activity-streak-num" id="activity-best-streak">—</div>
-      <div class="activity-streak-label">Best streak</div>
-    </div>
-  </div>
-</div>
-
 <div class="key-concepts-card" id="key-concepts">
   <div class="key-concepts-header">
     <div class="key-concepts-title">⭐ Key concepts — always</div>
@@ -529,53 +479,9 @@ footer { margin-top:24px; font-size:11px; color:var(--brown-muted); text-align:c
   <div id="key-concepts-list"></div>
 </div>
 
-<div class="masterskills-section">
-  <div class="masterskills-title">The Three Master Skills</div>
-  <div class="masterskills-tagline">Tony Robbins → Recognition → Utilization → Creation</div>
-  <div class="skill-cards" id="skill-cards"></div>
-</div>
-
 <div class="card">
   <div class="card-title">♟ Recent games</div>
   <div id="games-list"><div class="no-games">Loading…</div></div>
-</div>
-
-<div class="card">
-  <div class="card-title">📚 Concept mastery (SRS)</div>
-  <div class="srs-row" id="srs-row"></div>
-  <div class="srs-progress">
-    <div class="srs-progress-fill" id="srs-progress-fill" style="width:0%"></div>
-  </div>
-  <div class="srs-progress-label" id="srs-progress-label">— of 63 concepts beyond Learning</div>
-  <div class="srs-due-title">⏰ Due for review today</div>
-  <div class="srs-due-list" id="srs-due-list"><div class="no-due">All caught up.</div></div>
-</div>
-
-<div class="card">
-  <div class="card-title">📊 Mistake patterns — last 30 days</div>
-  <div id="pattern-breakdown"><div class="no-due">No patterns logged yet — play games and the auto-tagger will fill this.</div></div>
-</div>
-
-<div id="synth-wrap"></div>
-
-<div class="card" style="background:transparent; box-shadow:none; border:none; padding:0;">
-  <div class="card-title" style="padding:0 4px;">🧩 Pattern gallery — 8 themes × 7 positions</div>
-  <div id="gallery-themes" style="margin-top:8px;"></div>
-</div>
-
-<div class="card">
-  <div class="card-title">♟ Openings library</div>
-  <div id="openings-list"></div>
-</div>
-
-<div class="card">
-  <div class="card-title">⚠️ Weakness zones (Stockfish, 8 games)</div>
-  <div id="zones-list"></div>
-</div>
-
-<div class="card">
-  <div class="card-title">📅 Cycle 1 — 8 weeks (Sun–Sat)</div>
-  <div id="cycle-list"></div>
 </div>
 
 <div class="card">
@@ -613,16 +519,6 @@ function renderHero(d) {
   $('hero-progress').style.width = (g.progress_pct || 0) + '%';
   $('hero-progress-pct').textContent = (g.progress_pct || 0) + '% to 1500';
   $('hero-days').textContent = (g.days_remaining != null ? g.days_remaining : '—') + ' days left';
-  const tw = d.this_week || {};
-  $('hero-theme').textContent = tw.theme || '—';
-  $('hero-theme-meta').textContent = 'Cycle ' + (tw.cycle || '?') + ' · Week ' + (tw.cycle_week || '?') + ' of 8';
-  const tc = d.today_concept || {};
-  if (tc.term) {
-    $('hero-concept-term').textContent = tc.term;
-    $('hero-concept-line').textContent = tc.one_liner || '';
-  } else {
-    $('hero-concept').style.display = 'none';
-  }
   $('saba').textContent = d.saba_quote || '';
 }
 
@@ -1022,6 +918,37 @@ function renderBlunderTrend() {
       gamesByWeek[wk] = (gamesByWeek[wk] || 0) + 1;
       if (g.time_class === 'blitz') { if (!lastBlitz || g.end_time > lastBlitz) lastBlitz = g.end_time; }
     });
+    // live recent games (replaces stale data.json games)
+    try {
+      const blByLink = {};
+      if (drills && drills.drills) drills.drills.forEach(x => { if (x.link) blByLink[x.link] = (blByLink[x.link] || 0) + 1; });
+      const recent = games.slice(-5).reverse();
+      const list = $('games-list');
+      if (recent.length) {
+        list.innerHTML = '';
+        recent.forEach(g => {
+          const meWhite = g.white.username.toLowerCase() === 'ophirgambit';
+          const me = meWhite ? g.white : g.black;
+          const opp = meWhite ? g.black : g.white;
+          const won = me.result === 'win';
+          const draw = ['agreed','repetition','stalemate','insufficient','50move','timevsinsufficient'].indexOf(me.result) >= 0;
+          const cls = won ? 'win' : draw ? 'draw' : 'loss';
+          const emoji = won ? '✓' : draw ? '=' : '✗';
+          const when = new Date(g.end_time * 1000);
+          const bl = blByLink[g.url] || 0;
+          list.appendChild(el('a', {class:'game-row', href:g.url, target:'_blank', style:'display:flex;'},
+            el('span', {class:'game-result ' + cls}, emoji),
+            el('div', {class:'game-meta'},
+              el('div', {class:'game-opponent'}, (meWhite ? '⬜' : '⬛') + ' vs ' + opp.username + ' (' + opp.rating + ')'),
+              el('div', {class:'game-info'},
+                g.time_class + ' · ' + when.toLocaleDateString('en-US',{month:'short',day:'numeric'}) +
+                ' · me: ' + me.rating + (bl ? ' · 💥 ' + bl + ' blunder' + (bl>1?'s':'') : ' · clean ✨')
+              )
+            )
+          ));
+        });
+      }
+    } catch(e) {}
     // blitz-free days
     const bf = $('stat-blitzfree');
     if (lastBlitz) {
@@ -1084,17 +1011,7 @@ fetch(DATA_URL)
     renderHero(d);
     renderGates(d.goal ? d.goal.current_rapid : null);
     applyLiveStats();
-    renderActivity(d);
     renderKeyConcepts(d);
-    renderMasterSkills(d);
-    renderGames(d);
-    renderSRS(d);
-    renderBreakdown(d);
-    renderSynthesis(d);
-    renderGallery(d);
-    renderOpenings(d);
-    renderZones(d);
-    renderCycle(d);
     renderLinks(d);
     var meta = d._meta || {};
     $('footer-generated').textContent =
