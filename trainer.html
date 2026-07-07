@@ -249,6 +249,9 @@
     #board{width:calc(100vw - 48px); height:calc(100vw - 48px); max-width:460px; max-height:460px;}
     .board-meta{width:calc(100vw - 48px); max-width:460px;}
     .lp-bar{width:calc(100vw - 48px); max-width:460px;}
+    /* line-player focus mode: board + controls own the screen while a line plays */
+    .lp-on .drill-ctx, .lp-on .drill-foot, .lp-on .board-meta, .lp-on .drill-actions{display:none;}
+    .lp-on .card{padding-top:10px;}
     .feedback{font-size:.95rem; padding:12px 13px;}
     .drill-foot{font-size:.75rem;}
     .theme-grid{grid-template-columns:repeat(2,1fr); gap:10px;}
@@ -1085,7 +1088,8 @@ function lpWho(i){
 function lpRender(){
   lpApply();
   const el = document.getElementById("line-player");
-  if(!el){ LP = null; return; }
+  if(!el){ LP = null; document.body.classList.remove("lp-on"); return; }
+  document.body.classList.add("lp-on");
   const i = LP.idx;
   const mode = LP.kind === "best" ? "▶ best plan" : "⚠ punishment";
   const cur = i === 0 ? mode : `${mode}: ${LP.sans[i-1]} — ${lpWho(i-1)}`;
@@ -1105,6 +1109,7 @@ function lpStep(d){
 }
 function lpClose(){
   LP = null;
+  document.body.classList.remove("lp-on");
   const el = document.getElementById("line-player");
   if(el) el.innerHTML = "";
   // restore the post-reveal board (best move shown)
@@ -1133,6 +1138,7 @@ function nextDrill(){
 }
 
 function renderDrill(extraHl, feedback){
+  LP = null; document.body.classList.remove("lp-on");
   const el = document.getElementById("tab-drill");
   const sessAcc = sessTotal ? Math.round(100*sessCorrect/sessTotal) : null;
   const seenCount = (S.srs[drill.key]||{}).seen || 0;
