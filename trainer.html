@@ -133,7 +133,7 @@
     color:var(--muted); font-size:.7rem; font-family:ui-monospace,monospace; padding:4px 4px 0;}
   /* ---------- drill ---------- */
   .drill-ctx{margin-bottom:12px;}
-  .drill-ctx .opening{color:var(--muted); font-size:.82rem;}
+  .drill-ctx .opening, #ctx-panel .opening{color:var(--muted); font-size:.82rem;}
   .drill-ctx .task{font-size:1rem; margin-top:6px; line-height:1.45;}
   .drill-ctx .task strong{color:#F08A76;}
   .situation{margin-top:8px; display:flex; gap:7px; flex-wrap:wrap;}
@@ -160,6 +160,9 @@
   .ctx-line{font-size:.78rem; color:var(--muted); margin:4px 0 8px; letter-spacing:.02em;}
   .coach-note{background:rgba(52,153,90,.09); border:1px solid rgba(52,153,90,.25); border-radius:10px; padding:10px 12px; margin:8px 0; line-height:1.55; font-size:.92rem;}
   .coach-t{font-weight:800; font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; margin-bottom:4px; opacity:.8;}
+  .ctx-row{width:min(94vw,460px); margin:8px auto 0; text-align:center; font-size:.8rem; font-weight:600; color:var(--muted,#777); cursor:pointer; padding:6px 10px; border-radius:8px; background:rgba(0,0,0,.04); user-select:none;}
+  #ctx-panel{margin-top:8px;}
+  #ctx-panel .drill-foot{margin-top:8px;}
   .line-controls{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 4px;}
   .lp-btn{font-size:.82rem; padding:7px 12px;}
   .lp-bar{display:flex; align-items:center; gap:8px; width:min(94vw,460px); margin:10px auto 2px; padding:8px 10px; border-radius:12px; background:var(--blue); color:#fff; box-shadow:0 4px 14px rgba(37,99,235,.35);}
@@ -250,7 +253,7 @@
     .board-meta{width:calc(100vw - 48px); max-width:460px;}
     .lp-bar{width:calc(100vw - 48px); max-width:460px;}
     /* line-player focus mode: board + controls own the screen while a line plays */
-    .lp-on .drill-ctx, .lp-on .drill-foot, .lp-on .board-meta, .lp-on .drill-actions{display:none;}
+    .lp-on .drill-ctx, .lp-on .drill-foot, .lp-on .board-meta, .lp-on .drill-actions, .lp-on .ctx-row, .lp-on #ctx-panel{display:none !important;}
     .lp-on .card{padding-top:10px;}
     .feedback{font-size:.95rem; padding:12px 13px;}
     .drill-foot{font-size:.75rem;}
@@ -579,6 +582,7 @@ const RANKS = [
 ];
 const DAILY_GOAL = 5;
 let combo = 0;
+let ctxOpen = false; // ℹ️ details panel state, persists across drills this session
 
 function totalXP(){ return S.attempts.reduce((t,a)=>t+(a.xp||0), 0); }
 function rankFor(xp){
@@ -1118,6 +1122,12 @@ function lpClose(){
   renderBoard({});
 }
 
+function toggleCtx(){
+  ctxOpen = !ctxOpen;
+  const p = document.getElementById("ctx-panel"), c = document.getElementById("ctx-chev");
+  if(p) p.style.display = ctxOpen ? "block" : "none";
+  if(c) c.textContent = ctxOpen ? "▴" : "▾";
+}
 function showHint(){
   hintUsed = true;
   document.getElementById("hint-line").innerHTML =
@@ -1146,15 +1156,7 @@ function renderDrill(extraHl, feedback){
   el.innerHTML = `
     <div class="card">
       <div class="drill-ctx">
-        <div class="opening">${esc(drill.opening)} · ${esc(drill.date)} · you were <strong style="color:var(--text)">${drill.color}</strong>
-          ${drill.link ? ` · <a href="${extHref(drill.link)}" target="_blank" rel="noopener">game ↗</a>` : ""}</div>
         <div class="task">You played: <strong class="mono">${esc(drill.played)}</strong>. Find the best move.<span class="tries">${Array.from({length: MAX_TRIES}, (_,i)=>`<span class="pip ${i<tries?"used":""}"></span>`).join("")}</span></div>
-        <div class="situation">${(()=>{
-          const m = materialSummary(drill.fen, drill.color);
-          const e = evalPhrase(drill.evalBefore);
-          return `<span class="sit-chip">⚖️ ${esc(m.phrase)}${m.pts ? ` (${m.pts>0?"+":""}${m.pts})` : ""}</span>` +
-                 (e ? ` <span class="sit-chip ${e.cls}">📊 ${esc(e.word)} ${esc(fmtEval(drill.evalBefore))}</span>` : "");
-        })()}</div>
         <div id="hint-line" style="margin-top:6px; font-size:.9rem; color:var(--blue);"></div>
       </div>
       <div id="board-wrap">
@@ -1162,17 +1164,28 @@ function renderDrill(extraHl, feedback){
         <div class="board-meta"><span>move ${drill.moveNum} · ${drill.color === "White" ? "White" : "Black"} to play</span></div>
         <div id="line-player"></div>
       </div>
+      <div class="ctx-row" onclick="toggleCtx()">ℹ️ details · Drill ${qPos+1}/${Q.length}${combo >= 2 ? ` · 🔥x${combo}` : ""} <span id="ctx-chev">${ctxOpen?"▴":"▾"}</span></div>
+      <div id="ctx-panel" style="display:${ctxOpen?"block":"none"}">
+        <div class="opening">${esc(drill.opening)} · ${esc(drill.date)} · you were <strong style="color:var(--text)">${drill.color}</strong>
+          ${drill.link ? ` · <a href="${extHref(drill.link)}" target="_blank" rel="noopener">game ↗</a>` : ""}</div>
+        <div class="situation">${(()=>{
+          const m = materialSummary(drill.fen, drill.color);
+          const e = evalPhrase(drill.evalBefore);
+          return `<span class="sit-chip">⚖️ ${esc(m.phrase)}${m.pts ? ` (${m.pts>0?"+":""}${m.pts})` : ""}</span>` +
+                 (e ? ` <span class="sit-chip ${e.cls}">📊 ${esc(e.word)} ${esc(fmtEval(drill.evalBefore))}</span>` : "");
+        })()}</div>
+        <div class="drill-foot">
+          <span class="badge ${seenCount?"":"gold"}">${seenCount ? `✓ drilled ${seenCount}×` : "🆕 new"}</span>
+          <span class="badge">${THEME_ICONS[drill.theme]||"♟"} ${esc(drill.theme)}</span>
+          <span class="badge ${drill.difficulty==="Hard"?"coral":""}">${drill.difficulty}</span>
+          <span class="badge coral">−${drill.swing} eval swing</span>
+          ${combo >= 2 ? `<span class="badge gold">🔥 combo x${combo}${comboMult(combo)>1 ? ` (${comboMult(combo)}× XP)` : ""}</span>` : ""}
+          <span class="spacer"></span>
+          <span>✅ ${cov.done}/${cov.total} drilled${cov.neu?` · 🆕 ${cov.neu} new left`:""} · Session ${sessAcc===null?"—":sessAcc+"%"}</span>
+        </div>
+      </div>
       <div id="feedback-zone"></div>
       <div class="drill-actions" id="drill-actions"></div>
-      <div class="drill-foot">
-        <span class="badge ${seenCount?"":"gold"}">${seenCount ? `✓ drilled ${seenCount}×` : "🆕 new"}</span>
-        <span class="badge">${THEME_ICONS[drill.theme]||"♟"} ${esc(drill.theme)}</span>
-        <span class="badge ${drill.difficulty==="Hard"?"coral":""}">${drill.difficulty}</span>
-        <span class="badge coral">−${drill.swing} eval swing</span>
-        ${combo >= 2 ? `<span class="badge gold">🔥 combo x${combo}${comboMult(combo)>1 ? ` (${comboMult(combo)}× XP)` : ""}</span>` : ""}
-        <span class="spacer"></span>
-        <span>Drill ${qPos+1} of ${Q.length} · ✅ ${cov.done}/${cov.total} drilled${cov.neu?` · 🆕 ${cov.neu} new left`:""} · Session ${sessAcc===null?"—":sessAcc+"%"}</span>
-      </div>
     </div>`;
   renderBoard(extraHl||{});
   const fz = document.getElementById("feedback-zone");
