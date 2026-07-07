@@ -157,6 +157,16 @@
   .feedback.info{background:rgba(84,169,224,.10); border:1px solid rgba(84,169,224,.4);}
   .feedback .verdict{font-weight:700; margin-bottom:6px; font-size:1.05rem;}
   .engine-line{margin-top:9px; font-size:.84rem; color:var(--muted); line-height:1.5; word-break:break-word;}
+  .ctx-line{font-size:.78rem; color:var(--muted); margin:4px 0 8px; letter-spacing:.02em;}
+  .coach-note{background:rgba(52,153,90,.09); border:1px solid rgba(52,153,90,.25); border-radius:10px; padding:10px 12px; margin:8px 0; line-height:1.55; font-size:.92rem;}
+  .coach-t{font-weight:800; font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; margin-bottom:4px; opacity:.8;}
+  .line-controls{display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 4px;}
+  .lp-btn{font-size:.82rem; padding:7px 12px;}
+  .lp-bar{display:flex; align-items:center; gap:6px; margin-top:8px; padding:7px 10px; border-radius:10px; background:rgba(0,0,0,.06);}
+  .lp-ctl{border:none; background:rgba(0,0,0,.10); border-radius:7px; padding:5px 10px; cursor:pointer; font-size:.9rem;}
+  .lp-ctl:disabled{opacity:.35; cursor:default;}
+  .lp-caption{flex:1; text-align:center; font-size:.82rem; font-weight:600;}
+  .lp-count{opacity:.55; font-weight:400; margin-left:4px;}
   .levy{margin-top:11px; padding:10px 13px; border-left:3px solid var(--blue);
     background:rgba(46,124,184,.08); border-radius:0 8px 8px 0; font-size:.92rem; line-height:1.55;}
   .levy-t{font-weight:700; color:var(--blue); margin-bottom:3px;}
@@ -393,6 +403,7 @@
     <p>Built from your real games — every drill is a position where you blundered. Find what Stockfish found.</p>
   </div>
   <div style="display:flex; gap:8px; flex-shrink:0;">
+    <a class="theme-toggle" href="index.html" title="Back to dashboard" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">🏠</a>
     <button class="theme-toggle" id="sound-toggle" onclick="toggleSound()" title="Sound on/off">🔊</button>
     <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Light/dark mode">🌙</button>
   </div>
@@ -1000,7 +1011,8 @@ function makeUserMove(from, to){
     renderDrill({lastFrom: from, lastTo: to, bestDest: to, animateTo: to}, {
       kind:"good",
       verdict,
-      body: drill.explanation,
+      body: drill.coachNote || drill.explanation,
+      coach: !!drill.coachNote,
       deep: true
     });
   } else {
@@ -1038,6 +1050,63 @@ function makeUserMove(from, to){
       });
     }, 850);
   }
+}
+
+// ── Line player: step engine lines on the board ──────────────────────────
+let LP = null;
+function startLine(kind){
+  const sans = kind === "best"
+    ? (drill.bestLine || [])
+    : [drill.played].concat(drill.punishLine || []);
+  if(!sans.length) return;
+  LP = { kind, sans, idx: 0 };
+  lpRender();
+}
+function lpApply(){
+  // rebuild position from drill FEN with LP.idx moves applied; returns last move
+  game = new Chess(drill.fen);
+  let last = null;
+  for(let i=0;i<LP.idx;i++){
+    const mv = game.move(LP.sans[i]);
+    if(!mv){ break; }
+    last = mv;
+  }
+  renderBoard(last ? {lastFrom:last.from, lastTo:last.to, animateTo:last.to} : {});
+}
+function lpWho(i){
+  // move 0 in both lines is played from the drill position = YOUR side to move
+  const mine = i % 2 === 0;
+  if(LP.kind === "punish") return i === 0 ? "your move" : (mine ? "you" : "the punishment");
+  return mine ? (i === 0 ? "the right move" : "you") : "his best reply";
+}
+function lpRender(){
+  lpApply();
+  const el = document.getElementById("line-player");
+  if(!el){ LP = null; return; }
+  const i = LP.idx;
+  const cur = i === 0 ? "starting position" : `${LP.sans[i-1]} — ${lpWho(i-1)}`;
+  el.innerHTML = `<div class="lp-bar">
+    <button class="lp-ctl" onclick="lpStep(-999)" title="Reset">⏮</button>
+    <button class="lp-ctl" onclick="lpStep(-1)" ${i===0?"disabled":""}>◀</button>
+    <span class="lp-caption">${esc(cur)} <span class="lp-count">${i}/${LP.sans.length}</span></span>
+    <button class="lp-ctl" onclick="lpStep(1)" ${i>=LP.sans.length?"disabled":""}>▶</button>
+    <button class="lp-ctl" onclick="lpClose()" title="Close">✕</button>
+  </div>`;
+  if(i === 0) setTimeout(()=>{ if(LP && LP.idx===0){ lpStep(1); } }, 350);
+}
+function lpStep(d){
+  if(!LP) return;
+  LP.idx = d === -999 ? 0 : Math.max(0, Math.min(LP.sans.length, LP.idx + d));
+  lpRender();
+}
+function lpClose(){
+  LP = null;
+  const el = document.getElementById("line-player");
+  if(el) el.innerHTML = "";
+  // restore the post-reveal board (best move shown)
+  game = new Chess(drill.fen);
+  try { game.move(drill.best); } catch(e) {}
+  renderBoard({});
 }
 
 function showHint(){
@@ -1101,15 +1170,19 @@ function renderDrill(extraHl, feedback){
     const punish = drill.punishLine && drill.punishLine.length ? drill.played + " → " + drill.punishLine.join(" ") : null;
     const levy = LEVY[drill.theme];
     fz.innerHTML = `<div class="feedback ${feedback.kind}">
-      <div class="verdict">${feedback.verdict}</div>${feedback.body ? `<div>${esc(feedback.body)}</div>` : ""}
+      <div class="verdict">${feedback.verdict}</div>
+      ${feedback.deep ? `<div class="ctx-line">📍 ${esc(drill.opening||"")} · move ${drill.moveNum} · you were ${esc(fmtEval(drill.evalBefore))}${drill.result ? ` · game: you ${esc(drill.result)}` : ""}</div>` : ""}
+      ${feedback.body ? `<div class="${feedback.coach ? "coach-note" : ""}">${feedback.coach ? `<div class="coach-t">🎓 Coach's read</div>` : ""}${esc(feedback.body)}</div>` : ""}
       ${feedback.process ? `<div class="think">
         <div class="think-t">🧠 Think it through — ${esc(drill.theme)}</div>
         <ol>${(THINK[drill.theme]||THINK["Calculation Error"]).map(st=>`<li>${esc(st)}</li>`).join("")}</ol>
         ${feedback.signal ? `<div class="think-sig">🔎 Last try, one signal: ${esc(answerSignal())}.</div>` : ""}
       </div>` : ""}
       ${feedback.deep && drill.evalBefore !== undefined ? `<div class="engine-line mono">📉 This blunder: ${esc(fmtEval(drill.evalBefore))} → ${esc(fmtEval(drill.evalBefore - drill.swing))} for you</div>` : ""}
-      ${feedback.deep && engLine ? `<div class="engine-line mono">♟ The line: ${esc(engLine)}</div>` : ""}
-      ${feedback.deep && feedback.kind === "bad" && punish ? `<div class="engine-line mono">⚠ Your move ran into: ${esc(punish)}</div>` : ""}
+      ${feedback.deep ? `<div class="line-controls">
+        ${engLine ? `<button class="btn ghost lp-btn" onclick="startLine('best')">▶ Watch the best plan</button>` : ""}
+        ${punish ? `<button class="btn ghost lp-btn" onclick="startLine('punish')">⚠ Watch the punishment</button>` : ""}
+      </div><div id="line-player"></div>` : ""}
       ${feedback.deep && levy ? `<div class="levy"><div class="levy-t">📘 Levy's lens — ${esc(levy.title)}</div>${esc(levy.text)}</div>` : ""}
     </div>`;
   }

@@ -6,6 +6,9 @@ cd /Users/beanhq/chess-dashboard
 
 .venv/bin/python sync_trainer.py >> /tmp/trainer-sync.log 2>&1
 
+# AI coach notes for any new drills (isolated headless claude; soft-fail)
+python3 enrich_coach.py >> /tmp/trainer-sync.log 2>&1 || echo "$(date): coach enrichment FAILED (non-fatal)" >> /tmp/trainer-sync.log
+
 if ! git diff --quiet data/trainer-drills.json 2>/dev/null || [ -n "$(git status --porcelain data/)" ]; then
   git add data/trainer-drills.json data/trainer-cache.json
   git commit -m "trainer sync $(date +%Y-%m-%d)" >> /tmp/trainer-sync.log 2>&1
