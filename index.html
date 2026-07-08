@@ -816,15 +816,15 @@ function renderLinks(d) {
 const NN_KEY = 'road1500-nn';
 const NN_ITEMS = [
   { label: 'Rapid game 15|10 — Ritual every move', sub: 'stop after 2 losses' },
-  { label: '5-min review: find THE move, name it', sub: 'same day' },
+  { label: 'Find the Blunder — guess, then confirm', sub: '5 min · worst move + why' },
   { label: '5 Blunder Trainer drills', sub: 'the daily ring' },
-  { label: '5–10 slow puzzles to certainty', sub: 'full line first' },
-  { label: 'Book 15 min', sub: '3×/week counts' },
+  { label: '5–10 puzzles — calculate to certainty', sub: 'random · full line first' },
+  { label: 'Book — a few pages', sub: 'one section a day' },
 ];
 function nnData() { try { return JSON.parse(localStorage.getItem(NN_KEY)) || {}; } catch(e) { return {}; } }
 function nnSave(d) { try { localStorage.setItem(NN_KEY, JSON.stringify(d)); } catch(e) {} }
 function dayKey(dt) { dt = dt || new Date(); return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0'); }
-function nnDone(arr) { return (arr||[]).slice(0,4).filter(Boolean).length === 4; } // book optional
+function nnDone(arr) { return (arr||[]).slice(0,5).filter(Boolean).length === 5; } // all 5 daily
 function renderNN() {
   const data = nnData();
   const today = dayKey();
@@ -842,7 +842,7 @@ function renderNN() {
     wrap.appendChild(row);
   });
   $('nn-count').textContent = arr.filter(Boolean).length + '/5 today';
-  // streak: consecutive days (ending today or yesterday) with the 4 core NNs done
+  // streak: consecutive days (ending today or yesterday) with all 5 daily NNs done
   let streak = 0; const d0 = new Date();
   if (!nnDone(data[dayKey(d0)])) d0.setDate(d0.getDate() - 1);
   while (nnDone(data[dayKey(d0)])) { streak++; d0.setDate(d0.getDate() - 1); }
