@@ -6,6 +6,7 @@ cd /Users/beanhq/chess-dashboard
 
 rm -rf dist && mkdir -p dist
 cp index.html trainer.html manifest.json dist/
+cp data.json dist/ 2>/dev/null || true
 cp -R icons dist/icons
 mkdir -p dist/data
 cp data/*.json dist/data/ 2>/dev/null || true
