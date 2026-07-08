@@ -41,11 +41,10 @@ body { max-width:760px; margin:0 auto; padding:0 16px 80px; }
 a { color:var(--accent-deep); text-decoration:none; }
 a:active { opacity:0.7; }
 
-header { padding:18px 0 12px; border-bottom:1px solid rgba(96,130,190,0.10); margin-bottom:18px; }
+header { padding:8px 0 8px; border-bottom:1px solid rgba(96,130,190,0.10); margin-bottom:10px; }
 .headline { display:flex; align-items:center; gap:10px; }
-.logo { font-size:32px; }
-.headline h1 { font-family:Georgia, "Times New Roman", serif; font-size:22px; font-weight:700; letter-spacing:-0.01em; }
-.subhead { font-size:12px; color:var(--brown-muted); margin-top:2px; letter-spacing:0.05em; text-transform:uppercase; }
+.logo { font-size:20px; }
+.headline h1 { font-family:Georgia, "Times New Roman", serif; font-size:22px; font-weight:700; letter-spacing:-0.01em; white-space:nowrap; }
 
 .card {
   background:var(--paper); border:1px solid rgba(96,130,190,0.08);
@@ -60,16 +59,16 @@ header { padding:18px 0 12px; border-bottom:1px solid rgba(96,130,190,0.10); mar
 .hero {
   background:linear-gradient(135deg, var(--brown) 0%, var(--brown-soft) 100%);
   color:var(--cream); border:none; border-radius:18px;
-  padding:22px 20px 24px; margin-bottom:16px; box-shadow:var(--shadow-md);
+  padding:14px 18px 14px; margin-bottom:12px; box-shadow:var(--shadow-md);
 }
-.hero-elo-row { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:14px; }
+.hero-elo-row { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:8px; }
 .hero-elo { font-family:Georgia, serif; font-size:48px; font-weight:700; line-height:1; letter-spacing:-0.02em; }
-.hero-elo-label { font-size:10px; color:rgba(245,236,217,0.65); text-transform:uppercase; letter-spacing:0.10em; margin-bottom:4px; }
+.hero-elo-label { font-size:10px; color:rgba(245,236,217,0.65); text-transform:uppercase; letter-spacing:0.10em; }
 .hero-goal { text-align:right; font-size:12px; color:rgba(245,236,217,0.70); }
 .hero-goal-val { font-size:18px; color:var(--gold); font-weight:600; }
-.hero-progress { height:6px; background:rgba(245,236,217,0.15); border-radius:3px; overflow:hidden; margin-bottom:14px; }
+.hero-progress { height:6px; background:rgba(245,236,217,0.15); border-radius:3px; overflow:hidden; }
 .hero-progress-fill { height:100%; background:linear-gradient(90deg, var(--gold), var(--warm)); border-radius:3px; transition:width 0.4s ease; }
-.hero-meta { display:flex; justify-content:space-between; font-size:11px; color:rgba(245,236,217,0.65); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:18px; }
+.hero-meta { font-size:11px; color:rgba(245,236,217,0.65); text-transform:uppercase; letter-spacing:0.06em; margin-top:2px; }
 .hero-divider { height:1px; background:rgba(245,236,217,0.12); margin:14px -20px 18px; }
 .hero-theme-label { font-size:11px; color:rgba(245,236,217,0.55); text-transform:uppercase; letter-spacing:0.10em; }
 .hero-theme { font-family:Georgia, serif; font-size:24px; font-weight:600; margin-top:2px; color:#fffaee; }
@@ -78,7 +77,7 @@ header { padding:18px 0 12px; border-bottom:1px solid rgba(96,130,190,0.10); mar
 .hero-concept-label { font-size:10px; color:rgba(245,236,217,0.50); text-transform:uppercase; letter-spacing:0.10em; margin-bottom:4px; }
 .hero-concept-term { font-size:14px; font-weight:600; color:var(--gold); margin-bottom:3px; }
 .hero-concept-line { font-size:13px; color:rgba(245,236,217,0.80); line-height:1.45; }
-.saba { margin-top:14px; font-size:12px; font-style:italic; color:rgba(245,236,217,0.55); text-align:center; padding-top:12px; border-top:1px dashed rgba(245,236,217,0.10); }
+.saba { margin-top:10px; font-size:12px; font-style:italic; color:rgba(245,236,217,0.55); text-align:center; padding-top:8px; border-top:1px dashed rgba(245,236,217,0.10); }
 .saba::before { content:"\201C "; opacity:0.5; }
 .saba::after { content:" \201D"; opacity:0.5; }
 
@@ -316,8 +315,8 @@ footer { margin-top:24px; font-size:11px; color:var(--brown-muted); text-align:c
   box-shadow:0 12px 30px -10px rgba(29,78,216,0.45);
 }
 .headline h1 { font-family:'Anton', sans-serif; font-weight:400; font-size:24px; letter-spacing:0.03em; color:var(--accent-deep); }
-.hero-elo { font-family:'Anton', sans-serif; font-weight:400; font-size:56px; letter-spacing:0.01em; color:#FFFFFF; }
-.hero-goal-val { font-family:'Anton', sans-serif; font-weight:400; font-size:22px; color:#FFD34D; }
+.hero-elo { font-family:'Anton', sans-serif; font-weight:400; font-size:40px; letter-spacing:0.01em; color:#FFFFFF; }
+.hero-goal-val { font-family:'Anton', sans-serif; font-weight:400; font-size:18px; color:#FFD34D; }
 .hero-theme { font-family:'Anton', sans-serif; font-weight:400; letter-spacing:0.02em; color:#FFFFFF; }
 .hero-elo-label, .hero-goal, .hero-meta, .hero-theme-label, .hero-theme-meta, .hero-concept-label, .saba { color:rgba(224,240,255,0.75); }
 .hero-progress { background:rgba(224,240,255,0.22); }
@@ -402,12 +401,9 @@ footer { margin-top:24px; font-size:11px; color:var(--brown-muted); text-align:c
 
 <header>
   <div class="headline" style="display:flex; align-items:center; justify-content:space-between;">
-    <div style="display:flex; align-items:center; gap:10px;">
+    <div style="display:flex; align-items:center; gap:8px;">
       <span class="logo">♟</span>
-      <div>
-        <h1>Chess Dashboard</h1>
-        <div class="subhead">Ophir → Rapid 1500 by EOY 2026</div>
-      </div>
+      <h1>Chess Dashboard</h1>
     </div>
     <a href="trainer.html" class="trainer-btn">🎯 <span>Blunder Trainer</span></a>
   </div>
@@ -415,23 +411,18 @@ footer { margin-top:24px; font-size:11px; color:var(--brown-muted); text-align:c
 
 <div class="hero" id="hero">
   <div class="hero-elo-row">
-    <div>
-      <div class="hero-elo-label">Rapid</div>
+    <div style="display:flex; align-items:baseline; gap:9px;">
       <div class="hero-elo" id="hero-rapid">—</div>
+      <div class="hero-elo-label">rapid</div>
     </div>
     <div class="hero-goal">
-      <div class="hero-elo-label">Goal</div>
-      <div class="hero-goal-val">1500</div>
+      <div class="hero-goal-val">→ 1500</div>
+      <div class="hero-meta"><span id="hero-progress-pct">0%</span> · <span id="hero-days">—</span></div>
     </div>
   </div>
   <div class="hero-progress">
     <div class="hero-progress-fill" id="hero-progress" style="width:0%"></div>
   </div>
-  <div class="hero-meta">
-    <span id="hero-progress-pct">0%</span>
-    <span id="hero-days">— days left</span>
-  </div>
-  <div class="saba" id="saba">—</div>
 </div>
 
 <!-- ═══ ROAD TO 1500 — the coach plan panel ═══ -->
@@ -517,9 +508,8 @@ function renderHero(d) {
   const g = d.goal || {};
   $('hero-rapid').textContent = g.current_rapid != null ? g.current_rapid : '—';
   $('hero-progress').style.width = (g.progress_pct || 0) + '%';
-  $('hero-progress-pct').textContent = (g.progress_pct || 0) + '% to 1500';
+  $('hero-progress-pct').textContent = (g.progress_pct || 0) + '%';
   $('hero-days').textContent = (g.days_remaining != null ? g.days_remaining : '—') + ' days left';
-  $('saba').textContent = d.saba_quote || '';
 }
 
 function renderActivity(d) {
@@ -998,7 +988,7 @@ function applyLiveStats() {
       $('hero-rapid').textContent = rapid;
       const pct = Math.max(0, Math.min(100, Math.round((rapid - 400) / (1500 - 400) * 100)));
       $('hero-progress').style.width = pct + '%';
-      $('hero-progress-pct').textContent = pct + '% of the climb (from 400 floor)';
+      $('hero-progress-pct').textContent = pct + '%';
       const end = new Date('2026-12-31T23:59:59');
       $('hero-days').textContent = Math.max(0, Math.ceil((end - new Date()) / 86400000)) + ' days left';
       renderGates(rapid);
