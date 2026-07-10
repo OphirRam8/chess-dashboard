@@ -125,11 +125,18 @@
 
   <div class="explain">
     <h2>The loop</h2>
-    <div class="row"><div class="lt">T</div><div class="txt"><div class="t">Threats</div><div class="d">What does he threaten? Every check, capture, and attack he now has — deal with it first.</div></div></div>
-    <div class="row"><div class="lt">I</div><div class="txt"><div class="t">Ideas</div><div class="d">2-3 candidate moves of your own. Forcing first. Don't play the first thing you see.</div></div></div>
-    <div class="row"><div class="lt">P</div><div class="txt"><div class="t">Plans</div><div class="d">Take your best idea, calculate it to the end vs his best reply, and know the plan.</div></div></div>
-    <div class="row"><div class="lt">S</div><div class="txt"><div class="t">Safety</div><div class="d">Before you touch the piece: what can he check, capture, or attack? Is everything defended?</div></div></div>
+    <div class="row"><div class="lt">T</div><div class="txt"><div class="t">Threats</div><div class="d">Run CCA for him — checks, captures, attacks. Then name the real threat; most scary moves have no follow-up.</div></div></div>
+    <div class="row"><div class="lt">I</div><div class="txt"><div class="t">Ideas</div><div class="d">Run CCA for you. Forcing moves first — they make the position calculable.</div></div></div>
+    <div class="row"><div class="lt">P</div><div class="txt"><div class="t">Plans</div><div class="d">Calculate the most-forcing line to the end, then judge: material, king safety, activity, structure.</div></div></div>
+    <div class="row"><div class="lt">S</div><div class="txt"><div class="t">Safety</div><div class="d">CCA one more time for him after your move. What can he take? Is everything defended?</div></div></div>
     <div class="oneliner">His threats? → My ideas? → Best plan, calculated to the end → Before I move: is it safe (what can he take)?</div>
+
+    <h2 style="margin-top:26px;">🎓 Levy's edge</h2>
+    <div class="row"><div class="lt" style="font-family:inherit;font-size:20px;">🎯</div><div class="txt"><div class="t">Name the threat</div><div class="d">Most scary-looking moves have no follow-up. Trace his actual next move before you react — the fear usually evaporates.</div></div></div>
+    <div class="row"><div class="lt" style="font-family:inherit;font-size:20px;">⚖️</div><div class="txt"><div class="t">Danger levels</div><div class="d">A check beats a threat to your queen. If your threat is scarier than his, ignore his and play yours.</div></div></div>
+    <div class="row"><div class="lt" style="font-family:inherit;font-size:20px;">⚡</div><div class="txt"><div class="t">Most forcing first</div><div class="d">Among your checks, try the one with the fewest replies first — it collapses the calculation to a single line.</div></div></div>
+
+    <div class="oneliner" style="background:rgba(217,119,6,.08); border-left-color:var(--gold);">🎓 Grounded in Levy Rozman (GothamChess) — <i>How to Win at Chess</i>. His #1 rule: run CCA — checks, captures, attacks — every move, for BOTH sides. TIPS is how you organize it.</div>
     <a class="more" href="https://app.notion.com/p/3996780ba3928113b039d3f53b7a1be4" target="_blank" rel="noopener">Read the full thought process →</a>
   </div>
 </div>
@@ -170,10 +177,10 @@
   "use strict";
   var KEY="road1500-tips";
   var STEPS=[
-    { l:"T", name:"THREATS", q:"What does he threaten?", d:"Name every check, capture, and attack he now has. If there's a real threat, deal with it first." },
-    { l:"I", name:"IDEAS", q:"What are my ideas?", d:"Find 2-3 candidate moves — forcing ones first. Don't just play the first thing you see." },
-    { l:"P", name:"PLANS", q:"What's my best plan?", d:"Take your top idea, calculate it to the end vs his best reply, and know what it's doing. Judge the position." },
-    { l:"S", name:"SAFETY", q:"Is my move safe?", d:"Before you touch the piece: what can he check, capture, or attack? Is everything defended? Only then play." }
+    { l:"T", name:"THREATS", q:"What does he threaten?", d:"Run CCA for HIM — his checks, captures, attacks. Then name the real threat: most scary-looking moves have no follow-up (Levy)." },
+    { l:"I", name:"IDEAS", q:"What are my ideas?", d:"Run CCA for YOU — your checks, captures, attacks. Forcing moves first — they cut his replies to 1-3 so you can actually calculate." },
+    { l:"P", name:"PLANS", q:"What's my best plan?", d:"Calculate your best idea to the end (most-forcing check first). Then judge it: material, king safety, piece activity, pawn structure." },
+    { l:"S", name:"SAFETY", q:"Is my move safe?", d:"Run CCA for him ONE more time: after I move, what can he check, capture, or attack? Is everything defended? Only then play." }
   ];
   var mode="guided", stepIdx=0, revealed=false, warm=false, warmLeft=0;
   var el=function(id){return document.getElementById(id);};
