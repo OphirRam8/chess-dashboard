@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>STEP — Train Your Thought Process</title>
+<meta name="theme-color" content="#1D4ED8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F2F6FC; --card:#FFFFFF; --ink:#12213B; --muted:#5B6B85;
+    --blue:#2563EB; --blue-d:#1D4ED8; --sky:#38BDF8; --gold:#D97706;
+    --line:rgba(37,99,235,.12); --shadow:0 10px 30px -12px rgba(29,78,216,.28);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{font-family:'Inter',system-ui,sans-serif; background:var(--bg); color:var(--ink);
+    min-height:100dvh; display:flex; justify-content:center;
+    background-image:radial-gradient(120% 70% at 50% -8%, #DCEBFF 0%, #F2F6FC 55%);}
+  .wrap{width:100%; max-width:460px; min-height:100dvh; padding:calc(env(safe-area-inset-top) + 16px) 18px 34px; display:flex; flex-direction:column;}
+  a{color:var(--blue); text-decoration:none;}
+  button{font-family:inherit; cursor:pointer;}
+
+  header{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;}
+  .home{font-size:13px; font-weight:600; color:var(--blue); display:inline-flex; align-items:center; gap:5px;
+    background:rgba(255,255,255,.7); padding:8px 13px; border-radius:100px; box-shadow:0 3px 10px -6px rgba(29,78,216,.5);}
+  .reps-chip{font-size:12px; font-weight:700; color:var(--blue-d); background:rgba(37,99,235,.09);
+    padding:8px 13px; border-radius:100px;}
+
+  /* ---- HOME ---- */
+  #home .hero{text-align:center; margin:8px 0 6px;}
+  #home .hero .word{font-family:'Anton',sans-serif; font-size:62px; letter-spacing:2px;
+    background:linear-gradient(180deg,#1E3A8A,#2E7CF6); -webkit-background-clip:text; background-clip:text; color:transparent; line-height:1;}
+  #home .hero .tag{font-size:13.5px; color:var(--muted); font-weight:600; margin-top:8px; letter-spacing:.02em;}
+  .letters{display:flex; gap:8px; margin:20px 0 22px;}
+  .letters .l{flex:1; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:14px 8px; text-align:center; box-shadow:var(--shadow);}
+  .letters .l .big{font-family:'Anton',sans-serif; font-size:30px; color:var(--blue-d); line-height:1;}
+  .letters .l .nm{font-size:9.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin-top:5px;}
+
+  .cta{display:flex; flex-direction:column; gap:11px;}
+  .btn{border:none; border-radius:18px; padding:18px; font-size:16px; font-weight:800; letter-spacing:.01em;}
+  .btn.primary{background:linear-gradient(135deg,#2563EB,#38BDF8); color:#fff; box-shadow:0 12px 26px -10px rgba(37,99,235,.65);}
+  .btn.ghost{background:var(--card); color:var(--blue-d); border:1px solid var(--line); box-shadow:var(--shadow);}
+  .btn:active{transform:scale(.98);}
+
+  .mode-row{display:flex; align-items:center; justify-content:center; gap:8px; margin:20px 0 4px;}
+  .seg{display:inline-flex; background:rgba(255,255,255,.8); border:1px solid var(--line); border-radius:100px; padding:4px;}
+  .seg button{border:none; background:none; font-size:12.5px; font-weight:700; color:var(--muted); padding:8px 15px; border-radius:100px;}
+  .seg button.on{background:var(--blue); color:#fff;}
+  .mode-hint{text-align:center; font-size:12px; color:var(--muted); margin-top:9px; min-height:16px;}
+
+  .explain{margin-top:26px;}
+  .explain h2{font-size:12px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:0 0 12px 2px;}
+  .row{display:flex; gap:13px; background:var(--card); border:1px solid var(--line); border-radius:15px; padding:13px 14px; margin-bottom:9px; box-shadow:0 6px 16px -12px rgba(29,78,216,.4);}
+  .row .lt{font-family:'Anton',sans-serif; font-size:24px; color:var(--blue-d); width:26px; text-align:center; flex:0 0 26px; line-height:1.05;}
+  .row .txt .t{font-size:14.5px; font-weight:700;}
+  .row .txt .d{font-size:12.5px; color:var(--muted); margin-top:2px; line-height:1.4;}
+  .oneliner{margin-top:14px; background:rgba(37,99,235,.07); border-left:3px solid var(--blue); border-radius:10px; padding:12px 14px; font-size:13px; font-weight:600; color:#1c3157; line-height:1.5;}
+  .more{display:block; text-align:center; font-size:12.5px; font-weight:600; color:var(--muted); margin-top:16px;}
+
+  /* ---- REP (stepper) ---- */
+  #rep{position:fixed; inset:0; z-index:40; background:radial-gradient(130% 90% at 50% 0%, #E6F0FF 0%, #F2F6FC 60%); display:none; flex-direction:column; padding:calc(env(safe-area-inset-top) + 14px) 20px 26px; justify-content:space-between; max-width:460px; margin:0 auto; left:50%; transform:translateX(-50%);}
+  #rep.show{display:flex;}
+  .rep-top{display:flex; align-items:center; justify-content:space-between;}
+  .rep-x{border:none; background:rgba(255,255,255,.85); width:40px; height:40px; border-radius:50%; font-size:18px; color:var(--muted); box-shadow:0 4px 12px -8px rgba(29,78,216,.6);}
+  .dots{display:flex; gap:7px;}
+  .dots .d{width:26px; height:5px; border-radius:5px; background:rgba(37,99,235,.16); transition:background .25s;}
+  .dots .d.on{background:var(--blue);}
+  .warm-tag{font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--gold);}
+
+  .card-area{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;}
+  .card-letter{font-family:'Anton',sans-serif; font-size:150px; line-height:.9; letter-spacing:2px;
+    background:linear-gradient(180deg,#1E3A8A,#38BDF8); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .card-name{font-family:'Anton',sans-serif; font-size:26px; letter-spacing:1px; color:var(--blue-d); margin-top:2px;}
+  .card-q{font-size:22px; font-weight:800; margin-top:20px; line-height:1.25; max-width:340px;}
+  .card-do{font-size:15px; color:var(--muted); margin-top:14px; line-height:1.55; max-width:330px;}
+  .reveal-hint{font-size:13px; color:var(--blue); font-weight:600; margin-top:26px; opacity:.85;}
+  .hidden{display:none !important;}
+
+  .rep-next{border:none; border-radius:100px; padding:17px; font-size:16px; font-weight:800; letter-spacing:.02em;
+    background:linear-gradient(135deg,#2563EB,#38BDF8); color:#fff; box-shadow:0 12px 26px -10px rgba(37,99,235,.6); width:100%;}
+  .rep-next:active{transform:scale(.98);}
+
+  /* completion */
+  .done-hero{text-align:center;}
+  .done-hero .check{font-size:60px;}
+  .done-hero .big{font-family:'Anton',sans-serif; font-size:40px; color:var(--blue-d); margin-top:6px; letter-spacing:1px;}
+  .done-hero .sub{font-size:14.5px; color:var(--muted); margin-top:8px; line-height:1.5;}
+  .done-hero .cnt{font-size:13px; color:var(--gold); font-weight:700; margin-top:14px;}
+</style>
+</head>
+<body>
+<div class="wrap" id="home">
+  <header>
+    <a class="home" href="index.html">← Dashboard</a>
+    <span class="reps-chip" id="reps-chip">0 reps today</span>
+  </header>
+
+  <div class="hero">
+    <div class="word">STEP</div>
+    <div class="tag">Take a STEP before every move.</div>
+  </div>
+
+  <div class="letters">
+    <div class="l"><div class="big">S</div><div class="nm">Scan</div></div>
+    <div class="l"><div class="big">T</div><div class="nm">Think</div></div>
+    <div class="l"><div class="big">E</div><div class="nm">Evaluate</div></div>
+    <div class="l"><div class="big">P</div><div class="nm">Prove</div></div>
+  </div>
+
+  <div class="mode-row">
+    <div class="seg" id="seg">
+      <button data-mode="guided" class="on">Guided</button>
+      <button data-mode="recall">Recall</button>
+    </div>
+  </div>
+  <div class="mode-hint" id="mode-hint">Guided — full prompts, to learn the loop.</div>
+
+  <div class="cta" style="margin-top:16px;">
+    <button class="btn primary" id="run1">Run 1 rep</button>
+    <button class="btn ghost" id="warm">⚡ Warm-Up — 3 reps before you play</button>
+  </div>
+
+  <div class="explain">
+    <h2>The loop</h2>
+    <div class="row"><div class="lt">S</div><div class="txt"><div class="t">Scan his move</div><div class="d">What does it threaten? Every check, capture, and attack he now has.</div></div></div>
+    <div class="row"><div class="lt">T</div><div class="txt"><div class="t">Think of candidates</div><div class="d">2-3 of your own moves. Forcing first. Don't play the first idea.</div></div></div>
+    <div class="row"><div class="lt">E</div><div class="txt"><div class="t">Evaluate</div><div class="d">Calculate your best one to the end vs his best reply — then judge the position.</div></div></div>
+    <div class="row"><div class="lt">P</div><div class="txt"><div class="t">Prove it's safe</div><div class="d">Before you touch the piece: what can he check, capture, or attack? Is everything defended?</div></div></div>
+    <div class="oneliner">What did he threaten? → My candidates? → Calculate to the end → Before I move: what can he take?</div>
+    <a class="more" href="https://app.notion.com/p/3996780ba3928113b039d3f53b7a1be4" target="_blank" rel="noopener">Read the full thought process →</a>
+  </div>
+</div>
+
+<!-- ===== REP STEPPER ===== -->
+<div id="rep">
+  <div class="rep-top">
+    <button class="rep-x" id="rep-x">✕</button>
+    <div class="dots" id="dots"></div>
+    <span class="warm-tag" id="warm-tag"></span>
+  </div>
+
+  <div class="card-area" id="card-area">
+    <!-- step card -->
+    <div id="step-card">
+      <div class="card-letter" id="c-letter">S</div>
+      <div class="card-name" id="c-name">SCAN</div>
+      <div id="c-body">
+        <div class="card-q" id="c-q"></div>
+        <div class="card-do" id="c-do"></div>
+      </div>
+      <div class="reveal-hint hidden" id="c-hint">Say it out loud — then tap to check</div>
+    </div>
+    <!-- completion -->
+    <div class="done-hero hidden" id="done">
+      <div class="check">🧠</div>
+      <div class="big">STEP COMPLETE</div>
+      <div class="sub" id="done-sub">You're primed. Now run it on every move.</div>
+      <div class="cnt" id="done-cnt"></div>
+    </div>
+  </div>
+
+  <button class="rep-next" id="rep-next">Next →</button>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY="road1500-step";
+  var STEPS=[
+    { l:"S", name:"SCAN", q:"What does his move threaten?", d:"Name every check, capture, and attack he now has. If there's a real threat, you must deal with it." },
+    { l:"T", name:"THINK", q:"What are my candidate moves?", d:"Find 2-3 of your own moves — forcing ones first. Don't just play the first idea." },
+    { l:"E", name:"EVALUATE", q:"Does my best move actually work?", d:"Calculate your top candidate to the end, assuming his best reply — then judge the final position." },
+    { l:"P", name:"PROVE IT'S SAFE", q:"What can he hit after I move?", d:"Before you touch the piece: any check, capture, or attack? Is every piece still defended? Only then play." }
+  ];
+  var mode="guided", stepIdx=0, revealed=false, warm=false, warmLeft=0;
+  var el=function(id){return document.getElementById(id);};
+
+  // ---- rep counter (localStorage, per-day) ----
+  function todayKey(){var d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
+  function load(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return {};}}
+  function save(o){try{localStorage.setItem(KEY,JSON.stringify(o));}catch(e){}}
+  function repsToday(){var o=load();return (o.day===todayKey())?(o.n||0):0;}
+  function addRep(){var o=load();if(o.day!==todayKey()){o.day=todayKey();o.n=0;}o.n=(o.n||0)+1;o.total=(o.total||0)+1;save(o);renderChip();return o.n;}
+  function renderChip(){var n=repsToday();el("reps-chip").textContent=n+(n===1?" rep today":" reps today");}
+
+  // ---- mode ----
+  el("seg").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return;
+    mode=b.getAttribute("data-mode");
+    Array.prototype.forEach.call(el("seg").children,function(c){c.classList.toggle("on",c===b);});
+    el("mode-hint").textContent = mode==="guided"
+      ? "Guided — full prompts, to learn the loop."
+      : "Recall — just the letter. Say what it means, then reveal.";
+  });
+
+  // ---- rep flow ----
+  function startRep(isWarm){
+    warm=!!isWarm; warmLeft=isWarm?3:1;
+    beginSingle();
+    el("rep").classList.add("show");
+  }
+  function beginSingle(){
+    stepIdx=0; renderStep();
+  }
+  function buildDots(){
+    var d=el("dots"); d.innerHTML="";
+    for(var i=0;i<STEPS.length;i++){var s=document.createElement("div");s.className="d"+(i<=stepIdx?" on":"");d.appendChild(s);}
+  }
+  function renderStep(){
+    el("done").classList.add("hidden");
+    el("step-card").classList.remove("hidden");
+    var s=STEPS[stepIdx];
+    el("c-letter").textContent=s.l;
+    buildDots();
+    el("warm-tag").textContent = warm ? ("Warm-up "+(4-warmLeft)+"/3") : "";
+    if(mode==="recall"){
+      revealed=false;
+      el("c-name").classList.add("hidden");
+      el("c-body").classList.add("hidden");
+      el("c-hint").classList.remove("hidden");
+      el("rep-next").textContent="Reveal";
+    } else {
+      el("c-name").classList.remove("hidden");
+      el("c-body").classList.remove("hidden");
+      el("c-hint").classList.add("hidden");
+      el("c-name").textContent=s.name;
+      el("c-q").textContent=s.q;
+      el("c-do").textContent=s.d;
+      el("rep-next").textContent = stepIdx<STEPS.length-1 ? "Next →" : "Done";
+    }
+  }
+  function revealStep(){
+    var s=STEPS[stepIdx];
+    el("c-name").textContent=s.name; el("c-name").classList.remove("hidden");
+    el("c-q").textContent=s.q; el("c-do").textContent=s.d; el("c-body").classList.remove("hidden");
+    el("c-hint").classList.add("hidden");
+    revealed=true;
+    el("rep-next").textContent = stepIdx<STEPS.length-1 ? "Next →" : "Done";
+  }
+  function nextTap(){
+    if(mode==="recall" && !revealed){ revealStep(); return; }
+    if(stepIdx<STEPS.length-1){ stepIdx++; renderStep(); return; }
+    finishSingle();
+  }
+  function finishSingle(){
+    var n=addRep();
+    warmLeft--;
+    if(warm && warmLeft>0){ beginSingle(); return; }   // next rep in the warm-up
+    // completion screen
+    el("step-card").classList.add("hidden");
+    el("done").classList.remove("hidden");
+    el("warm-tag").textContent="";
+    Array.prototype.forEach.call(el("dots").children,function(c){c.classList.add("on");});
+    el("done-sub").textContent = warm ? "3 reps done — you're primed. Go play." : "You're primed. Now run it on every move.";
+    el("done-cnt").textContent = "🔥 "+n+(n===1?" rep":" reps")+" today";
+    el("rep-next").textContent="Finish";
+  }
+  function closeRep(){ el("rep").classList.remove("show"); }
+
+  el("run1").addEventListener("click",function(){startRep(false);});
+  el("warm").addEventListener("click",function(){startRep(true);});
+  el("rep-x").addEventListener("click",closeRep);
+  el("rep-next").addEventListener("click",function(){
+    if(!el("done").classList.contains("hidden")){ closeRep(); return; } // on completion → finish
+    nextTap();
+  });
+
+  renderChip();
+})();
+</script>
+</body>
+</html>
