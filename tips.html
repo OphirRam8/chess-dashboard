@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>STEP — Train Your Thought Process</title>
+<title>TIPS — Train Your Thought Process</title>
 <meta name="theme-color" content="#1D4ED8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -99,15 +99,15 @@
   </header>
 
   <div class="hero">
-    <div class="word">STEP</div>
-    <div class="tag">Take a STEP before every move.</div>
+    <div class="word">TIPS</div>
+    <div class="tag">Run your TIPS before every move.</div>
   </div>
 
   <div class="letters">
-    <div class="l"><div class="big">S</div><div class="nm">Scan</div></div>
-    <div class="l"><div class="big">T</div><div class="nm">Think</div></div>
-    <div class="l"><div class="big">E</div><div class="nm">Evaluate</div></div>
-    <div class="l"><div class="big">P</div><div class="nm">Prove</div></div>
+    <div class="l"><div class="big">T</div><div class="nm">Threats</div></div>
+    <div class="l"><div class="big">I</div><div class="nm">Ideas</div></div>
+    <div class="l"><div class="big">P</div><div class="nm">Plans</div></div>
+    <div class="l"><div class="big">S</div><div class="nm">Safety</div></div>
   </div>
 
   <div class="mode-row">
@@ -125,11 +125,11 @@
 
   <div class="explain">
     <h2>The loop</h2>
-    <div class="row"><div class="lt">S</div><div class="txt"><div class="t">Scan his move</div><div class="d">What does it threaten? Every check, capture, and attack he now has.</div></div></div>
-    <div class="row"><div class="lt">T</div><div class="txt"><div class="t">Think of candidates</div><div class="d">2-3 of your own moves. Forcing first. Don't play the first idea.</div></div></div>
-    <div class="row"><div class="lt">E</div><div class="txt"><div class="t">Evaluate</div><div class="d">Calculate your best one to the end vs his best reply — then judge the position.</div></div></div>
-    <div class="row"><div class="lt">P</div><div class="txt"><div class="t">Prove it's safe</div><div class="d">Before you touch the piece: what can he check, capture, or attack? Is everything defended?</div></div></div>
-    <div class="oneliner">What did he threaten? → My candidates? → Calculate to the end → Before I move: what can he take?</div>
+    <div class="row"><div class="lt">T</div><div class="txt"><div class="t">Threats</div><div class="d">What does he threaten? Every check, capture, and attack he now has — deal with it first.</div></div></div>
+    <div class="row"><div class="lt">I</div><div class="txt"><div class="t">Ideas</div><div class="d">2-3 candidate moves of your own. Forcing first. Don't play the first thing you see.</div></div></div>
+    <div class="row"><div class="lt">P</div><div class="txt"><div class="t">Plans</div><div class="d">Take your best idea, calculate it to the end vs his best reply, and know the plan.</div></div></div>
+    <div class="row"><div class="lt">S</div><div class="txt"><div class="t">Safety</div><div class="d">Before you touch the piece: what can he check, capture, or attack? Is everything defended?</div></div></div>
+    <div class="oneliner">His threats? → My ideas? → Best plan, calculated to the end → Before I move: is it safe (what can he take)?</div>
     <a class="more" href="https://app.notion.com/p/3996780ba3928113b039d3f53b7a1be4" target="_blank" rel="noopener">Read the full thought process →</a>
   </div>
 </div>
@@ -145,8 +145,8 @@
   <div class="card-area" id="card-area">
     <!-- step card -->
     <div id="step-card">
-      <div class="card-letter" id="c-letter">S</div>
-      <div class="card-name" id="c-name">SCAN</div>
+      <div class="card-letter" id="c-letter">T</div>
+      <div class="card-name" id="c-name">THREATS</div>
       <div id="c-body">
         <div class="card-q" id="c-q"></div>
         <div class="card-do" id="c-do"></div>
@@ -156,7 +156,7 @@
     <!-- completion -->
     <div class="done-hero hidden" id="done">
       <div class="check">🧠</div>
-      <div class="big">STEP COMPLETE</div>
+      <div class="big">TIPS COMPLETE</div>
       <div class="sub" id="done-sub">You're primed. Now run it on every move.</div>
       <div class="cnt" id="done-cnt"></div>
     </div>
@@ -168,12 +168,12 @@
 <script>
 (function(){
   "use strict";
-  var KEY="road1500-step";
+  var KEY="road1500-tips";
   var STEPS=[
-    { l:"S", name:"SCAN", q:"What does his move threaten?", d:"Name every check, capture, and attack he now has. If there's a real threat, you must deal with it." },
-    { l:"T", name:"THINK", q:"What are my candidate moves?", d:"Find 2-3 of your own moves — forcing ones first. Don't just play the first idea." },
-    { l:"E", name:"EVALUATE", q:"Does my best move actually work?", d:"Calculate your top candidate to the end, assuming his best reply — then judge the final position." },
-    { l:"P", name:"PROVE IT'S SAFE", q:"What can he hit after I move?", d:"Before you touch the piece: any check, capture, or attack? Is every piece still defended? Only then play." }
+    { l:"T", name:"THREATS", q:"What does he threaten?", d:"Name every check, capture, and attack he now has. If there's a real threat, deal with it first." },
+    { l:"I", name:"IDEAS", q:"What are my ideas?", d:"Find 2-3 candidate moves — forcing ones first. Don't just play the first thing you see." },
+    { l:"P", name:"PLANS", q:"What's my best plan?", d:"Take your top idea, calculate it to the end vs his best reply, and know what it's doing. Judge the position." },
+    { l:"S", name:"SAFETY", q:"Is my move safe?", d:"Before you touch the piece: what can he check, capture, or attack? Is everything defended? Only then play." }
   ];
   var mode="guided", stepIdx=0, revealed=false, warm=false, warmLeft=0;
   var el=function(id){return document.getElementById(id);};
