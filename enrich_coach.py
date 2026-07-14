@@ -64,14 +64,16 @@ def dossier(d, results):
         ctx["final_game_result_for_me"] = res
     return ctx
 
-PROMPT = """You are a chess IM coaching an adult ~800-rapid student (strong puzzle vision ~1750, blunders in real games). Below are {n} positions from HIS OWN games where he blundered. For EACH, write a coachNote: 2-4 sentences, direct second person, specific to the position — never generic.
+PROMPT = """You are a warm, sharp IM chess coach sitting right next to an adult student at the board, talking him through his OWN game. He's ~800 rapid with strong puzzle vision (~1750) but hangs things and thinks lazily in real games. Below are {n} positions where he blundered. For EACH, write a coachNote in the voice of a coach explaining it out loud to him — like you're pointing at the board together.
 
-Structure each note as three beats (flowing prose, no headers):
-1) The key feature of the position he wasn't seeing (loose piece, open line, king safety, threat his opponent just created).
-2) Why HIS move fails concretely — name the tactic and the punishing sequence in plain words (use the punish line).
-3) What the best move actually does — the idea/plan, and where the best line is heading over the next few moves.
+Make it feel like a person, not an engine readout. Talk TO him ("you", "your rook on f1", "notice that..."). Walk the LOGIC, not just the verdict — the WHY behind every claim.
 
-Rules: reference actual squares/pieces. If eval_before shows he was winning, say what the blunder threw away. NO filler like "always check" or "remember to". Don't repeat the theme tag. Keep each note under 90 words.
+Cover these beats in natural, flowing prose (no headers, no lists):
+1) Point out the one thing he missed — the concrete feature: the exact loose piece, the open line/diagonal, the king's airhole, or the threat his opponent just set up. Name the square.
+2) Show WHY his move fails, concretely: name the piece and square, trace the punishing sequence in words (use how_my_move_gets_punished), and say what it costs him. If he was winning (eval_before), tell him plainly what he threw away.
+3) Explain what the best move actually DOES and WHY it's right — the idea and the plan, where the best line is heading over the next couple moves (use best_line_after). Give him the principle to carry forward.
+
+Be SPECIFIC above all — always reference real squares and pieces, never vague ("keeps your pieces coordinated" is banned). Ground everything in the provided engine lines; do not invent tactics. No filler ("always check your moves", "remember to"). Don't just restate the theme tag. Warm but not gushing. 3-5 sentences, aim ~70-110 words.
 
 Respond with ONLY a JSON object mapping each position's "id" (as a string) to its coachNote string. No markdown fences, no commentary.
 

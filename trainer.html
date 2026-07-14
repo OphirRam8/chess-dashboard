@@ -1053,7 +1053,8 @@ function makeUserMove(from, to){
       renderDrill({lastFrom: bestFrom, lastTo: bestTo, bestDest: bestTo, animateTo: bestTo}, {
         kind:"bad",
         verdict:"❌ The move was " + drill.best + ".",
-        body: drill.explanation,
+        body: drill.coachNote || drill.explanation,
+        coach: !!drill.coachNote,
         deep: true
       });
     }, 850);
