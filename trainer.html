@@ -926,12 +926,16 @@ function startDrills(filterTheme){
   switchTab("drill");
   if(Q.length) loadDrill(); else renderDrillEmpty(filterTheme);
 }
+let introTimer = null;
 function loadDrill(){
   const item = Q[qPos];
   drill = item.d; drillIdx = item.i;
   game = new Chess(drill.fen);
   selSq = null; solved = false; failed = false; hintUsed = false; triedOnce = false; tries = 0;
   renderDrill();
+  // Auto-replay the blunder on load: see what you played, board snaps back, then you think.
+  clearTimeout(introTimer);
+  introTimer = setTimeout(()=>{ if(!solved && !failed && !LP && !showingMyMove) showMyMove(); }, 550);
 }
 function sqName(file, rank){ return "abcdefgh"[file] + (rank+1); }
 
